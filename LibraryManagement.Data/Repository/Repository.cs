@@ -32,7 +32,7 @@ namespace LibraryManagement.Data.Repository
             return await _dbSet.FindAsync(id);
         }
 
-        public async Task SaveAsync()
+        public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
         }

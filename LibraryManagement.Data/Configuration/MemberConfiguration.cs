@@ -20,6 +20,11 @@ namespace LibraryManagement.Data.Configuration
                 .Property(m => m.JoinDate)
                 .IsRequired();
 
+            entity
+                .HasOne(m => m.User)
+                .WithOne()
+                .HasForeignKey<Member>(m => m.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

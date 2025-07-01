@@ -1,4 +1,6 @@
-﻿namespace LibraryManagement.Data.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace LibraryManagement.Data.Models
 {
     public class Book
     {
@@ -10,5 +12,7 @@
         public virtual Genre Genre { get; set; } = null!;
         public DateTime PublishedDate { get; set; }
         public bool IsDeleted { get; set; }
+        public string BookCreatorId { get; set; } = null!;
+        public IdentityUser BookCreator { get; set; } = null!;
     }
 }

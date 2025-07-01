@@ -1,7 +1,8 @@
 namespace LibraryManagement.Web
 {
     using Data;
-
+    using LibraryManagement.Data.Interfaces;
+    using LibraryManagement.Data.Repository;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
@@ -22,10 +23,16 @@ namespace LibraryManagement.Web
             builder.Services
                 .AddDefaultIdentity<IdentityUser>(options =>
                 {
-                    options.SignIn.RequireConfirmedAccount = true;
+                    options.SignIn.RequireConfirmedAccount = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireDigit = false;
                 })
                 .AddEntityFrameworkStores<LibraryManagementDbContext>();
+
             builder.Services.AddControllersWithViews();
+            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
             WebApplication? app = builder.Build();
             

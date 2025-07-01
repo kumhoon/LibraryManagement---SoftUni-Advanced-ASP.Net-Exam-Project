@@ -21,6 +21,7 @@ namespace LibraryManagement.Data.Configuration
                 .HasOne(br => br.Book)
                 .WithMany()
                 .HasForeignKey(br => br.BookId)
+                .IsRequired(false)
                 .OnDelete(DeleteBehavior.Restrict);
 
             entity

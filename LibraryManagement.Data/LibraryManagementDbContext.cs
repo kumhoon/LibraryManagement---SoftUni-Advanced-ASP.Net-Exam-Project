@@ -3,6 +3,7 @@
     using LibraryManagement.Data.Models;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
+    using System.Reflection;
 
     public class LibraryManagementDbContext : IdentityDbContext
     {
@@ -25,7 +26,7 @@
         {
             base.OnModelCreating(builder);
 
-            builder.ApplyConfigurationsFromAssembly(exe)
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }
 }

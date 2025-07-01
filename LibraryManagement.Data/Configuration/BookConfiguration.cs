@@ -40,6 +40,12 @@ namespace LibraryManagement.Data.Configuration
 
             entity
                 .HasQueryFilter(b => b.IsDeleted == false);
+
+            entity
+                .HasOne(b => b.BookCreator)
+                .WithMany()
+                .HasForeignKey(b => b.BookCreatorId)    
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
