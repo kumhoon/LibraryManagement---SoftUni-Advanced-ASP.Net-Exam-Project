@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>aspnet-LibraryManagement.Web-43fc014e-aaab-4ffa-b5aa-28ebf02721ff</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.15" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LibraryManagement.Data\LibraryManagement.Data.csproj" />
+    <ProjectReference Include="..\LibraryManagement.GCommon\LibraryManagement.GCommon.csproj" />
+    <ProjectReference Include="..\LibraryManagement.Services.Core\LibraryManagement.Services.Core.csproj" />
+    <ProjectReference Include="..\LibraryManagement.Web.Infrastructure\LibraryManagement.Web.Infrastructure.csproj" />
+    <ProjectReference Include="..\LibraryManagement.Web.ViewModels\LibraryManagement.Web.ViewModels.csproj" />
+  </ItemGroup>
+
+</Project>

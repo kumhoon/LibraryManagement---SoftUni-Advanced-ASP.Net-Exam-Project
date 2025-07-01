@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LibraryManagement.Data.Models\LibraryManagement.Data.Models.csproj" />
+    <ProjectReference Include="..\LibraryManagement.GCommon\LibraryManagement.GCommon.csproj" />
+    <ProjectReference Include="..\LibraryManagement.Services.AutoMapping\LibraryManagement.Services.AutoMapping.csproj" />
+  </ItemGroup>
+
+</Project>
