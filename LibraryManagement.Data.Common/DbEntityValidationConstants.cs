@@ -23,5 +23,10 @@ namespace LibraryManagement.Data.Common
         {
             public const int GenreNameMaxLength = 25;
         }
+
+        public static class Member
+        {
+            public const int MemberNameMaxLength = 50;
+        }
     }
 }
