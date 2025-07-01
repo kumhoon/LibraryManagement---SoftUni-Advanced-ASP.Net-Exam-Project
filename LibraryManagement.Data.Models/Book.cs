@@ -9,5 +9,6 @@
         public virtual Author Author { get; set; } = null!;
         public virtual Genre Genre { get; set; } = null!;
         public DateTime PublishedDate { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
