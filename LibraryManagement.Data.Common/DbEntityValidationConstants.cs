@@ -8,24 +8,24 @@ namespace LibraryManagement.Data.Common
 {
     public static class DbEntityValidationConstants
     {
-        public static class Author
+        public static class AuthorConstants
         {
             public const int AuthorNameMaxLength = 50;
         }
 
-        public static class Book
+        public static class BookConstants
         {
             public const int BookTitleMaxLength = 60;
             public const int BookDescriptionMaxLength = 500;
             
         }
 
-        public static class Genre
+        public static class GenreConstants
         {
             public const int GenreNameMaxLength = 25;
         }
 
-        public static class Member
+        public static class MemberConstants
         {
             public const int MemberNameMaxLength = 50;
         }

@@ -1,7 +1,7 @@
 ﻿using LibraryManagement.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using static LibraryManagement.Data.Common.DbEntityValidationConstants.Member;
+using static LibraryManagement.Data.Common.DbEntityValidationConstants.MemberConstants;
 namespace LibraryManagement.Data.Configuration
 {
     public class MemberConfiguration : IEntityTypeConfiguration<Member>

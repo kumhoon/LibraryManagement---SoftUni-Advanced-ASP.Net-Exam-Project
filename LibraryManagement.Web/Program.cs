@@ -3,12 +3,14 @@ namespace LibraryManagement.Web
     using Data;
     using LibraryManagement.Data.Interfaces;
     using LibraryManagement.Data.Repository;
+    using LibraryManagement.Data.Seeding;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+    using System.Threading.Tasks;
 
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
             
@@ -21,21 +23,29 @@ namespace LibraryManagement.Web
                 });
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services
-                .AddDefaultIdentity<IdentityUser>(options =>
-                {
-                    options.SignIn.RequireConfirmedAccount = false;
-                    options.Password.RequireNonAlphanumeric = false;
-                    options.Password.RequireLowercase = false;
-                    options.Password.RequireUppercase = false;
-                    options.Password.RequireDigit = false;
-                })
-                .AddEntityFrameworkStores<LibraryManagementDbContext>();
+                     .AddIdentity<IdentityUser, IdentityRole>(options =>
+                     {
+                         options.SignIn.RequireConfirmedAccount = false;
+                         options.Password.RequireNonAlphanumeric = false;
+                         options.Password.RequireLowercase = false;
+                         options.Password.RequireUppercase = false;
+                         options.Password.RequireDigit = false;
+                     })
+                     .AddEntityFrameworkStores<LibraryManagementDbContext>()
+                     .AddDefaultTokenProviders();
 
             builder.Services.AddControllersWithViews();
-            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            builder.Services.AddRazorPages();
+            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));  
 
             WebApplication? app = builder.Build();
-            
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                await LibraryManagementDbContextSeed.SeedAsync(services);
+            }
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseMigrationsEndPoint();

@@ -1,7 +1,7 @@
 ﻿using LibraryManagement.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using static LibraryManagement.Data.Common.DbEntityValidationConstants.Book;
+using static LibraryManagement.Data.Common.DbEntityValidationConstants.BookConstants;
 
 namespace LibraryManagement.Data.Configuration
 {
@@ -51,6 +51,8 @@ namespace LibraryManagement.Data.Configuration
                 Property(b => b.Description)
                 .IsRequired()
                 .HasMaxLength(BookDescriptionMaxLength);
+
+            
         }
     }
 }
