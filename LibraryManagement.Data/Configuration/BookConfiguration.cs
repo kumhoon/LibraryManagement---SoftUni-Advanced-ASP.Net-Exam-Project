@@ -46,6 +46,11 @@ namespace LibraryManagement.Data.Configuration
                 .WithMany()
                 .HasForeignKey(b => b.BookCreatorId)    
                 .OnDelete(DeleteBehavior.Restrict);
+
+            entity.
+                Property(b => b.Description)
+                .IsRequired()
+                .HasMaxLength(BookDescriptionMaxLength);
         }
     }
 }

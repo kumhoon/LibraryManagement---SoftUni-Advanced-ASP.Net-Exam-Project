@@ -14,5 +14,7 @@ namespace LibraryManagement.Data.Models
         public bool IsDeleted { get; set; }
         public string BookCreatorId { get; set; } = null!;
         public IdentityUser BookCreator { get; set; } = null!;
+
+        public string Description { get; set; } = null!;
     }
 }

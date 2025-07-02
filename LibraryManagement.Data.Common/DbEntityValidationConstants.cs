@@ -16,6 +16,7 @@ namespace LibraryManagement.Data.Common
         public static class Book
         {
             public const int BookTitleMaxLength = 60;
+            public const int BookDescriptionMaxLength = 500;
             
         }
 
