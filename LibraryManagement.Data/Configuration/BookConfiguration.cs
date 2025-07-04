@@ -52,6 +52,9 @@ namespace LibraryManagement.Data.Configuration
                 .IsRequired()
                 .HasMaxLength(BookDescriptionMaxLength);
 
+            entity
+                .Property(b => b.ImageUrl)
+                .IsRequired(false);
             
         }
     }

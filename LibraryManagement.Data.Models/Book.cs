@@ -16,5 +16,7 @@ namespace LibraryManagement.Data.Models
         public IdentityUser BookCreator { get; set; } = null!;
 
         public string Description { get; set; } = null!;
+
+        public string? ImageUrl { get; set; }
     }
 }

@@ -4,6 +4,8 @@ namespace LibraryManagement.Web
     using LibraryManagement.Data.Interfaces;
     using LibraryManagement.Data.Repository;
     using LibraryManagement.Data.Seeding;
+    using LibraryManagement.Services.Core;
+    using LibraryManagement.Services.Core.Interfaces;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System.Threading.Tasks;
@@ -36,7 +38,9 @@ namespace LibraryManagement.Web
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
-            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));  
+            builder.Services.AddScoped(typeof(IRepository<,>), typeof(BaseRepository<,>));
+            builder.Services.AddScoped(typeof(IBookRepository), typeof(BookRepository));
+            builder.Services.AddScoped(typeof(IBookService), typeof(BookService));
 
             WebApplication? app = builder.Build();
 

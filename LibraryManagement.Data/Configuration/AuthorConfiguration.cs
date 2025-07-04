@@ -24,6 +24,10 @@ namespace LibraryManagement.Data.Configuration
 
             entity
                 .HasQueryFilter(a => a.IsDeleted == false);
+
+            entity
+                .Property(a => a.ImageUrl)
+                .IsRequired(false);
         }
     }
 }

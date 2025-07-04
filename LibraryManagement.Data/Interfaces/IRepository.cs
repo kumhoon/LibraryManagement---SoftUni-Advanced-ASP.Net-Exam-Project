@@ -1,14 +1,27 @@
-﻿namespace LibraryManagement.Data.Interfaces
+﻿using System.Linq.Expressions;
+
+namespace LibraryManagement.Data.Interfaces
 {
-    public interface IRepository<T> where T : class
+    public interface IRepository<TType, TId>
     {
-        Task<IEnumerable<T>> GetAllAsync();
-        Task<T> GetByIdAsync(Guid id);
-        Task AddAsync(T entity);
-        void Update(T entity);
-        void Delete(T entity);
+
+        Task<TType> GetByIdAsync(TId id);
+
+        Task<TType> FirstOrDefaultAsync(Expression<Func<TType, bool>> predicate);
+
+        Task<IEnumerable<TType>> GetAllAsync();
+
+        IQueryable<TType> GetAllAttached();
+
+        Task AddAsync(TType item);
+
+        Task AddRangeAsync(TType[] items);
+
+        Task<bool> UpdateAsync(TType item);
+
         Task SaveChangesAsync();
 
         Task SoftDeleteAsync(Guid id);
     }
+       
 }
