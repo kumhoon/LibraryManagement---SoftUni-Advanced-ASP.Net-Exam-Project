@@ -31,5 +31,26 @@ namespace LibraryManagement.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Details(Guid id)
+        {
+            try
+            {
+                string? userId = this.GetUserId();
+                BookDetailsViewModel bookDetailsVM = await this._bookService.GetBookDetailsAsync(id, userId);
+                if (bookDetailsVM == null)
+                {         
+                    return NotFound();
+                }
+                return View(bookDetailsVM);
+            }
+            catch (Exception e)
+            {
+
+                Console.WriteLine($"An error has occured: {e.Message}");
+                return RedirectToAction(nameof(Index));
+            }
+        }
     }
 }

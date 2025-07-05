@@ -28,9 +28,24 @@ namespace LibraryManagement.Services.Core
             throw new NotImplementedException();
         }
 
-        public async Task<BookDetailsViewModel?> GetBookDetailsAsync(Guid? id, string userId)
+        public async Task<BookDetailsViewModel?> GetBookDetailsAsync(Guid id, string? userId)
         {
-            throw new NotImplementedException();
+            var book = await this._bookRepository.GetBookWithDetailsAsync(id);
+
+            if (book == null) { return null;}
+
+            var viewModel = new BookDetailsViewModel
+            {
+                Id = book.Id,
+                AuthorName = book.Author.Name,
+                Description = book.Description,
+                ImageUrl = book.ImageUrl,
+                PublishedDate = book.PublishedDate,
+                Title = book.Title,
+                Genre = book.Genre.Name,
+            };
+                
+            return viewModel;
         }
 
         public Task<BookDeleteInputModel> GetBookForDeletingAsync(Guid userId, Guid? bookId)

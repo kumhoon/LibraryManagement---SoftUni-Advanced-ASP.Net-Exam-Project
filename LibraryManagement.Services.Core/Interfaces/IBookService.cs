@@ -6,7 +6,7 @@
     {
         Task<IEnumerable<BookIndexViewModel>> GetBookIndexAsync(string? userId);
 
-        Task <BookDetailsViewModel?> GetBookDetailsAsync(Guid? id, string? userId);
+        Task <BookDetailsViewModel?> GetBookDetailsAsync(Guid id, string? userId);
 
         Task<bool> CreateBookAsync(Guid userId, BookCreateInputModel inputModel);
 
