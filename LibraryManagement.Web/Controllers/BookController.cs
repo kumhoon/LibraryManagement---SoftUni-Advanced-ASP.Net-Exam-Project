@@ -9,10 +9,12 @@ namespace LibraryManagement.Web.Controllers
     public class BookController : BaseController
     {
         private readonly IBookService _bookService;
+        private readonly IGenreService _genreService;
 
-        public BookController(IBookService bookService)
+        public BookController(IBookService bookService, IGenreService genreService)
         {
             _bookService = bookService;
+            _genreService = genreService;
         }
         [HttpGet]
         [AllowAnonymous]
@@ -44,6 +46,24 @@ namespace LibraryManagement.Web.Controllers
                     return NotFound();
                 }
                 return View(bookDetailsVM);
+            }
+            catch (Exception e)
+            {
+
+                Console.WriteLine($"An error has occured: {e.Message}");
+                return RedirectToAction(nameof(Index));
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            try
+            {
+                BookCreateInputModel? inputModel = new BookCreateInputModel
+                {
+                    Genres = await _genreService.GetAllAsSelectListAsync()
+                };
+                return View(inputModel);
             }
             catch (Exception e)
             {

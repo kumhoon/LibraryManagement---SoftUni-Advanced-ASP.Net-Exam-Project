@@ -8,7 +8,7 @@
 
         Task <BookDetailsViewModel?> GetBookDetailsAsync(Guid id, string? userId);
 
-        Task<bool> CreateBookAsync(Guid userId, BookCreateInputModel inputModel);
+        Task<bool> CreateBookAsync(string userId, BookCreateInputModel inputModel);
 
         Task<BookEditInputModel> GetBookForEditingAsync(Guid userId, Guid? bookId);
 

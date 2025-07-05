@@ -1,4 +1,6 @@
 ﻿@using LibraryManagement.Web.ViewModels.Book
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
 @model IEnumerable<BookIndexViewModel>
 @foreach (var book in Model)
 {
@@ -8,5 +10,12 @@
         <p>@book.AuthorName</p>
         <p>@book.PublishedDate</p>
         <a asp-action="Details" asp-route-id="@book.Id">Details</a>
+    </div>
+}
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="mb-3">
+        <a asp-action="Create" class="btn btn-success">Add New Book</a>
     </div>
 }

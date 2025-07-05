@@ -1,12 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LibraryManagement.Web.ViewModels.Book
+﻿namespace LibraryManagement.Web.ViewModels.Book
 {
+    using System.ComponentModel.DataAnnotations;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using static LibraryManagement.GCommon.ViewModelValidationConstants.BookConstants;
+    using static LibraryManagement.GCommon.ViewModelValidationConstants.ErrorMessages;
     public class BookCreateInputModel
     {
+        [Required]
+        [StringLength(BookTitleMaxLength, MinimumLength = BookTitleMinLength, ErrorMessage = BookTitleErrorMessage)]
+        public string Title { get; set; } = null!;
+
+        public Guid GenreId { get; set; }
+
+        public IEnumerable<SelectListItem> Genres { get; set; } = Enumerable.Empty<SelectListItem>();
+
+        [Required]
+        [StringLength(BookDescriptionMaxLength, MinimumLength = BookDescriptionMinLength, ErrorMessage = BookDescriptionErrorMessage)]
+        public string Description { get; set; } = null!;
+
+        public string? ImageUrl { get; set; }
+
+        public DateTime PublishedDate { get; set; }
+        [Required]
+        [StringLength(BookAuthorNameMaxLength, MinimumLength = BookAuthorNameMinLength, ErrorMessage = BookAuthorNameErrorMessage)]
+        public string Author { get; set; } = null!;
     }
 }

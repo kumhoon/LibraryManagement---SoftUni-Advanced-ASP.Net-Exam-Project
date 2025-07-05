@@ -10,14 +10,19 @@ namespace LibraryManagement.GCommon
     {
         public static class BookConstants
         {
-            public const int TitleMinLength = 1;
-            public const int TitleMaxLength = 60;
+            public const int BookTitleMinLength = 1;
+            public const int BookTitleMaxLength = 60;
 
             public const int BookAuthorNameMinLength = 1;
             public const int BookAuthorNameMaxLength = 50;
 
             public const int BookGenreNameMinLength = 1;
             public const int BookGenreNameMaxLength = 25;
+
+            public const int BookDescriptionMinLength = 1;
+            public const int BookDescriptionMaxLength = 500;
+
+            public const string PublishedOnDateTimeFormat = "dd-MM-yyyy";
         }
 
         public static class ErrorMessages
@@ -27,6 +32,8 @@ namespace LibraryManagement.GCommon
             public const string BookAuthorNameErrorMessage = "Author name must be between 1 and 50 characters";
 
             public const string BookGenreNameErrorMessage = "Genre must be between 1 and 25 characters";
+
+            public const string BookDescriptionErrorMessage = "Description must be between 1 and 500 characters";
         }
     }
 }

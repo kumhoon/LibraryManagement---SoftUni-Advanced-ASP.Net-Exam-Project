@@ -41,6 +41,10 @@ namespace LibraryManagement.Web
             builder.Services.AddScoped(typeof(IRepository<,>), typeof(BaseRepository<,>));
             builder.Services.AddScoped(typeof(IBookRepository), typeof(BookRepository));
             builder.Services.AddScoped(typeof(IBookService), typeof(BookService));
+            builder.Services.AddScoped(typeof(IGenreRepository), typeof(GenreRepository));
+            builder.Services.AddScoped(typeof(IAuthorRepository), typeof(AuthorRepository));
+            builder.Services.AddScoped(typeof(IAuthorService), typeof(AuthorService));
+            builder.Services.AddScoped(typeof(IGenreService), typeof(GenreService));
 
             WebApplication? app = builder.Build();
 
