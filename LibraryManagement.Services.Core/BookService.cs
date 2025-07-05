@@ -28,7 +28,7 @@ namespace LibraryManagement.Services.Core
             throw new NotImplementedException();
         }
 
-        public Task<BookDetailsViewModel?> GetBookDetailsAsync(Guid? id, Guid? userId)
+        public async Task<BookDetailsViewModel?> GetBookDetailsAsync(Guid? id, string userId)
         {
             throw new NotImplementedException();
         }
