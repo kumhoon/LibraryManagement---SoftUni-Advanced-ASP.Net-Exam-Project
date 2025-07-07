@@ -84,6 +84,7 @@ namespace LibraryManagement.Services.Core
                 PublishedDate = book.PublishedDate,
                 Title = book.Title,
                 Genre = book.Genre.Name,
+                CreatorId = book.BookCreatorId
             };
                 
             return viewModel;

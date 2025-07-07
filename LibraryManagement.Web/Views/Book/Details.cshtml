@@ -1,5 +1,7 @@
-﻿@using LibraryManagement.Web.ViewModels.Book
+﻿@inject UserManager<IdentityUser> UserManager
+@using LibraryManagement.Web.ViewModels.Book
 @model BookDetailsViewModel
+
 
 @{
     ViewData["Title"] = "Book Details";
@@ -31,4 +33,12 @@
     </dl>
 </div>
 
-<a asp-action="Index" class="btn btn-primary">Back to All Books</a>
+<a asp-action="Index" class="btn btn-primary">Back to All Books</a> 
+@if (User.Identity?.IsAuthenticated == true)
+{
+    var currentUserId = UserManager.GetUserId(User);
+    if (currentUserId == Model.CreatorId)
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning ms-2">Edit</a>
+    }
+}

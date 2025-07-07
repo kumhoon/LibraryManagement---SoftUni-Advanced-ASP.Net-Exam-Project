@@ -21,5 +21,7 @@ namespace LibraryManagement.Web.ViewModels.Book
         public DateTime PublishedDate { get; set; }
 
         public string? ImageUrl { get; set; }
+
+        public string CreatorId { get; set; } = null!;
     }
 }
