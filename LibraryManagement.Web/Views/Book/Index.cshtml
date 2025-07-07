@@ -5,10 +5,10 @@
 @foreach (var book in Model)
 {
     <div>
-        <h3>@book.Title</h3>
+        <h3>Title: @book.Title</h3>
         <p>@book.ImageUrl</p>
-        <p>@book.AuthorName</p>
-        <p>@book.PublishedDate</p>
+        <p>Author: @book.AuthorName</p>
+        <p>Publish Date: @book.PublishedDate.ToString("dd-MM-yyyy")</p>
         <a asp-action="Details" asp-route-id="@book.Id">Details</a>
     </div>
 }

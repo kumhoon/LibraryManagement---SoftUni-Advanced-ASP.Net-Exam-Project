@@ -4,7 +4,6 @@ namespace LibraryManagement.Data.Interfaces
 {
     public interface IRepository<TType, TId>
     {
-
         Task<TType> GetByIdAsync(TId id);
 
         Task<TType> FirstOrDefaultAsync(Expression<Func<TType, bool>> predicate);

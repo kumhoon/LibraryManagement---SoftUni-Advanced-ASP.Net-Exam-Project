@@ -1,8 +1,5 @@
 ﻿namespace LibraryManagement.Web.ViewModels.Book
 {
-    using System.ComponentModel.DataAnnotations;
-    using static LibraryManagement.GCommon.ViewModelValidationConstants.BookConstants;
-    using static LibraryManagement.GCommon.ViewModelValidationConstants.ErrorMessages;
     public class BookIndexViewModel
     {
         public Guid Id { get; set; }

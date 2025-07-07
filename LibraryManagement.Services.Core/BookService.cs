@@ -90,14 +90,46 @@ namespace LibraryManagement.Services.Core
             return viewModel;
         }
 
-        public Task<BookDeleteInputModel> GetBookForDeletingAsync(Guid userId, Guid? bookId)
+        public async Task<BookDeleteInputModel?> GetBookForDeletingAsync(string userId, Guid? bookId)
         {
-            throw new NotImplementedException();
+            BookDeleteInputModel deleteModel = null;
+            if (bookId != null)
+            {
+                var bookDeleteModel = await _bookRepository.GetBookWithDetailsAsync(bookId.Value);
+                if((bookDeleteModel != null) 
+                    && (bookDeleteModel.BookCreatorId.ToLower() == userId.ToLower()))
+                {
+                    deleteModel = new BookDeleteInputModel
+                    {
+                        Title = bookDeleteModel.Title,
+                        AuthorName = bookDeleteModel.Author.Name,
+                    };
+                }
+            }
+            return deleteModel;
         }
 
-        public Task<BookEditInputModel> GetBookForEditingAsync(Guid userId, Guid? bookId)
+        public async Task<BookEditInputModel> GetBookForEditingAsync(string userId, Guid? bookId)
         {
-            throw new NotImplementedException();
+            BookEditInputModel? editModel = null;
+            if (bookId != null) 
+            { 
+                var bookEditModel = await _bookRepository.GetBookWithDetailsAsync(bookId.Value);
+                if ((bookEditModel != null) && bookEditModel.BookCreatorId.ToLower() == userId.ToLower())
+                {
+                    editModel = new BookEditInputModel
+                    {
+                        Id = bookEditModel.Id,
+                        Title = bookEditModel.Title,
+                        Description = bookEditModel.Description,
+                        ImageUrl = bookEditModel.ImageUrl,
+                        GenreId = bookEditModel.GenreId,
+                        PublishedDate = bookEditModel.PublishedDate,
+                        Author = bookEditModel.Author.Name,
+                    };
+                }
+            }
+            return editModel;
         }
 
         public async Task<IEnumerable<BookIndexViewModel>> GetBookIndexAsync(string? userId)
@@ -115,14 +147,59 @@ namespace LibraryManagement.Services.Core
                 });
         }
 
-        public Task<bool> SoftDeleteBookAsync(Guid userId, BookDeleteInputModel inputModel)
+        public async Task<bool> SoftDeleteBookAsync(string userId, BookDeleteInputModel inputModel)
         {
-            throw new NotImplementedException();
+            bool deleteResult = false;
+
+            IdentityUser? user = await this._userManager.FindByIdAsync(userId);
+
+            Book? book = await this._bookRepository.GetBookWithDetailsAsync(inputModel.Id);
+
+            if ((user != null) 
+                && (book != null) 
+                && (book.BookCreatorId.ToLower() == userId.ToLower())) 
+            { 
+                book.IsDeleted = true;
+                await this._bookRepository.SaveChangesAsync();
+                deleteResult = true;
+            }
+            return deleteResult;
         }
 
-        public Task<bool> UpdateEditedBookAsync(Guid userId, BookEditInputModel inputModel)
+        public async Task<bool> UpdateEditedBookAsync(string userId, BookEditInputModel inputModel)
         {
-            throw new NotImplementedException();
+            bool updateResult = false;
+
+            IdentityUser? user = await this._userManager
+                .FindByIdAsync(userId);
+
+            Genre? genre = await this._genreRepository.GetByIdAsync(inputModel.GenreId);
+
+            Book? book = await this._bookRepository.GetBookWithDetailsAsync(inputModel.Id);
+
+            bool isPublishedOnDateValid = DateTime.TryParseExact(
+                inputModel.PublishedDate.ToString(PublishedOnDateTimeFormat),
+                PublishedOnDateTimeFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime PublishedOn);
+
+            if ((user != null) 
+                && (genre != null) 
+                && (book != null) 
+                && (book.BookCreatorId.ToLower() == userId.ToLower()))
+            {
+                book.Title = inputModel.Title;
+                book.Author.Name = inputModel.Author;
+                book.Description = inputModel.Description;
+                book.ImageUrl = inputModel.ImageUrl;
+                book.PublishedDate = inputModel.PublishedDate;
+                book.GenreId = inputModel.GenreId;
+
+                await this._bookRepository.UpdateAsync(book);
+                updateResult = true;
+            }
+            return updateResult;
         }
     }
 }

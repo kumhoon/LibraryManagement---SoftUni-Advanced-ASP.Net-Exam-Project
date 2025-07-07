@@ -98,5 +98,98 @@ namespace LibraryManagement.Web.Controllers
                 return RedirectToAction(nameof(Create));
             }
         }
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid? id)
+        {
+            try
+            {
+                string userId = this.GetUserId()!;
+
+                BookEditInputModel? editInputModel = await this._bookService.GetBookForEditingAsync(userId, id.Value);
+                if(editInputModel == null)
+                {
+                    return RedirectToAction(nameof(Edit));
+                }
+                editInputModel.Genres = await this._genreService.GetAllAsSelectListAsync();
+                return View(editInputModel);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"An error has occured: {e.Message}");
+                return RedirectToAction(nameof(Edit));
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> Edit(BookEditInputModel editInputModel)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    editInputModel.Genres = await this._genreService.GetAllAsSelectListAsync();
+                    return View(editInputModel);
+                }
+                bool editResult = await this._bookService.UpdateEditedBookAsync(GetUserId()!, editInputModel);
+                if (editResult == false)
+                {
+                    ModelState.AddModelError(string.Empty, "A fatal error has occured. Please try again later.");
+
+                    editInputModel.Genres = await this._genreService.GetAllAsSelectListAsync();
+                    return View(editInputModel);
+                }
+                return RedirectToAction(nameof(Details), new { id = editInputModel.Id });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"An error has occured: {e.Message}");
+                return RedirectToAction(nameof(Edit));
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            try
+            {
+                string userId = this.GetUserId()!;
+                BookDeleteInputModel? bookDeleteInputModel = await this._bookService.GetBookForDeletingAsync(userId, id);
+
+                if (bookDeleteInputModel == null)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(bookDeleteInputModel);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"An error has occured: {e.Message}");
+                return RedirectToAction(nameof(Delete));
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> ConfirmDelete(BookDeleteInputModel inputModel)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid data provided. Please try again.");
+                    return View(inputModel);
+                }
+
+                bool deleteResult = await this._bookService.SoftDeleteBookAsync(this.GetUserId()!, inputModel);
+                if (deleteResult == false)
+                {
+                    ModelState.AddModelError(string.Empty, "A fatal error has occured. Please try again later.");
+                    return View(inputModel);
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"An error has occured: {e.Message}");
+                return RedirectToAction(nameof(Delete));
+            }
+        }
     }
 }

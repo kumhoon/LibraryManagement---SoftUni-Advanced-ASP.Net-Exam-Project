@@ -10,12 +10,12 @@
 
         Task<bool> CreateBookAsync(string userId, BookCreateInputModel inputModel);
 
-        Task<BookEditInputModel> GetBookForEditingAsync(Guid userId, Guid? bookId);
+        Task<BookEditInputModel> GetBookForEditingAsync(string userId, Guid? bookId);
 
-        Task<bool> UpdateEditedBookAsync(Guid userId, BookEditInputModel inputModel);
+        Task<bool> UpdateEditedBookAsync(string userId, BookEditInputModel inputModel);
 
-        Task<bool> SoftDeleteBookAsync(Guid userId, BookDeleteInputModel inputModel);
+        Task<bool> SoftDeleteBookAsync(string userId, BookDeleteInputModel inputModel);
 
-        Task<BookDeleteInputModel> GetBookForDeletingAsync(Guid userId, Guid? bookId);
+        Task<BookDeleteInputModel?> GetBookForDeletingAsync(string userId, Guid? bookId);
     }
 }
