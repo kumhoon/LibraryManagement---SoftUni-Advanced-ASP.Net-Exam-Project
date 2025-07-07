@@ -40,7 +40,7 @@ namespace LibraryManagement.Web.Controllers
             try
             {
                 string? userId = this.GetUserId();
-                BookDetailsViewModel bookDetailsVM = await this._bookService.GetBookDetailsAsync(id, userId);
+                BookDetailsViewModel? bookDetailsVM = await this._bookService.GetBookDetailsAsync(id, userId);
                 if (bookDetailsVM == null)
                 {         
                     return NotFound();
@@ -69,7 +69,33 @@ namespace LibraryManagement.Web.Controllers
             {
 
                 Console.WriteLine($"An error has occured: {e.Message}");
+                return RedirectToAction(nameof(Create));
+            }
+        }
+        [HttpPost]  
+        public async Task<IActionResult> Create(BookCreateInputModel inputModel)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    inputModel.Genres = await this._genreService.GetAllAsSelectListAsync();
+                    return View(inputModel);
+                }
+                bool createResult = await this._bookService.CreateBookAsync(this.GetUserId()!, inputModel);
+
+                if (createResult == false) 
+                {
+                    ModelState.AddModelError(string.Empty, "A fatal error has occured. Please try again later.");
+                    inputModel.Genres = await this._genreService.GetAllAsSelectListAsync();
+                    return View(inputModel);
+                }
                 return RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"An error has occured: {e.Message}");
+                return RedirectToAction(nameof(Create));
             }
         }
     }
