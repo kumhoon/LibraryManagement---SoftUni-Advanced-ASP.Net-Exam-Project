@@ -12,5 +12,16 @@ namespace LibraryManagement.Data.Models
         public string UserId { get; set; } = null!;
 
         public IdentityUser User { get; set; } = null!;
+
+        public MembershipStatus Status { get; set; } = MembershipStatus.None;
+
+    }
+    public enum MembershipStatus
+    {
+        None,
+        Pending,
+        Approved,
+        Rejected,
+        Revoked
     }
 }

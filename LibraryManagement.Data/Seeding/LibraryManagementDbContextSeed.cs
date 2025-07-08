@@ -127,14 +127,16 @@ namespace LibraryManagement.Data.Seeding
                         Id = Guid.NewGuid(),
                         Name = "User One",
                         JoinDate = DateTime.UtcNow,
-                        UserId = userDb1.Id
+                        UserId = userDb1.Id,
+                        Status = MembershipStatus.Approved
                     },
                     new Member
                     {
                         Id = Guid.NewGuid(),
                         Name = "User Two",
                         JoinDate = DateTime.UtcNow,
-                        UserId = userDb2.Id
+                        UserId = userDb2.Id,
+                        Status = MembershipStatus.Approved
                     }
                 );
                 await context.SaveChangesAsync();
