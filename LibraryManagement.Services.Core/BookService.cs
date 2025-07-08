@@ -132,9 +132,18 @@ namespace LibraryManagement.Services.Core
             return editModel;
         }
 
-        public async Task<IEnumerable<BookIndexViewModel>> GetBookIndexAsync(string? userId)
+        public async Task<IEnumerable<BookIndexViewModel>> GetBookIndexAsync(string? searchTerm)
         {
             var books = await this._bookRepository.GetAllWithDetailsAsync();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = searchTerm.ToLower();
+                books = books.Where(b =>
+                    b.Title.ToLower().Contains(searchTerm) ||
+                    b.Author.Name.ToLower().Contains(searchTerm) ||
+                    b.Genre.Name.ToLower().Contains(searchTerm));
+            }
 
             return books
                 .Select(book => new BookIndexViewModel
