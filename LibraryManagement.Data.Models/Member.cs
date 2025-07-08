@@ -15,6 +15,8 @@ namespace LibraryManagement.Data.Models
 
         public MembershipStatus Status { get; set; } = MembershipStatus.None;
 
+        public string? MembershipApplicationReason { get; set; }
+
     }
     public enum MembershipStatus
     {

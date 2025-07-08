@@ -4,10 +4,10 @@
     using LibraryManagement.Data.Models;
     using Microsoft.EntityFrameworkCore;
 
-    public class MemberRepository : BaseRepository<Member, Guid>, IMembershipRepository
+    public class MembershipRepository : BaseRepository<Member, Guid>, IMembershipRepository
     {
         private readonly LibraryManagementDbContext _context;
-        public MemberRepository(LibraryManagementDbContext dbContext) : base(dbContext)
+        public MembershipRepository(LibraryManagementDbContext dbContext) : base(dbContext)
         {
             _context = dbContext;
         }
