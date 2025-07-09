@@ -17,12 +17,14 @@
         {
             try
             {
-                var email = User.Identity?.Name ?? "";
-                var defaultName = email.Contains('@') ? email.Split('@')[0] : email;
+                var userId = this.GetUserId()!;
+                var membership = _membershipService.GetMembershipByUserIdAsync(userId);
+
+                ViewBag.CanApply = membership == null; 
 
                 var model = new MemberApplicationInputModel
                 {
-                    Name = defaultName,
+                    Name = this.User.Identity!.Name!.Split('@')[0], 
                 };
 
                 return View(model);
@@ -45,7 +47,7 @@
                 var userId = this.GetUserId()!;
 
                 await _membershipService.ApplyForMembershipAsync(userId, inputmodel);
-                TempData["SuccessMessage"] = "Your membership application has been submitted.";
+               
                 return RedirectToAction("ApplyConfirmation");
             }
             catch (Exception e)

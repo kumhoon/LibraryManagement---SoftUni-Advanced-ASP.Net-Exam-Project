@@ -50,9 +50,40 @@
             await _membershipRepository.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Member>> GetPendingMembersAsync()
+        public async Task<IEnumerable<MembershipPendingViewModel>> GetPendingApplications()
         {
-            return await _membershipRepository.GetPendingApplicationsAsync();
+            var pendingMembers = await _membershipRepository.GetPendingApplicationsAsync();
+
+            var result = pendingMembers.Select(m => new MembershipPendingViewModel
+            {
+                Id = m.Id,
+                Name = m.Name,
+                Email = m.User.Email, 
+                JoinDate = m.JoinDate,
+                Reason = m.MembershipApplicationReason,
+                Status = m.Status
+            });
+
+            return result;
+        }
+
+        public async Task<Member?> GetMembershipByUserIdAsync(string userId) 
+        {
+            return await _membershipRepository
+                .FirstOrDefaultAsync(m => m.UserId == userId && m.Status != MembershipStatus.Revoked);
+        }
+
+        public async Task<bool> UpdateMembershipStatusAsync(Guid memberId, MembershipStatus newStatus)
+        {
+            var member = await _membershipRepository.GetByIdAsync(memberId);
+
+            if (member == null)
+            {
+                return false;
+            }
+
+            member.Status = newStatus;
+            return await _membershipRepository.UpdateAsync(member);
         }
     }
 }

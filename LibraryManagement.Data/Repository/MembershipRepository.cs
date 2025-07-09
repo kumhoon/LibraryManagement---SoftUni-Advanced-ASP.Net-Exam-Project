@@ -14,9 +14,10 @@
 
         public async Task<IEnumerable<Member>> GetPendingApplicationsAsync()
         {
-            return await this._context.Memberships
-                .Where(m => m.Status == MembershipStatus.Pending)
-                .ToArrayAsync();
+            return await _context.Memberships
+                    .Include(m => m.User)
+                    .Where(m => m.Status == MembershipStatus.Pending)
+                    .ToListAsync();
         }
     }
 }

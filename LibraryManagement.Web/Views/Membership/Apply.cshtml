@@ -2,18 +2,33 @@
 
 <h2>Apply for Membership</h2>
 
-<form asp-action="Apply" method="post">
-    <div class="mb-3">
-        <label asp-for="Name" class="form-label"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
+@{
+    bool canApply = ViewBag.CanApply ?? true;
+}
 
-    <div class="mb-3">
-        <label asp-for="Reason" class="form-label"></label>
-        <textarea asp-for="Reason" class="form-control"></textarea>
-        <span asp-validation-for="Reason" class="text-danger"></span>
-    </div>
+@if (canApply)
+{
+    <form asp-action="Apply" method="post">
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
-    <button type="submit" class="btn btn-primary">Submit Application</button>
-</form>
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Reason" class="form-label"></label>
+            <textarea asp-for="Reason" class="form-control"></textarea>
+            <span asp-validation-for="Reason" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Apply</button>
+    </form>
+}
+else
+{
+    <div class="alert alert-info">
+        You have already applied or are an active member. No need to apply again.
+    </div>
+}
