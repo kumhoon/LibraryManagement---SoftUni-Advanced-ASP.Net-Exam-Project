@@ -1,0 +1,35 @@
+﻿@using LibraryManagement.Web.ViewModels.BorrowingRecord
+@model IEnumerable<BorrowingRecordViewModel>
+
+@{
+    ViewData["Title"] = "Borrowing History";
+}
+
+<h2>Borrowing History</h2>
+
+@if (!Model.Any())
+{
+    <p>You haven't borrowed any books yet.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Book Title</th>
+                <th>Borrowed On</th>
+                <th>Returned On</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var record in Model)
+            {
+                <tr>
+                    <td>@record.Title</td>
+                    <td>@record.BorrowDate.ToString("dd-MM-yyyy")</td>
+                    <td>@(record.ReturnDate?.ToString("dd-MM-yyyy") ?? "Not returned yet")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

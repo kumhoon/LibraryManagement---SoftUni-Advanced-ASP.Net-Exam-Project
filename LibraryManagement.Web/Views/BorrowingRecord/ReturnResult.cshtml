@@ -1,0 +1,17 @@
+﻿@using LibraryManagement.Web.ViewModels.BorrowingRecord
+@model BorrowingRecordResultViewModel
+
+<h2>Return Book</h2>
+
+@if (Model.Success)
+{
+    <div class="alert alert-success">@Model.Message</div>
+}
+else
+{
+    <div class="alert alert-danger">@Model.Message</div>
+}
+
+<p>Book: <strong>@Model.BookTitle</strong></p>
+
+<a asp-action="History" class="btn btn-primary">Back to Borrowing History</a>

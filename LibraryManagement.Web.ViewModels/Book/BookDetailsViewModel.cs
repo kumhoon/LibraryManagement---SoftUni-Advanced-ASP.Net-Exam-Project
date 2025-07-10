@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace LibraryManagement.Web.ViewModels.Book
 {
     public class BookDetailsViewModel
@@ -23,5 +19,9 @@ namespace LibraryManagement.Web.ViewModels.Book
         public string? ImageUrl { get; set; }
 
         public string CreatorId { get; set; } = null!;
+
+        public bool IsApprovedMember { get; set; }
+
+        public bool HasBorrowedThisBook { get; set; }
     }
 }

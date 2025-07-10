@@ -47,6 +47,8 @@ namespace LibraryManagement.Web
             builder.Services.AddScoped(typeof(IGenreService), typeof(GenreService));
             builder.Services.AddScoped(typeof(IMembershipRepository), typeof(MembershipRepository));
             builder.Services.AddScoped(typeof(IMembershipService), typeof(MembershipService));
+            builder.Services.AddScoped(typeof(IBorrowingRecordRepository), typeof(BorrowingRecordRepository));
+            builder.Services.AddScoped(typeof(IBorrowingRecordService), typeof(BorrowingRecordService));
 
             WebApplication? app = builder.Build();
 

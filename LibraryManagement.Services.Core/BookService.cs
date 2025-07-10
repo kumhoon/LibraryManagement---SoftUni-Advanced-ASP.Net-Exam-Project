@@ -16,13 +16,17 @@ namespace LibraryManagement.Services.Core
         private readonly IGenreService _genreService;
         private readonly IAuthorService _authorService;
         private readonly IGenreRepository _genreRepository;
+        private readonly IMembershipService _membershipService;
+        private readonly IBorrowingRecordService _borrowingRecordService;
 
         public BookService
             (UserManager<IdentityUser> userManager, 
             IBookRepository bookRepository, 
             IGenreService genreService, 
             IAuthorService authorService,
-            IGenreRepository genreRepository
+            IGenreRepository genreRepository,
+            IMembershipService membershipService,
+            IBorrowingRecordService borrowingRecordService
             )
         {
             _bookRepository = bookRepository;
@@ -30,6 +34,8 @@ namespace LibraryManagement.Services.Core
             _genreService = genreService;
             _authorService = authorService;
             _genreRepository = genreRepository;
+            _membershipService = membershipService;
+            _borrowingRecordService = borrowingRecordService;
         }
 
         public async Task<bool> CreateBookAsync(string userId, BookCreateInputModel inputModel)
@@ -69,6 +75,11 @@ namespace LibraryManagement.Services.Core
             return createResult;
         }
 
+        public async Task<Book?> GetBookByIdAsync(Guid bookId)
+        {
+            return await _bookRepository.GetByIdAsync(bookId);
+        }
+
         public async Task<BookDetailsViewModel?> GetBookDetailsAsync(Guid id, string? userId)
         {
             var book = await this._bookRepository.GetBookWithDetailsAsync(id);
@@ -84,9 +95,24 @@ namespace LibraryManagement.Services.Core
                 PublishedDate = book.PublishedDate,
                 Title = book.Title,
                 Genre = book.Genre.Name,
-                CreatorId = book.BookCreatorId
+                CreatorId = book.BookCreatorId,
+                IsApprovedMember = false,
+                HasBorrowedThisBook = false,
+
             };
-                
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var member = await _membershipService.GetMembershipByUserIdAsync(userId);
+                if (member != null && member.Status == MembershipStatus.Approved)
+                {
+                    viewModel.IsApprovedMember = true;
+
+                    bool hasBorrowed = await _borrowingRecordService.IsBookBorrowedAsync(member.Id, book.Id);
+                    viewModel.HasBorrowedThisBook = hasBorrowed;
+                }
+            }
+
             return viewModel;
         }
 

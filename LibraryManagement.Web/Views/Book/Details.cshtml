@@ -31,6 +31,33 @@
             </dd>
         }
     </dl>
+    @if (User.Identity?.IsAuthenticated == true && Model.IsApprovedMember)
+    {
+        if (Model.HasBorrowedThisBook)
+        {
+            <!-- Return button -->
+            <form asp-controller="BorrowingRecord" asp-action="ReturnBook" method="post" class="d-inline">
+                <input type="hidden" name="bookId" value="@Model.Id" />
+                <button type="submit" class="btn btn-danger mt-3">Return Book</button>
+            </form>
+        }
+        else
+        {
+            <!-- Borrow button -->
+            <form asp-controller="BorrowingRecord" asp-action="BorrowBook" method="post" class="d-inline">
+                <input type="hidden" name="bookId" value="@Model.Id" />
+                <button type="submit" class="btn btn-success mt-3">Borrow Book</button>
+            </form>
+        }
+    }
+    else if (User.Identity?.IsAuthenticated == true && !Model.IsApprovedMember)
+    {
+        <p class="text-warning mt-3">You need to be an approved member to borrow books.</p>
+    }
+    else
+    {
+        <p class="text-info mt-3">Please <a asp-controller="Account" asp-action="Login">log in</a> as an approved member to borrow books.</p>
+    }
 </div>
 
 <a asp-action="Index" class="btn btn-primary">Back to All Books</a> 

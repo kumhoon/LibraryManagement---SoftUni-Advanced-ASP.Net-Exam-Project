@@ -1,9 +1,9 @@
-﻿using LibraryManagement.Data.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-namespace LibraryManagement.Data.Configuration
+﻿namespace LibraryManagement.Data.Configuration
 {
+    using LibraryManagement.Data.Models;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
     public class BorrowingRecordConfiguration : IEntityTypeConfiguration<BorrowingRecord>
     {
         public void Configure(EntityTypeBuilder<BorrowingRecord> entity)

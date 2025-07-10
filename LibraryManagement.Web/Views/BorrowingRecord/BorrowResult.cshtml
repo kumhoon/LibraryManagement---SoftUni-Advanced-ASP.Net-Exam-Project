@@ -1,0 +1,8 @@
+﻿@using LibraryManagement.Web.ViewModels.BorrowingRecord
+@model BorrowingRecordResultViewModel
+
+<h2>@(Model.Success ? "Success" : "Error")</h2>
+<p>@Model.Message</p>
+<p><strong>Book:</strong> @Model.BookTitle</p>
+
+<a asp-controller="Book" asp-action="Index" class="btn btn-primary">Back to All Books</a>

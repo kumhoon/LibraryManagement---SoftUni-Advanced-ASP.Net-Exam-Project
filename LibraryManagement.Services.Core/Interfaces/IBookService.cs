@@ -1,5 +1,6 @@
 ﻿namespace LibraryManagement.Services.Core.Interfaces
 {
+    using LibraryManagement.Data.Models;
     using LibraryManagement.Web.ViewModels.Book;
 
     public interface IBookService
@@ -17,5 +18,7 @@
         Task<bool> SoftDeleteBookAsync(string userId, BookDeleteInputModel inputModel);
 
         Task<BookDeleteInputModel?> GetBookForDeletingAsync(string userId, Guid? bookId);
+
+        Task<Book?> GetBookByIdAsync(Guid bookId);
     }
 }

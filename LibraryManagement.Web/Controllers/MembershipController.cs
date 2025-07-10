@@ -13,12 +13,12 @@
         }
 
         [HttpGet]
-        public IActionResult Apply()
+        public async Task<IActionResult> Apply()
         {
             try
             {
                 var userId = this.GetUserId()!;
-                var membership = _membershipService.GetMembershipByUserIdAsync(userId);
+                var membership = await _membershipService.GetMembershipByUserIdAsync(userId);
 
                 ViewBag.CanApply = membership == null; 
 
