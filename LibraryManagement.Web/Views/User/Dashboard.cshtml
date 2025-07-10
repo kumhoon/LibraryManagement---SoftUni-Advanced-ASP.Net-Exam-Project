@@ -1,0 +1,29 @@
+﻿@using LibraryManagement.Data.Models
+@using LibraryManagement.Web.ViewModels.User
+@model UserMembershipViewModel
+
+@{
+    ViewData["Title"] = "Membership Dashboard";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="card mt-4 p-4">
+    @if (Model.MembershipStatus == null)
+    {
+        <p>You have not applied for a membership yet.</p>
+        <a asp-controller="Membership" asp-action="Apply" class="btn btn-primary">Apply for Membership</a>
+    }
+    else
+    {
+        <p>
+            Your membership application status:
+            <strong>@Model.MembershipStatus.ToString()</strong>
+        </p>
+
+        @if (Model.MembershipStatus == MembershipStatus.Revoked || Model.MembershipStatus == MembershipStatus.Rejected)
+        {
+            <p class="text-danger">Please contact support if you believe this is a mistake.</p>
+        }
+    }
+</div>

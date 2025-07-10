@@ -70,7 +70,7 @@
         public async Task<Member?> GetMembershipByUserIdAsync(string userId) 
         {
             return await _membershipRepository
-                .FirstOrDefaultAsync(m => m.UserId == userId && m.Status != MembershipStatus.Revoked);
+                .FirstOrDefaultAsync(m => m.UserId == userId);
         }
 
         public async Task<bool> UpdateMembershipStatusAsync(Guid memberId, MembershipStatus newStatus)
