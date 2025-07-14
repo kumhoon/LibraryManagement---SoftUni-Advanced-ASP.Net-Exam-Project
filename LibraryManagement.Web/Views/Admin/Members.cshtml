@@ -1,0 +1,34 @@
+﻿@using LibraryManagement.Web.ViewModels.Membership
+@model IEnumerable<ApprovedMemberViewModel>
+
+@{
+    ViewData["Title"] = "Approved Members";
+}
+
+<h2>Approved Members</h2>
+
+<table class="table table-bordered table-striped mt-4">
+    <thead class="table-dark">
+        <tr>
+            <th>Name</th>
+            <th>Join Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var member in Model)
+        {
+            <tr>
+                <td>@member.Name</td>
+                <td>@member.JoinDate.ToString("MMMM dd, yyyy")</td>
+                <td>
+                    <form asp-action="RevokeMembership" asp-controller="Admin" method="post" asp-route-id="@member.Id" onsubmit="return confirm('Are you sure you want to revoke this membership?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Revoke</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Dashboard" class="btn btn-secondary">Back to Dashboard</a>

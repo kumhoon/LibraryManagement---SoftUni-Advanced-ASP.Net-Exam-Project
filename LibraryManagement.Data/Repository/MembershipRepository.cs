@@ -12,12 +12,22 @@
             _context = dbContext;
         }
 
+        public async Task<IEnumerable<Member>> GetApprovedMembersAsync()
+        {
+            return await _context.Memberships
+                    .Include(m => m.User)
+                    .Where(m => m.Status == MembershipStatus.Approved)
+                    .ToArrayAsync();
+        }
+
         public async Task<IEnumerable<Member>> GetPendingApplicationsAsync()
         {
             return await _context.Memberships
                     .Include(m => m.User)
                     .Where(m => m.Status == MembershipStatus.Pending)
-                    .ToListAsync();
+                    .ToArrayAsync();
         }
+
+
     }
 }

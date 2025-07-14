@@ -11,5 +11,7 @@
         Task<Member?> GetMembershipByUserIdAsync(string userId);
 
         Task<bool> UpdateMembershipStatusAsync(Guid memberId, MembershipStatus newStatus);
+
+        Task<IEnumerable<ApprovedMemberViewModel>> GetApprovedMembersAsync();
     }
 }

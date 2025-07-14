@@ -1,5 +1,6 @@
 ﻿namespace LibraryManagement.Web.Controllers
 {
+    using LibraryManagement.Data.Models;
     using LibraryManagement.Services.Core.Interfaces;
     using LibraryManagement.Web.ViewModels.Membership;
     using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,11 @@
                 var userId = this.GetUserId()!;
                 var membership = await _membershipService.GetMembershipByUserIdAsync(userId);
 
-                ViewBag.CanApply = membership == null; 
+                bool canApply = membership == null ||
+                        membership.Status == MembershipStatus.Rejected ||
+                        membership.Status == MembershipStatus.Revoked;
+
+                ViewBag.CanApply = canApply;
 
                 var model = new MemberApplicationInputModel
                 {

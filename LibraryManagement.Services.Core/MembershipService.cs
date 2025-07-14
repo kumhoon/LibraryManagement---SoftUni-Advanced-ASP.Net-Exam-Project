@@ -33,7 +33,20 @@
 
             if (existingMembership != null)
             {
-                throw new InvalidOperationException("You have already applied for or have been granted membership");
+                if (existingMembership.Status == MembershipStatus.Pending ||
+                    existingMembership.Status == MembershipStatus.Approved)
+                {
+                    throw new InvalidOperationException("You have already applied for or have been granted membership.");
+                }
+
+                
+                existingMembership.Name = inputModel.Name;
+                existingMembership.MembershipApplicationReason = inputModel.Reason;
+                existingMembership.JoinDate = DateTime.UtcNow;
+                existingMembership.Status = MembershipStatus.Pending;
+
+                await _membershipRepository.UpdateAsync(existingMembership);
+                return;
             }
 
             var member = new Member
@@ -84,6 +97,19 @@
 
             member.Status = newStatus;
             return await _membershipRepository.UpdateAsync(member);
+        }
+
+        public async Task<IEnumerable<ApprovedMemberViewModel>> GetApprovedMembersAsync()
+        {
+            var members = await _membershipRepository.GetApprovedMembersAsync();
+
+            return members.Select(m => new ApprovedMemberViewModel
+            {
+                Id = m.Id,
+                Name = m.Name,
+                JoinDate = m.JoinDate,
+
+            });
         }
     }
 }

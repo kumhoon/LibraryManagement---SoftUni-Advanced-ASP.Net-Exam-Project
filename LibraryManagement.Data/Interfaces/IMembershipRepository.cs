@@ -4,5 +4,7 @@
     public interface IMembershipRepository : IRepository<Member, Guid>
     {
         Task<IEnumerable<Member>> GetPendingApplicationsAsync();
+
+        Task<IEnumerable<Member>> GetApprovedMembersAsync();
     }
 }

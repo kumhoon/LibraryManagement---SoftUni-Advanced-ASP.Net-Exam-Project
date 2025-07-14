@@ -22,6 +22,12 @@
         }
 
         [HttpGet]
+        public async Task<IActionResult> Members()
+        {
+            var members = await this._membershipService.GetApprovedMembersAsync();
+            return View(members);
+        }
+        [HttpGet]
         public async Task<IActionResult> ReviewApplications()
         {
             var pendingMembers = await this._membershipService.GetPendingApplications();
@@ -44,7 +50,7 @@
         public async Task<IActionResult> RevokeMembership(Guid id)
         {
             await this._membershipService.UpdateMembershipStatusAsync(id, MembershipStatus.Revoked);
-            return RedirectToAction(nameof(ReviewApplications));
+            return RedirectToAction(nameof(Members));
         }
     }
 }
