@@ -19,6 +19,21 @@
                 .ToArrayAsync();
         }
 
+        public async Task<IEnumerable<Author>> GetAuthorsWithBooksAsync(string? searchTerm)
+        {
+            IQueryable<Author> query = GetAllAttached()
+                    .Include(a => a.Books);
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                query = query.Where(a => a.Name.Contains(searchTerm));
+            }
+
+            return await query
+                .OrderBy(a => a.Name)
+                .ToArrayAsync();
+        }
+
         public async Task<Author?> GetByNameAsync(string name)
         {
             return await _context.Authors
