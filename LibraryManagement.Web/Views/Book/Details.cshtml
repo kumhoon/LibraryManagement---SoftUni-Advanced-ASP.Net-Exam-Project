@@ -54,6 +54,11 @@
             <!-- Message when user already borrowed another book -->
             <p class="text-warning mt-3">You can only borrow one book at a time. Please return your current book to borrow another.</p>
         }
+        <!-- Add to Favourites button -->
+        <form asp-controller="FavouriteList" asp-action="Add" method="post" class="d-inline ms-2">
+            <input type="hidden" name="bookId" value="@Model.Id" />
+            <button type="submit" class="btn btn-primary mt-3">Add to Favourites</button>
+        </form>
     }
     else if (User.Identity?.IsAuthenticated == true && !Model.IsApprovedMember)
     {
@@ -66,6 +71,7 @@
 </div>
 
 <a asp-action="Index" class="btn btn-primary">Back to All Books</a> 
+
 @if (User.IsInRole("Admin"))
 {
     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning ms-2">Edit</a>

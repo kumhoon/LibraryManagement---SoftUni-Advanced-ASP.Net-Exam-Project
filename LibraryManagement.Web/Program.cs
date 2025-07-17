@@ -38,17 +38,19 @@ namespace LibraryManagement.Web
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
-            builder.Services.AddScoped(typeof(IRepository<,>), typeof(BaseRepository<,>));
-            builder.Services.AddScoped(typeof(IBookRepository), typeof(BookRepository));
-            builder.Services.AddScoped(typeof(IBookService), typeof(BookService));
-            builder.Services.AddScoped(typeof(IGenreRepository), typeof(GenreRepository));
-            builder.Services.AddScoped(typeof(IAuthorRepository), typeof(AuthorRepository));
-            builder.Services.AddScoped(typeof(IAuthorService), typeof(AuthorService));
-            builder.Services.AddScoped(typeof(IGenreService), typeof(GenreService));
-            builder.Services.AddScoped(typeof(IMembershipRepository), typeof(MembershipRepository));
-            builder.Services.AddScoped(typeof(IMembershipService), typeof(MembershipService));
-            builder.Services.AddScoped(typeof(IBorrowingRecordRepository), typeof(BorrowingRecordRepository));
-            builder.Services.AddScoped(typeof(IBorrowingRecordService), typeof(BorrowingRecordService));
+            builder.Services.AddScoped(typeof(IRepository<,>), (typeof(BaseRepository<,>)));
+            builder.Services.AddScoped<IBookRepository, BookRepository>();
+            builder.Services.AddScoped<IBookService, BookService>();
+            builder.Services.AddScoped<IGenreRepository, GenreRepository>();
+            builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+            builder.Services.AddScoped<IAuthorService, AuthorService>();
+            builder.Services.AddScoped<IGenreService, GenreService>();
+            builder.Services.AddScoped<IMembershipRepository, MembershipRepository>();
+            builder.Services.AddScoped<IMembershipService, MembershipService>();
+            builder.Services.AddScoped<IBorrowingRecordRepository, BorrowingRecordRepository>();
+            builder.Services.AddScoped<IBorrowingRecordService, BorrowingRecordService>();
+            builder.Services.AddScoped<IFavouriteListRepository, FavouriteListRepository>();
+            builder.Services.AddScoped<IFavouriteListService, FavouriteListService>();
 
             WebApplication? app = builder.Build();
 

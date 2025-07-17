@@ -6,5 +6,7 @@
         Task<IEnumerable<Member>> GetPendingApplicationsAsync();
 
         Task<IEnumerable<Member>> GetApprovedMembersAsync();
+
+        Task<Member?> GetByUserIdAsync(string userId);
     }
 }

@@ -22,6 +22,8 @@
 
         public virtual DbSet<Member> Memberships { get; set; }
 
+        public virtual DbSet<FavouriteList> FavouriteLists { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

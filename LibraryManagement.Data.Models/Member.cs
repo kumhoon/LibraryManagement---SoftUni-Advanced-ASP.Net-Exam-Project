@@ -17,6 +17,7 @@ namespace LibraryManagement.Data.Models
 
         public string? MembershipApplicationReason { get; set; }
 
+        public virtual ICollection<FavouriteList> Favourites { get; set; } = new HashSet<FavouriteList>();
     }
     public enum MembershipStatus
     {

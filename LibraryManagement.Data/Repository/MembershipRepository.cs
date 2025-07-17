@@ -6,15 +6,15 @@
 
     public class MembershipRepository : BaseRepository<Member, Guid>, IMembershipRepository
     {
-        private readonly LibraryManagementDbContext _context;
+        private readonly LibraryManagementDbContext _dbContext;
         public MembershipRepository(LibraryManagementDbContext dbContext) : base(dbContext)
         {
-            _context = dbContext;
+            _dbContext = dbContext;
         }
 
         public async Task<IEnumerable<Member>> GetApprovedMembersAsync()
         {
-            return await _context.Memberships
+            return await _dbContext.Memberships
                     .Include(m => m.User)
                     .Where(m => m.Status == MembershipStatus.Approved)
                     .ToArrayAsync();
@@ -22,12 +22,15 @@
 
         public async Task<IEnumerable<Member>> GetPendingApplicationsAsync()
         {
-            return await _context.Memberships
+            return await _dbContext.Memberships
                     .Include(m => m.User)
                     .Where(m => m.Status == MembershipStatus.Pending)
                     .ToArrayAsync();
         }
 
-
+        public async Task<Member?> GetByUserIdAsync(string userId)
+        {
+            return await _dbContext.Memberships.FirstOrDefaultAsync(m => m.UserId == userId);
+        }
     }
 }

@@ -18,5 +18,7 @@ namespace LibraryManagement.Data.Models
         public string Description { get; set; } = null!;
 
         public string? ImageUrl { get; set; }
+
+        public virtual ICollection<FavouriteList> FavouritedBy { get; set; } = new HashSet<FavouriteList>();
     }
 }

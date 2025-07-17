@@ -1,0 +1,64 @@
+﻿@using LibraryManagement.Web.ViewModels.Book
+@model IEnumerable<BookIndexViewModel>
+
+@{
+    ViewData["Title"] = "My Favourite Books";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+@if (!Model.Any())
+{
+    <p>You have no favourite books yet.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Cover</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Genre</th>
+                <th>Published</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in Model)
+            {
+                <tr>
+                    <td>
+                        @if (!string.IsNullOrEmpty(book.ImageUrl))
+                        {
+                            <img src="@book.ImageUrl" alt="@book.Title" style="max-height: 100px;" />
+                        }
+                        else
+                        {
+                            <span>No image</span>
+                        }
+                    </td>
+                    <td>@book.Title</td>
+                    <td>@book.AuthorName</td>
+                    <td>@book.Genre</td>
+                    <td>@book.PublishedDate.ToString("yyyy-MM-dd")</td>
+                    <td>
+                        <form asp-action="Remove" method="post" style="display:inline;">
+                            <input type="hidden" name="bookId" value="@book.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
