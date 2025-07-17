@@ -1,5 +1,6 @@
 ﻿using LibraryManagement.Services.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LibraryManagement.Web.Controllers
 {
@@ -11,7 +12,9 @@ namespace LibraryManagement.Web.Controllers
         {
             _authorService = authorService;
         }
+
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Index(string? searchTerm)
         {
             var authors = await _authorService.GetAuthorsWithBooksAsync(searchTerm);
