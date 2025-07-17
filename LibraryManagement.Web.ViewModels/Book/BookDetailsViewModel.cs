@@ -23,5 +23,7 @@ namespace LibraryManagement.Web.ViewModels.Book
         public bool IsApprovedMember { get; set; }
 
         public bool HasBorrowedThisBook { get; set; }
+
+        public bool HasBorrowedAnyBook { get; set; }
     }
 }

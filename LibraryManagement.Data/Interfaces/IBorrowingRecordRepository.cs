@@ -5,8 +5,10 @@
     {
         Task<IEnumerable<BorrowingRecord>> GetByMemberIdAsync(Guid memberId);
 
-        Task<BorrowingRecord?> HasActiveBorrowAsync(Guid memberId, Guid bookId);
+        Task<bool> HasAnyActiveBorrowAsync(Guid memberId);
 
-        Task<bool> IsBookBorrowedAsync(Guid memberId, Guid bookId);
+        Task<bool> IsBookBorrowedAsync(Guid bookId);
+
+        Task<BorrowingRecord?> HasActiveBorrowAsync(Guid memberId, Guid bookId);
     }
 }

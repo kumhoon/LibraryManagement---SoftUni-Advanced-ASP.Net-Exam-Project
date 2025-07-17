@@ -21,20 +21,28 @@ namespace LibraryManagement.Data.Repository
                 
         }
 
+        public async Task<bool> HasAnyActiveBorrowAsync(Guid memberId)
+        {
+            return await _context.BorrowingRecords
+                .AnyAsync(br => br.MemberId == memberId &&
+                                            br.ReturnDate == null);
+        }
+
+        public async Task<bool> IsBookBorrowedAsync(Guid bookId)
+        {
+            return await _context.BorrowingRecords
+                .AnyAsync(br => br.BookId == bookId &&
+                                br.ReturnDate == null);
+
+        }
+
         public async Task<BorrowingRecord?> HasActiveBorrowAsync(Guid memberId, Guid bookId)
         {
             return await _context.BorrowingRecords
                 .FirstOrDefaultAsync(br => br.MemberId == memberId &&
-                                br.BookId == bookId &&
-                                br.ReturnDate == null);
-        }
-
-        public async Task<bool> IsBookBorrowedAsync(Guid memberId, Guid bookId)
-        {
-            return await _context.BorrowingRecords
-                .AnyAsync(br => br.MemberId == memberId &&
-                                br.BookId == bookId &&
-                                br.ReturnDate == null);
+                                           br.BookId == bookId &&
+                                           br.ReturnDate == null);
         }
     }
+
 }

@@ -54,6 +54,7 @@ namespace LibraryManagement.Web.Controllers
             }
         }
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
             try
@@ -71,7 +72,8 @@ namespace LibraryManagement.Web.Controllers
                 return RedirectToAction(nameof(Create));
             }
         }
-        [HttpPost]  
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(BookCreateInputModel inputModel)
         {
             try
@@ -98,6 +100,7 @@ namespace LibraryManagement.Web.Controllers
             }
         }
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Guid? id)
         {
             try
@@ -119,6 +122,7 @@ namespace LibraryManagement.Web.Controllers
             }
         }
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(BookEditInputModel editInputModel)
         {
             try
@@ -145,6 +149,7 @@ namespace LibraryManagement.Web.Controllers
             }
         }
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
             try
@@ -165,6 +170,7 @@ namespace LibraryManagement.Web.Controllers
             }
         }
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ConfirmDelete(BookDeleteInputModel inputModel)
         {
             try

@@ -41,13 +41,18 @@
                 <button type="submit" class="btn btn-danger mt-3">Return Book</button>
             </form>
         }
-        else
+        else if (!Model.HasBorrowedAnyBook)
         {
             <!-- Borrow button -->
             <form asp-controller="BorrowingRecord" asp-action="BorrowBook" method="post" class="d-inline">
                 <input type="hidden" name="bookId" value="@Model.Id" />
                 <button type="submit" class="btn btn-success mt-3">Borrow Book</button>
             </form>
+        }
+        else
+        {
+            <!-- Message when user already borrowed another book -->
+            <p class="text-warning mt-3">You can only borrow one book at a time. Please return your current book to borrow another.</p>
         }
     }
     else if (User.Identity?.IsAuthenticated == true && !Model.IsApprovedMember)
@@ -61,12 +66,8 @@
 </div>
 
 <a asp-action="Index" class="btn btn-primary">Back to All Books</a> 
-@if (User.Identity?.IsAuthenticated == true)
+@if (User.IsInRole("Admin"))
 {
-    var currentUserId = UserManager.GetUserId(User);
-    if (currentUserId == Model.CreatorId)
-    {
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning ms-2">Edit</a>
-        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-warning ms-2">Delete</a>
-    }
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning ms-2">Edit</a>
+    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-warning ms-2">Delete</a>
 }

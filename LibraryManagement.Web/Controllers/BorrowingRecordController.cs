@@ -45,18 +45,40 @@
                 return RedirectToAction("Apply", "Membership");
             }
 
-            var result = await _borrowingRecordService.BorrowBookAsync(member.Id, bookId);
-
-            var book = await _bookService.GetBookByIdAsync(bookId); 
-
-            var vm = new BorrowingRecordResultViewModel
+            // Check if member has any active borrow (one book at a time rule)
+            bool hasActiveBorrow = await _borrowingRecordService.HasAnyActiveBorrowAsync(member.Id);
+            if (hasActiveBorrow)
             {
-                Success = result,
-                Message = result ? "Book successfully borrowed!" : "Failed to borrow the book.",
-                BookTitle = book?.Title ?? "Unknown Book"
+                var book = await _bookService.GetBookByIdAsync(bookId);
+                var vm = new BorrowingRecordResultViewModel
+                {
+                    Success = false,
+                    Message = "You can only borrow one book at a time. Please return your current book before borrowing another.",
+                    BookTitle = book?.Title ?? "Unknown Book"
+                };
+                return View("BorrowResult", vm);
+            }
+
+            // Try borrowing the book
+            var borrowResult = await _borrowingRecordService.BorrowBookAsync(member.Id, bookId);
+            var borrowedBook = await _bookService.GetBookByIdAsync(bookId);
+
+            string message = borrowResult switch
+            {
+                BorrowResult.Success => "Book successfully borrowed!",
+                BorrowResult.AlreadyBorrowedByMember => "You have already borrowed this book.",
+                BorrowResult.BookUnavailable => "This book is currently borrowed by another user.",
+                _ => "Failed to borrow the book."
             };
 
-            return View("BorrowResult", vm);
+            var resultVm = new BorrowingRecordResultViewModel
+            {
+                Success = borrowResult == BorrowResult.Success,
+                Message = message,
+                BookTitle = borrowedBook?.Title ?? "Unknown Book"
+            };
+
+            return View("BorrowResult", resultVm);
         }
 
         [HttpPost]

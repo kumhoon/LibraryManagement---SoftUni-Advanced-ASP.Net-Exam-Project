@@ -98,6 +98,7 @@ namespace LibraryManagement.Services.Core
                 CreatorId = book.BookCreatorId,
                 IsApprovedMember = false,
                 HasBorrowedThisBook = false,
+                HasBorrowedAnyBook = false
 
             };
 
@@ -108,8 +109,13 @@ namespace LibraryManagement.Services.Core
                 {
                     viewModel.IsApprovedMember = true;
 
-                    bool hasBorrowed = await _borrowingRecordService.IsBookBorrowedAsync(member.Id, book.Id);
+                    bool hasBorrowed = await _borrowingRecordService
+                        .IsBookBorrowedByMemberAsync(member.Id, book.Id);
+
                     viewModel.HasBorrowedThisBook = hasBorrowed;
+
+                    viewModel.HasBorrowedAnyBook = await _borrowingRecordService
+                        .HasAnyActiveBorrowAsync(member.Id);
                 }
             }
 

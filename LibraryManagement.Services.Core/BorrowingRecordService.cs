@@ -12,16 +12,23 @@ namespace LibraryManagement.Services.Core
         {
             _borrowingRecordRepository = borrowingRecordRepository;
         }
-        public async Task<bool> BorrowBookAsync(Guid memberId, Guid bookId)
+        public async Task<BorrowResult> BorrowBookAsync(Guid memberId, Guid bookId)
         {
-            var alreadyBorrowed = await _borrowingRecordRepository
-                .HasActiveBorrowAsync(memberId, bookId);
-
-            if (alreadyBorrowed != null) 
-            { 
-                return false; 
+            // Check if member already borrowed this book
+            var alreadyBorrowed = await _borrowingRecordRepository.HasActiveBorrowAsync(memberId, bookId);
+            if (alreadyBorrowed != null)
+            {
+                return BorrowResult.AlreadyBorrowedByMember;
             }
 
+            // Check if book is borrowed by someone else
+            var isBorrowedByOther = await _borrowingRecordRepository.IsBookBorrowedAsync(bookId);
+            if (isBorrowedByOther)
+            {
+                return BorrowResult.BookUnavailable;
+            }
+
+            // If all good, create borrowing record
             var record = new BorrowingRecord
             {
                 Id = Guid.NewGuid(),
@@ -32,7 +39,8 @@ namespace LibraryManagement.Services.Core
 
             await _borrowingRecordRepository.AddAsync(record);
             await _borrowingRecordRepository.SaveChangesAsync();
-            return true;
+
+            return BorrowResult.Success;
         }
 
         public async Task<IEnumerable<BorrowingRecordViewModel>> GetBorrowingHistoryAsync(Guid memberId)
@@ -49,9 +57,9 @@ namespace LibraryManagement.Services.Core
             });
         }
 
-        public async Task<bool> IsBookBorrowedAsync(Guid memberId, Guid bookId)
+        public async Task<bool> IsBookBorrowedAsync(Guid bookId)
         {
-            return await _borrowingRecordRepository.IsBookBorrowedAsync(memberId, bookId);
+            return await _borrowingRecordRepository.IsBookBorrowedAsync(bookId);
         }
 
         public async Task<bool> ReturnBookAsync(Guid memberId, Guid bookId)
@@ -70,6 +78,16 @@ namespace LibraryManagement.Services.Core
                 .UpdateAsync(record);
         }
 
+        public async Task<bool> HasAnyActiveBorrowAsync(Guid memberId)
+        {
+            return await _borrowingRecordRepository.HasAnyActiveBorrowAsync(memberId);
+        }
 
+        public async Task<bool> IsBookBorrowedByMemberAsync(Guid memberId, Guid bookId)
+        {
+            var record = await _borrowingRecordRepository.HasActiveBorrowAsync(memberId, bookId);
+            return record != null;
+        }
     }
+
 }
