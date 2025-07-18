@@ -3,9 +3,9 @@
     using System.Linq.Expressions;
     public interface IRepository<TType, TId>
     {
-        Task<TType> GetByIdAsync(TId id);
+        Task<TType?> GetByIdAsync(TId? id);
 
-        Task<TType> FirstOrDefaultAsync(Expression<Func<TType, bool>> predicate);
+        Task<TType?> FirstOrDefaultAsync(Expression<Func<TType, bool>> predicate);
 
         Task<IEnumerable<TType>> GetAllAsync();
 

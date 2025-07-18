@@ -25,7 +25,7 @@
 
             if (existing != null) return false;
 
-            Review review = new Review
+            Review review = new()
             {
                 Id = Guid.NewGuid(),
                 MemberId = memberId,
@@ -92,7 +92,7 @@
 
                 display.Add(new ReviewDisplayViewModel
                 {
-                    MemberName = member.Name ?? "Unknown",
+                    MemberName = member?.Name ?? "Unknown",
                     Rating = r.Rating,
                     Content = r.Content,
                     CreatedAt = r.CreatedAt
@@ -119,19 +119,19 @@
         public async Task<IEnumerable<PendingReviewViewModel>> GetPendingReviewsAsync()
         {
             IEnumerable<Review> pending = await _reviewRepository.GetPendingAsync();
-            List<PendingReviewViewModel> result = new List<PendingReviewViewModel>(pending.Count());
+            List<PendingReviewViewModel> result = new(pending.Count());
 
             foreach (var r in pending)
             {
-                Member member = await _memberRepository.GetByIdAsync(r.MemberId);
-                Book book = await _bookRepository.GetByIdAsync(r.BookId);
+                Member? member = await _memberRepository.GetByIdAsync(r.MemberId);
+                Book? book = await _bookRepository.GetByIdAsync(r.BookId);
                 result.Add(new PendingReviewViewModel
                 {
                     ReviewId = r.Id,
                     BookId = r.BookId,
-                    BookTitle = book?.Title ?? "(unknown)",
+                    BookTitle = book?.Title ?? "(Unknown)",
                     MemberId = r.MemberId,
-                    MemberName = member.Name,
+                    MemberName = member?.Name ?? "(Unknown)",
                     Rating = r.Rating,
                     Content = r.Content,
                     CreatedAt = r.CreatedAt

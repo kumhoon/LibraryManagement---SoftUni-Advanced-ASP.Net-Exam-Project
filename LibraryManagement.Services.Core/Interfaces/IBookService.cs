@@ -5,15 +5,14 @@
     using LibraryManagement.Web.ViewModels.Book;
     public interface IBookService
     {
-        //Task<IEnumerable<BookIndexViewModel>> GetBookIndexAsync(string? userId);
-
+        
         Task<PagedResult<BookIndexViewModel>> GetBookIndexAsync(string? searchTerm, int pageNumber = 1, int pageSize = 5);
 
         Task<BookDetailsViewModel?> GetBookDetailsAsync(Guid id, string? userId, int reviewPage);
 
         Task<bool> CreateBookAsync(string userId, BookCreateInputModel inputModel);
 
-        Task<BookEditInputModel> GetBookForEditingAsync(string userId, Guid? bookId);
+        Task<BookEditInputModel?> GetBookForEditingAsync(string userId, Guid? bookId);
 
         Task<bool> UpdateEditedBookAsync(string userId, BookEditInputModel inputModel);
 

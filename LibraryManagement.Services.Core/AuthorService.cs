@@ -51,6 +51,11 @@
 
         public async Task<Author> GetOrCreateAuthorAsync(string name)
         {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Author name cannot be null or empty.", nameof(name));
+            }
+
             var existingAuthor = await _authorRepository.GetByNameAsync(name.Trim());
 
             if (existingAuthor != null) 

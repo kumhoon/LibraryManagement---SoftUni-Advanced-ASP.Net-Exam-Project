@@ -15,7 +15,7 @@
             this.dbSet = this.dbContext.Set<TType>();
         }
       
-        public async Task<TType> GetByIdAsync(TId? id)
+        public async Task<TType?> GetByIdAsync(TId? id)
         {
             TType? entity = await this.dbSet
                 .FindAsync(id);
@@ -23,7 +23,7 @@
             return entity;
         }
 
-        public async Task<TType> FirstOrDefaultAsync(Expression<Func<TType, bool>> predicate)
+        public async Task<TType?> FirstOrDefaultAsync(Expression<Func<TType, bool>> predicate)
         {
             TType? entity = await this.dbSet
                 .FirstOrDefaultAsync(predicate);

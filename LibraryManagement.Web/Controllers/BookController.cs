@@ -59,7 +59,7 @@
         {
             try
             {
-                BookCreateInputModel? inputModel = new BookCreateInputModel
+                BookCreateInputModel? inputModel = new()
                 {
                     Genres = await _genreService.GetAllAsSelectListAsync()
                 };
@@ -103,6 +103,11 @@
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Guid? id)
         {
+            if (id == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
             try
             {
                 string userId = this.GetUserId()!;

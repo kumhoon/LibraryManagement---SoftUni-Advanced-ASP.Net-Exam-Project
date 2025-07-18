@@ -53,7 +53,7 @@
             var author = await this._authorService.GetOrCreateAuthorAsync(inputModel.Author);
 
             bool isPublishedOnDateValid = DateTime.TryParseExact(
-                inputModel.PublishedDate.ToString(PublishedOnDateTimeFormat),
+                inputModel.PublishedDate,
                 PublishedOnDateTimeFormat,
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.None,
@@ -140,12 +140,12 @@
 
         public async Task<BookDeleteInputModel?> GetBookForDeletingAsync(string userId, Guid? bookId)
         {
-            BookDeleteInputModel deleteModel = null;
+            BookDeleteInputModel? deleteModel = null;
             if (bookId != null)
             {
                 var bookDeleteModel = await _bookRepository.GetBookWithDetailsAsync(bookId.Value);
                 if((bookDeleteModel != null) 
-                    && (bookDeleteModel.BookCreatorId.ToLower() == userId.ToLower()))
+                    && (bookDeleteModel.BookCreatorId.Equals(userId, StringComparison.OrdinalIgnoreCase)))
                 {
                     deleteModel = new BookDeleteInputModel
                     {
@@ -157,13 +157,13 @@
             return deleteModel;
         }
 
-        public async Task<BookEditInputModel> GetBookForEditingAsync(string userId, Guid? bookId)
+        public async Task<BookEditInputModel?> GetBookForEditingAsync(string userId, Guid? bookId)
         {
             BookEditInputModel? editModel = null;
             if (bookId != null) 
             { 
                 var bookEditModel = await _bookRepository.GetBookWithDetailsAsync(bookId.Value);
-                if ((bookEditModel != null) && bookEditModel.BookCreatorId.ToLower() == userId.ToLower())
+                if ((bookEditModel != null) && bookEditModel.BookCreatorId.Equals(userId, StringComparison.OrdinalIgnoreCase))
                 {
                     editModel = new BookEditInputModel
                     {
@@ -237,7 +237,7 @@
 
             if ((user != null) 
                 && (book != null) 
-                && (book.BookCreatorId.ToLower() == userId.ToLower())) 
+                && (book.BookCreatorId.Equals(userId, StringComparison.OrdinalIgnoreCase))) 
             { 
                 book.IsDeleted = true;
                 await this._bookRepository.SaveChangesAsync();
@@ -267,13 +267,14 @@
             if ((user != null) 
                 && (genre != null) 
                 && (book != null) 
-                && (book.BookCreatorId.ToLower() == userId.ToLower()))
+                && (book.BookCreatorId.Equals(userId, StringComparison.OrdinalIgnoreCase))
+                && (isPublishedOnDateValid))
             {
                 book.Title = inputModel.Title;
                 book.Author.Name = inputModel.Author;
                 book.Description = inputModel.Description;
                 book.ImageUrl = inputModel.ImageUrl;
-                book.PublishedDate = inputModel.PublishedDate;
+                book.PublishedDate = PublishedOn;
                 book.GenreId = inputModel.GenreId;
 
                 await this._bookRepository.UpdateAsync(book);

@@ -20,13 +20,7 @@
 
         public async Task ApplyForMembershipAsync(string userId, MemberApplicationInputModel inputModel)
         {
-            var user = await this._userManager.FindByIdAsync(userId);
-
-            if (user == null)
-            {
-                throw new InvalidOperationException("User not found");
-            }
-
+            var user = await this._userManager.FindByIdAsync(userId) ?? throw new InvalidOperationException("User not found");
             var existingMembership = await this._membershipRepository
                 .FirstOrDefaultAsync(m => m.UserId == userId);
 
@@ -70,7 +64,7 @@
             {
                 Id = m.Id,
                 Name = m.Name,
-                Email = m.User.Email, 
+                Email = m.User?.Email ?? "(No Email)",
                 JoinDate = m.JoinDate,
                 Reason = m.MembershipApplicationReason,
                 Status = m.Status

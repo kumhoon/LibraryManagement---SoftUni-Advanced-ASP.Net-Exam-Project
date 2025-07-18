@@ -39,7 +39,9 @@
 
     <div class="form-group">
         <label asp-for="PublishedDate" class="control-label"></label>
-        <input asp-for="PublishedDate" type="date" class="form-control" />
+        <input asp-for="PublishedDate" type="text" class="form-control"
+               value="@Model.PublishedDate
+" placeholder="dd-MM-yyyy" />
         <span asp-validation-for="PublishedDate" class="text-danger"></span>
     </div>
 

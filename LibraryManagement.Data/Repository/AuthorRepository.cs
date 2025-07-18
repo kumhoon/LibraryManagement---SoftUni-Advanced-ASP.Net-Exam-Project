@@ -36,7 +36,7 @@
         public async Task<Author?> GetByNameAsync(string name)
         {
             return await _context.Authors
-                .FirstOrDefaultAsync(a => a.Name.ToLower() == name.ToLower());
+                    .FirstOrDefaultAsync(a => a.Name.ToLower() == name.ToLower());
         }
     }
 }

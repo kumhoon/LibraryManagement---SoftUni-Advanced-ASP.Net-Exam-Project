@@ -7,8 +7,6 @@
     {
         Task<Author> GetOrCreateAuthorAsync(string name);
 
-        //Task<IEnumerable<AuthorWithBooksViewModel>> GetAuthorsWithBooksAsync(string? searchTerm);
-
         Task<PagedResult<AuthorWithBooksViewModel>> GetAuthorsWithBooksAsync(string? searchTerm, int pageNumber = 1, int pageSize = 5);
     }
 }

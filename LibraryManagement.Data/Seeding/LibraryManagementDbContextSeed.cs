@@ -17,7 +17,7 @@ namespace LibraryManagement.Data.Seeding
             var context = scope.ServiceProvider.GetRequiredService<LibraryManagementDbContext>();
 
             // Seed roles
-            string[] roles = new[] { "Admin", "User" };
+            string[] roles = ["Admin", "User"];
             foreach (var role in roles)
             {
                 if (!await roleManager.RoleExistsAsync(role))
@@ -73,7 +73,9 @@ namespace LibraryManagement.Data.Seeding
             // Seed books
             if (!context.Books.Any())
             {
-                var adminDbUser = await userManager.FindByEmailAsync(adminUser.Email);
+                var adminDbUser = await userManager.FindByEmailAsync(adminUser.Email)
+                    ?? throw new InvalidOperationException($"Admin user with email '{adminUser.Email}' was not found.");
+
                 var asimov = context.Authors.First(a => a.Name == "Isaac Asimov");
                 var tolkien = context.Authors.First(a => a.Name == "J.R.R. Tolkien");
 
@@ -120,7 +122,10 @@ namespace LibraryManagement.Data.Seeding
             {
                 var userDb1 = await userManager.FindByEmailAsync(user1.Email);
                 var userDb2 = await userManager.FindByEmailAsync(user2.Email);
-
+                if (userDb1 == null || userDb2 == null)
+                {
+                    throw new InvalidOperationException($"User was not found.");
+                }
                 context.Memberships.AddRange(
                     new Member
                     {
