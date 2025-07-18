@@ -26,4 +26,8 @@
     <ProjectReference Include="..\LibraryManagement.Web.ViewModels\LibraryManagement.Web.ViewModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Models\" />
+  </ItemGroup>
+
 </Project>

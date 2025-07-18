@@ -22,9 +22,11 @@
                 <td>@member.Name</td>
                 <td>@member.JoinDate.ToString("MMMM dd, yyyy")</td>
                 <td>
-                    <form asp-action="RevokeMembership" asp-controller="Admin" method="post" asp-route-id="@member.Id" onsubmit="return confirm('Are you sure you want to revoke this membership?');">
+                    <form asp-area="Admin" asp-action="RevokeMembership" asp-controller="Admin" method="post" asp-route-id="@member.Id" onsubmit="return confirm('Are you sure you want to revoke this membership?');">
                         <button type="submit" class="btn btn-danger btn-sm">Revoke</button>
                     </form>
+
+                    <a asp-area="Admin" asp-action="Dashboard" class="btn btn-secondary">Back to Dashboard</a>
                 </td>
             </tr>
         }
