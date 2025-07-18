@@ -4,8 +4,6 @@ namespace LibraryManagement.Data.Configuration
     using LibraryManagement.Data.Models;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-
     public class FavouriteListConfiguration : IEntityTypeConfiguration<FavouriteList>
     {
         public void Configure(EntityTypeBuilder<FavouriteList> entity)

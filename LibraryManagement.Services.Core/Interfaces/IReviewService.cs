@@ -1,7 +1,6 @@
-﻿using LibraryManagement.Web.ViewModels.Review;
-
-namespace LibraryManagement.Services.Core.Interfaces
+﻿namespace LibraryManagement.Services.Core.Interfaces
 {
+    using LibraryManagement.Web.ViewModels.Review;
     public interface IReviewService 
     {
         Task<bool> CreateReviewAsync(Guid memberId, Guid bookId, int rating, string? content);

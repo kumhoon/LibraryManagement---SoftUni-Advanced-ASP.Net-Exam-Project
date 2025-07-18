@@ -3,8 +3,6 @@
     using LibraryManagement.Services.Core.Interfaces;
     using LibraryManagement.Web.ViewModels.User;
     using Microsoft.AspNetCore.Mvc;
-    
-
     public class UserController : BaseController
     {
         private readonly IMembershipService _membershipService;

@@ -1,14 +1,9 @@
-﻿using LibraryManagement.Data.Interfaces;
-using LibraryManagement.Data.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LibraryManagement.Data.Repository
+﻿namespace LibraryManagement.Data.Repository
 {
+    using LibraryManagement.Data.Interfaces;
+    using LibraryManagement.Data.Models;
+    using Microsoft.EntityFrameworkCore;
+
     public class FavouriteListRepository : BaseRepository<FavouriteList, Guid>, IFavouriteListRepository
     {
         private readonly LibraryManagementDbContext _dbContext;

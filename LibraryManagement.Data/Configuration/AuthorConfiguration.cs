@@ -1,10 +1,9 @@
-﻿using LibraryManagement.Data.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using static LibraryManagement.Data.Common.DbEntityValidationConstants.AuthorConstants;
-
-namespace LibraryManagement.Data.Configuration
+﻿namespace LibraryManagement.Data.Configuration
 {
+    using LibraryManagement.Data.Models;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
+    using static LibraryManagement.Data.Common.DbEntityValidationConstants.AuthorConstants;
     public class AuthorConfiguration : IEntityTypeConfiguration<Author>
     {
         public void Configure(EntityTypeBuilder<Author> entity)

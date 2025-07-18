@@ -1,15 +1,8 @@
-﻿using LibraryManagement.Data.Models;
-using LibraryManagement.Services.Common;
-using LibraryManagement.Web.ViewModels.Author;
-using LibraryManagement.Web.ViewModels.Book;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LibraryManagement.Services.Core.Interfaces
+﻿namespace LibraryManagement.Services.Core.Interfaces
 {
+    using LibraryManagement.Data.Models;
+    using LibraryManagement.Services.Common;
+    using LibraryManagement.Web.ViewModels.Author;
     public interface IAuthorService
     {
         Task<Author> GetOrCreateAuthorAsync(string name);

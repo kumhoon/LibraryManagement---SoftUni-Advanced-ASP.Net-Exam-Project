@@ -2,14 +2,11 @@
 {
     using LibraryManagement.Data.Interfaces;
     using LibraryManagement.Data.Models;
-    using LibraryManagement.Data.Repository;
     using LibraryManagement.Services.Common;
     using LibraryManagement.Services.Core.Interfaces;
     using LibraryManagement.Web.ViewModels.Author;
     using Microsoft.EntityFrameworkCore;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
-
     public class AuthorService : IAuthorService
     {
         private readonly IAuthorRepository _authorRepository;
@@ -49,14 +46,7 @@
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalItems = total
-            };
-            //var authors = await _authorRepository.GetAuthorsWithBooksAsync(searchTerm);
-
-            //return authors.Select(a => new AuthorWithBooksViewModel
-            //{
-            //    Name = a.Name,
-            //    Books = a.Books.Select(b => b.Title)
-            //});
+            };         
         }
 
         public async Task<Author> GetOrCreateAuthorAsync(string name)

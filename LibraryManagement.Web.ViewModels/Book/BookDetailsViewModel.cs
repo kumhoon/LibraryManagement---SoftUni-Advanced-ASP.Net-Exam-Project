@@ -1,6 +1,4 @@
 ﻿using LibraryManagement.Web.ViewModels.Review;
-using System;
-using System.Collections.Generic;
 namespace LibraryManagement.Web.ViewModels.Book
 {
     public class BookDetailsViewModel

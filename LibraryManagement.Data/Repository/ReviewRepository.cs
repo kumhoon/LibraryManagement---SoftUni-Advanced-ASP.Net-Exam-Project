@@ -4,7 +4,6 @@ namespace LibraryManagement.Data.Repository
     using LibraryManagement.Data.Interfaces;
     using LibraryManagement.Data.Models;
     using Microsoft.EntityFrameworkCore;
-
     public class ReviewRepository : BaseRepository<Review, Guid>, IReviewRepository
     {
         private readonly LibraryManagementDbContext _dbContext;

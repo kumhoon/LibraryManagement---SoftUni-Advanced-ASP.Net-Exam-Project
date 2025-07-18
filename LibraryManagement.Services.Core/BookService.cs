@@ -1,17 +1,15 @@
-﻿using LibraryManagement.Data.Interfaces;
-using LibraryManagement.Data.Models;
-using LibraryManagement.Services.Common;
-using LibraryManagement.Services.Core.Interfaces;
-using LibraryManagement.Web.ViewModels.Book;
-using LibraryManagement.Web.ViewModels.Review;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System.Globalization;
-using static LibraryManagement.GCommon.ViewModelValidationConstants.BookConstants;
-
-namespace LibraryManagement.Services.Core
+﻿namespace LibraryManagement.Services.Core
 {
-    
+    using LibraryManagement.Data.Interfaces;
+    using LibraryManagement.Data.Models;
+    using LibraryManagement.Services.Common;
+    using LibraryManagement.Services.Core.Interfaces;
+    using LibraryManagement.Web.ViewModels.Book;
+    using LibraryManagement.Web.ViewModels.Review;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
+    using System.Globalization;
+    using static LibraryManagement.GCommon.ViewModelValidationConstants.BookConstants;
     public class BookService : IBookService
     {
         private readonly UserManager<IdentityUser> _userManager;

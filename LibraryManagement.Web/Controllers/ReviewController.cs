@@ -1,13 +1,13 @@
-﻿using LibraryManagement.Services.Core.Interfaces;
-using LibraryManagement.Web.ViewModels.Review;
-using Microsoft.AspNetCore.Mvc;
-
-namespace LibraryManagement.Web.Controllers
+﻿namespace LibraryManagement.Web.Controllers
 {
+    using LibraryManagement.Services.Core.Interfaces;
+    using LibraryManagement.Web.ViewModels.Review;
+    using Microsoft.AspNetCore.Mvc;
+
     public class ReviewController : BaseController
     {
         private readonly IReviewService _reviewService;
-        private readonly IMembershipService _memberService; // Assuming you have this for current user logic
+        private readonly IMembershipService _memberService; 
 
         public ReviewController(IReviewService reviewService, IMembershipService memberService)
         {
@@ -28,7 +28,7 @@ namespace LibraryManagement.Web.Controllers
             var model = new ReviewViewModel
             {
                 ReviewId = review?.ReviewId ?? Guid.Empty,
-                Rating = review?.Rating ?? 5, // Default rating to 5 if new
+                Rating = review?.Rating ?? 5, 
                 Content = review?.Content,
                 BookId = bookId
             };

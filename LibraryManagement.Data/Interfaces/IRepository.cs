@@ -1,7 +1,6 @@
-﻿using System.Linq.Expressions;
-
-namespace LibraryManagement.Data.Interfaces
+﻿namespace LibraryManagement.Data.Interfaces
 {
+    using System.Linq.Expressions;
     public interface IRepository<TType, TId>
     {
         Task<TType> GetByIdAsync(TId id);

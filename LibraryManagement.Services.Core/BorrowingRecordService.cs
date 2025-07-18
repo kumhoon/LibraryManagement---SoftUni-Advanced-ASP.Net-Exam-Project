@@ -1,10 +1,10 @@
-﻿using LibraryManagement.Data.Interfaces;
-using LibraryManagement.Data.Models;
-using LibraryManagement.Services.Core.Interfaces;
-using LibraryManagement.Web.ViewModels.BorrowingRecord;
-
-namespace LibraryManagement.Services.Core
+﻿namespace LibraryManagement.Services.Core
 {
+    using LibraryManagement.Data.Interfaces;
+    using LibraryManagement.Data.Models;
+    using LibraryManagement.Services.Core.Interfaces;
+    using LibraryManagement.Web.ViewModels.BorrowingRecord;
+
     public class BorrowingRecordService : IBorrowingRecordService
     {
         private readonly IBorrowingRecordRepository _borrowingRecordRepository;

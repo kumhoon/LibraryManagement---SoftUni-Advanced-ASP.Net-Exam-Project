@@ -5,7 +5,6 @@
     using LibraryManagement.Services.Common;
     using LibraryManagement.Services.Core.Interfaces;
     using LibraryManagement.Web.ViewModels.Review;
-
     public class ReviewService : IReviewService
     {
         private readonly IReviewRepository _reviewRepository;
@@ -71,9 +70,7 @@
         }
 
         public async Task<BookReviewsViewModel> GetBookReviewsAsync(Guid bookId, int pageNumber, int pageSize)
-        {
-
-            // Get all approved reviews (for average + total count)
+        {         
             var allApproved = await _reviewRepository.GetApprovedByBookAsync(bookId);
 
             double averageRating = allApproved.Any()
@@ -81,8 +78,7 @@
                 : 0.0;
 
             int totalReviews = allApproved.Count();
-
-            // Apply pagination to the reviews
+            
             var pagedReviews = allApproved
                 .OrderByDescending(r => r.CreatedAt)
                 .Skip((pageNumber - 1) * pageSize)

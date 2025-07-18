@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LibraryManagement.GCommon
+﻿namespace LibraryManagement.GCommon
 {
     public static class ViewModelValidationConstants
     {
@@ -36,12 +30,25 @@ namespace LibraryManagement.GCommon
             public const string BookDescriptionErrorMessage = "Description must be between 1 and 500 characters";
 
             public const string MemberNameErrorMessage = "Name must be between 1 and 60 characters";
+
+            public const string ReviewContentErrorMessage = "Review content must be between 1 and 1000 characters";
+
+            public const string ReviewRatingErrorMessage = "Rating must be between 1 and 5";
         }
 
         public static class MembershipConstants
         {
             public const int MemberNameMinLength = 1;
             public const int MemberNameMaxLength = 60;
+        }
+
+        public static class ReviewConstants
+        {
+            public const int ReviewContentMinLength = 1;
+            public const int ReviewContentMaxLength = 1000;
+            public const int ReviewRatingMinValue = 1;
+            public const int ReviewRatingMaxValue = 5;
+            public const string ReviewDateTimeFormat = "dd-MM-yyyy";
         }
     }
 }

@@ -35,7 +35,6 @@
     {
         if (Model.HasBorrowedThisBook)
         {
-            <!-- Return button -->
             <form asp-controller="BorrowingRecord" asp-action="ReturnBook" method="post" class="d-inline">
                 <input type="hidden" name="bookId" value="@Model.Id" />
                 <button type="submit" class="btn btn-danger mt-3">Return Book</button>
@@ -43,18 +42,15 @@
         }
         else if (!Model.HasBorrowedAnyBook)
         {
-            <!-- Borrow button -->
             <form asp-controller="BorrowingRecord" asp-action="BorrowBook" method="post" class="d-inline">
                 <input type="hidden" name="bookId" value="@Model.Id" />
                 <button type="submit" class="btn btn-success mt-3">Borrow Book</button>
             </form>
         }
         else
-        {
-            <!-- Message when user already borrowed another book -->
+        {   
             <p class="text-warning mt-3">You can only borrow one book at a time. Please return your current book to borrow another.</p>
         }
-        <!-- Add to Favourites button -->
         <form asp-controller="FavouriteList" asp-action="Add" method="post" class="d-inline ms-2">
             <input type="hidden" name="bookId" value="@Model.Id" />
             <button type="submit" class="btn btn-primary mt-3">Add to Favourites</button>

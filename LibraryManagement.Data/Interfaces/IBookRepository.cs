@@ -1,13 +1,7 @@
-﻿using LibraryManagement.Data.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LibraryManagement.Data.Interfaces
+﻿namespace LibraryManagement.Data.Interfaces
 {
+    using LibraryManagement.Data.Models;
+
     public interface IBookRepository : IRepository<Book, Guid>
     {
         Task<IEnumerable<Book>> SearchByTitleAsync(string title);

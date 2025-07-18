@@ -1,11 +1,10 @@
-﻿using LibraryManagement.Web.Controllers;
-
-namespace LibraryManagement.Web.Areas.Admin.Controllers
+﻿namespace LibraryManagement.Web.Areas.Admin.Controllers
 {
     using LibraryManagement.Data.Models;
     using LibraryManagement.Services.Core.Interfaces;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using LibraryManagement.Web.Controllers;
 
     [Area("Admin")]
     [Authorize(Roles = "Admin")]

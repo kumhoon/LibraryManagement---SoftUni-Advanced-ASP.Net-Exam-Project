@@ -1,9 +1,9 @@
-﻿using LibraryManagement.Services.Core.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-
-namespace LibraryManagement.Web.Controllers
+﻿namespace LibraryManagement.Web.Controllers
 {
+    using LibraryManagement.Services.Core.Interfaces;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Authorization;
+
     public class AuthorController : BaseController
     {
         private readonly IAuthorService _authorService;

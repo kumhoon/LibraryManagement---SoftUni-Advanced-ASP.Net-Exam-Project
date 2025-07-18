@@ -1,7 +1,7 @@
-﻿using LibraryManagement.Data.Models;
-
-namespace LibraryManagement.Data.Interfaces
+﻿namespace LibraryManagement.Data.Interfaces
 {
+    using LibraryManagement.Data.Models;
+
     public interface IFavouriteListRepository : IRepository<FavouriteList, Guid>
     {
         Task<bool> AddAsync(Guid memberId, Guid bookId);

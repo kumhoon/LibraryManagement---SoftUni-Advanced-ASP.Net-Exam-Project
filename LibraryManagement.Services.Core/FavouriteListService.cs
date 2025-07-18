@@ -1,10 +1,8 @@
-﻿using LibraryManagement.Data.Interfaces;
-using LibraryManagement.Data.Models;
-using LibraryManagement.Services.Core.Interfaces;
-using LibraryManagement.Web.ViewModels.Book;
-
-namespace LibraryManagement.Services.Core
+﻿namespace LibraryManagement.Services.Core
 {
+    using LibraryManagement.Data.Interfaces;
+    using LibraryManagement.Services.Core.Interfaces;
+    using LibraryManagement.Web.ViewModels.Book;
     public class FavouriteListService : IFavouriteListService
     {
         private readonly IFavouriteListRepository _favouriteListRepository;

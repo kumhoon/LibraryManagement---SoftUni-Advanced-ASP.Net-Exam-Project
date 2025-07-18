@@ -1,12 +1,7 @@
-﻿using LibraryManagement.Services.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LibraryManagement.Web.ViewModels.Review
+﻿namespace LibraryManagement.Web.ViewModels.Review
 {
+    using LibraryManagement.Services.Common;
+
     public class BookReviewsViewModel
     {
         public Guid BookId { get; set; }

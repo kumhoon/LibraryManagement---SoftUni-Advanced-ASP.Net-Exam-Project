@@ -5,7 +5,6 @@
     using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-
     public class BookRepository : BaseRepository<Book, Guid>, IBookRepository
     {
         private readonly LibraryManagementDbContext _context;

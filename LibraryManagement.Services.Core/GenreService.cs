@@ -1,8 +1,7 @@
-﻿using LibraryManagement.Data.Interfaces;
-using LibraryManagement.Services.Core.Interfaces;
-using System;
-namespace LibraryManagement.Services.Core
+﻿namespace LibraryManagement.Services.Core
 {
+    using LibraryManagement.Data.Interfaces;
+    using LibraryManagement.Services.Core.Interfaces;
     using Microsoft.AspNetCore.Mvc.Rendering;
     public class GenreService : IGenreService
     {

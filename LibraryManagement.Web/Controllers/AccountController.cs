@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-
-namespace LibraryManagement.Web.Controllers
+﻿namespace LibraryManagement.Web.Controllers
 {
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+
     public class AccountController : BaseController
     {
         private readonly SignInManager<IdentityUser> _signInManager;

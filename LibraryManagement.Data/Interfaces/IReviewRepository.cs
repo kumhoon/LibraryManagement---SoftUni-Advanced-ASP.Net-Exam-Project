@@ -1,7 +1,6 @@
 ﻿namespace LibraryManagement.Data.Interfaces
 {
     using LibraryManagement.Data.Models;
-
     public interface IReviewRepository : IRepository<Review, Guid>
     {
         Task<IEnumerable<Review>> GetApprovedByBookAsync(Guid bookId);

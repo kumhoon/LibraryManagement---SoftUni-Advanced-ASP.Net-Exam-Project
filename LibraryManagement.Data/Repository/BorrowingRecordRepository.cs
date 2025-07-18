@@ -1,9 +1,9 @@
-﻿using LibraryManagement.Data.Interfaces;
-using LibraryManagement.Data.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace LibraryManagement.Data.Repository
+﻿namespace LibraryManagement.Data.Repository
 {
+    using LibraryManagement.Data.Interfaces;
+    using LibraryManagement.Data.Models;
+    using Microsoft.EntityFrameworkCore;
+
     public class BorrowingRecordRepository : BaseRepository<BorrowingRecord, Guid>, IBorrowingRecordRepository
     {
         private readonly LibraryManagementDbContext _context;

@@ -1,7 +1,7 @@
-﻿using LibraryManagement.Data.Models;
-
-namespace LibraryManagement.Web.ViewModels.Membership
+﻿namespace LibraryManagement.Web.ViewModels.Membership
 {
+    using LibraryManagement.Data.Models;
+
     public class MembershipPendingViewModel
     {
         public Guid Id { get; set; }

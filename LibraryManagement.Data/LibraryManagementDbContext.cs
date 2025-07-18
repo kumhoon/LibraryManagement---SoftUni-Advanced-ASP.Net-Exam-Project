@@ -4,7 +4,6 @@
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using System.Reflection;
-
     public class LibraryManagementDbContext : IdentityDbContext
     {
         public LibraryManagementDbContext(DbContextOptions<LibraryManagementDbContext> options)

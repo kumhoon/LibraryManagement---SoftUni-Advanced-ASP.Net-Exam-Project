@@ -5,7 +5,6 @@
     using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-
     public class GenreRepository : BaseRepository<Genre, Guid>, IGenreRepository
     {
         private readonly LibraryManagementDbContext _context;

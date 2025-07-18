@@ -3,7 +3,6 @@
     using LibraryManagement.Data.Interfaces;
     using LibraryManagement.Data.Models;
     using Microsoft.EntityFrameworkCore;
-
     public class AuthorRepository : BaseRepository<Author, Guid>, IAuthorRepository
     {
         private readonly LibraryManagementDbContext _context;

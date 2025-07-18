@@ -1,7 +1,6 @@
 ﻿namespace LibraryManagement.Services.Core.Interfaces
 {
     using LibraryManagement.Web.ViewModels.BorrowingRecord;
-
     public interface IBorrowingRecordService
     {
         Task<BorrowResult> BorrowBookAsync(Guid memberId, Guid bookId);

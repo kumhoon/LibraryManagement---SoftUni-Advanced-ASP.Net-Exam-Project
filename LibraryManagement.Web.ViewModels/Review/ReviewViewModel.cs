@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LibraryManagement.Web.ViewModels.Review
+﻿namespace LibraryManagement.Web.ViewModels.Review
 {
+    using System.ComponentModel.DataAnnotations;
+    using static LibraryManagement.GCommon.ViewModelValidationConstants.ReviewConstants;
+    using static LibraryManagement.GCommon.ViewModelValidationConstants.ErrorMessages;
+
     public class ReviewViewModel
     {
         public Guid ReviewId { get; set; }
 
         public Guid BookId { get; set; }
-        public int Rating { get; set; } 
-
+        [Required]
+        [Range(ReviewRatingMinValue, ReviewRatingMaxValue, ErrorMessage = ReviewRatingErrorMessage)]
+        public int Rating { get; set; }
+        [StringLength(ReviewContentMaxLength, MinimumLength = ReviewContentMinLength, ErrorMessage = ReviewContentErrorMessage)]
         public string? Content { get; set; }
 
     }

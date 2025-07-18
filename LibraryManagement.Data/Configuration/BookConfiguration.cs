@@ -1,10 +1,9 @@
-﻿using LibraryManagement.Data.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using static LibraryManagement.Data.Common.DbEntityValidationConstants.BookConstants;
-
-namespace LibraryManagement.Data.Configuration
+﻿namespace LibraryManagement.Data.Configuration
 {
+    using LibraryManagement.Data.Models;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
+    using static LibraryManagement.Data.Common.DbEntityValidationConstants.BookConstants;
     public class BookConfiguration : IEntityTypeConfiguration<Book>
     {
         public void Configure(EntityTypeBuilder<Book> entity)

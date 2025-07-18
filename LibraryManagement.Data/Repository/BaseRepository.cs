@@ -1,9 +1,8 @@
-﻿using LibraryManagement.Data.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-
-namespace LibraryManagement.Data.Repository
+﻿namespace LibraryManagement.Data.Repository
 {
+    using LibraryManagement.Data.Interfaces;
+    using Microsoft.EntityFrameworkCore;
+    using System.Linq.Expressions;
     public class BaseRepository<TType, TId> : IRepository<TType, TId>
         where TType : class
     {

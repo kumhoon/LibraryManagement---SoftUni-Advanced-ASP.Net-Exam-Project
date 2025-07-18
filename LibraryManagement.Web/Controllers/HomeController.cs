@@ -1,9 +1,7 @@
 namespace LibraryManagement.Web.Controllers
 {
     using System.Diagnostics;
-
     using ViewModels;
-
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Authorization;
 

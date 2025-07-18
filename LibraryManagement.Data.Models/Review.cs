@@ -1,6 +1,4 @@
-﻿
-
-namespace LibraryManagement.Data.Models
+﻿namespace LibraryManagement.Data.Models
 {
     using System.ComponentModel.DataAnnotations;
     using static LibraryManagement.Data.Common.DbEntityValidationConstants.ReviewConstants;

@@ -3,7 +3,6 @@
     using LibraryManagement.Data.Interfaces;
     using LibraryManagement.Data.Models;
     using Microsoft.EntityFrameworkCore;
-
     public class MembershipRepository : BaseRepository<Member, Guid>, IMembershipRepository
     {
         private readonly LibraryManagementDbContext _dbContext;

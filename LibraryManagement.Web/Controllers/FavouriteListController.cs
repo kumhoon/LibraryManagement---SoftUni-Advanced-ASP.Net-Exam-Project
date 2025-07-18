@@ -2,7 +2,6 @@
 {
     using LibraryManagement.Services.Core.Interfaces;
     using Microsoft.AspNetCore.Mvc;
-    using System.Security.Claims;
 
     public class FavouriteListController : BaseController
     {

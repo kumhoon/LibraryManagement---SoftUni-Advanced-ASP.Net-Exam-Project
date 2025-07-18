@@ -1,7 +1,7 @@
-﻿using LibraryManagement.Web.ViewModels.Book;
-
-namespace LibraryManagement.Services.Core.Interfaces
+﻿namespace LibraryManagement.Services.Core.Interfaces
 {
+    using LibraryManagement.Web.ViewModels.Book;
+
     public interface IFavouriteListService
     {
         Task<bool> AddToFavouritesAsync(Guid memberId, Guid bookId);

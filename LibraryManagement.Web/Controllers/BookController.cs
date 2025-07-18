@@ -1,11 +1,10 @@
-﻿using LibraryManagement.Services.Core.Interfaces;
-using LibraryManagement.Web.ViewModels.Book;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-
-namespace LibraryManagement.Web.Controllers
+﻿namespace LibraryManagement.Web.Controllers
 {
+    using LibraryManagement.Services.Core.Interfaces;
+    using LibraryManagement.Web.ViewModels.Book;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+
     public class BookController : BaseController
     {
         private readonly IBookService _bookService;
