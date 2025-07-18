@@ -15,9 +15,10 @@ namespace LibraryManagement.Web.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Index(string? searchTerm)
+        public async Task<IActionResult> Index(string? searchTerm, int page = 1, int pageSize = 5)
         {
-            var authors = await _authorService.GetAuthorsWithBooksAsync(searchTerm);
+            var authors = await _authorService.GetAuthorsWithBooksAsync(searchTerm, page, pageSize);
+            ViewData["SearchTerm"] = searchTerm;
             return View(authors);
         }
     }

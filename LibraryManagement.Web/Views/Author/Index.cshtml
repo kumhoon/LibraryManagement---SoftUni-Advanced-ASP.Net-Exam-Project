@@ -1,5 +1,6 @@
-﻿@using LibraryManagement.Web.ViewModels.Author
-@model IEnumerable<AuthorWithBooksViewModel>
+﻿@using LibraryManagement.Services.Common
+@using LibraryManagement.Web.ViewModels.Author
+@model PagedResult<AuthorWithBooksViewModel>
 
 <h2>All Authors</h2>
 
@@ -7,7 +8,7 @@
     <input type="text" name="searchTerm" placeholder="Search authors..." class="form-control" />
 </form>
 
-@foreach (var author in Model)
+@foreach (var author in Model.Items)
 {
     <div class="card mb-3">
         <div class="card-body">
@@ -21,3 +22,25 @@
         </div>
     </div>
 }
+<nav>
+    <ul class="pagination">
+        <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+            <a class="page-link"
+               asp-action="Index"
+               asp-route-searchTerm="@ViewData["SearchTerm"]"
+               asp-route-page="@(Model.PageNumber - 1)"
+               asp-route-pageSize="@Model.PageSize">
+                Previous
+            </a>
+        </li>
+        <li class="page-item @(Model.PageNumber >= Model.TotalPages ? "disabled" : "")">
+            <a class="page-link"
+               asp-action="Index"
+               asp-route-searchTerm="@ViewData["SearchTerm"]"
+               asp-route-page="@(Model.PageNumber + 1)"
+               asp-route-pageSize="@Model.PageSize">
+                Next
+            </a>
+        </li>
+    </ul>
+</nav>

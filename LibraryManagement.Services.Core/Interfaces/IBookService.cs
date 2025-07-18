@@ -1,11 +1,14 @@
 ﻿namespace LibraryManagement.Services.Core.Interfaces
 {
     using LibraryManagement.Data.Models;
+    using LibraryManagement.Services.Common;
     using LibraryManagement.Web.ViewModels.Book;
 
     public interface IBookService
     {
-        Task<IEnumerable<BookIndexViewModel>> GetBookIndexAsync(string? userId);
+        //Task<IEnumerable<BookIndexViewModel>> GetBookIndexAsync(string? userId);
+
+        Task<PagedResult<BookIndexViewModel>> GetBookIndexAsync(string? searchTerm, int pageNumber = 1, int pageSize = 5);
 
         Task <BookDetailsViewModel?> GetBookDetailsAsync(Guid id, string? userId);
 

@@ -1,8 +1,10 @@
 ﻿using LibraryManagement.Data.Interfaces;
 using LibraryManagement.Data.Models;
+using LibraryManagement.Services.Common;
 using LibraryManagement.Services.Core.Interfaces;
 using LibraryManagement.Web.ViewModels.Book;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using static LibraryManagement.GCommon.ViewModelValidationConstants.BookConstants;
 
@@ -164,28 +166,51 @@ namespace LibraryManagement.Services.Core
             return editModel;
         }
 
-        public async Task<IEnumerable<BookIndexViewModel>> GetBookIndexAsync(string? searchTerm)
-        {
-            var books = await this._bookRepository.GetAllWithDetailsAsync();
+        public async Task<PagedResult<BookIndexViewModel>> GetBookIndexAsync(string? searchTerm, int pageNumber = 1, int pageSize = 5)
+        {          
+            IQueryable<Book> query = _bookRepository
+                .GetAllAttached()              
+                .Include(b => b.Author)
+                .Include(b => b.Genre);
 
+            
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                searchTerm = searchTerm.ToLower();
-                books = books.Where(b =>
-                    b.Title.ToLower().Contains(searchTerm) ||
-                    b.Author.Name.ToLower().Contains(searchTerm) ||
-                    b.Genre.Name.ToLower().Contains(searchTerm));
+                query = query.Where(b =>
+                    b.Title.Contains(searchTerm.Trim()) ||
+                    b.Author.Name.Contains(searchTerm) ||
+                    b.Genre.Name.Contains(searchTerm));
             }
 
-            return books
-                .Select(book => new BookIndexViewModel
-                {
-                    Id = book.Id,
-                    Title = book.Title,
-                    AuthorName = book.Author.Name,
-                    Genre = book.Genre.Name,
-                    PublishedDate = book.PublishedDate,
-                });
+            
+            int total = await query.CountAsync();
+
+            
+            var pagedBooks = await query
+                .OrderBy(b => b.Title)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            
+            var items = pagedBooks.Select(b => new BookIndexViewModel
+            {
+                Id = b.Id,
+                Title = b.Title,
+                AuthorName = b.Author.Name,
+                Genre = b.Genre.Name,
+                PublishedDate = b.PublishedDate,
+                ImageUrl = b.ImageUrl
+            });
+
+            
+            return new PagedResult<BookIndexViewModel>
+            {
+                Items = items,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalItems = total
+            };
         }
 
         public async Task<bool> SoftDeleteBookAsync(string userId, BookDeleteInputModel inputModel)

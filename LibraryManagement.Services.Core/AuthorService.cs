@@ -2,8 +2,11 @@
 {
     using LibraryManagement.Data.Interfaces;
     using LibraryManagement.Data.Models;
+    using LibraryManagement.Data.Repository;
+    using LibraryManagement.Services.Common;
     using LibraryManagement.Services.Core.Interfaces;
     using LibraryManagement.Web.ViewModels.Author;
+    using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -15,15 +18,45 @@
             _authorRepository = authorRepository;
         }
 
-        public async Task<IEnumerable<AuthorWithBooksViewModel>> GetAuthorsWithBooksAsync(string? searchTerm)
+        public async Task<PagedResult<AuthorWithBooksViewModel>> GetAuthorsWithBooksAsync(string? searchTerm, int pageNumber = 1, int pageSize = 5)
         {
-            var authors = await _authorRepository.GetAuthorsWithBooksAsync(searchTerm);
+            IQueryable<Author> query = _authorRepository
+                .GetAllAttached()
+                .Include(a => a.Books);
+                
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                query = query.Where(a => a.Name.Contains(searchTerm.Trim()));
+            }
 
-            return authors.Select(a => new AuthorWithBooksViewModel
+            int total = await query.CountAsync();
+
+            var pagedAuthors = await query
+                .OrderBy(a => a.Name)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            var items = pagedAuthors.Select(a => new AuthorWithBooksViewModel
             {
                 Name = a.Name,
-                Books = a.Books.Select(b => b.Title)
+                Books = a.Books.Select(b => b.Title).ToList()
             });
+
+            return new PagedResult<AuthorWithBooksViewModel>
+            {
+                Items = items,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalItems = total
+            };
+            //var authors = await _authorRepository.GetAuthorsWithBooksAsync(searchTerm);
+
+            //return authors.Select(a => new AuthorWithBooksViewModel
+            //{
+            //    Name = a.Name,
+            //    Books = a.Books.Select(b => b.Title)
+            //});
         }
 
         public async Task<Author> GetOrCreateAuthorAsync(string name)

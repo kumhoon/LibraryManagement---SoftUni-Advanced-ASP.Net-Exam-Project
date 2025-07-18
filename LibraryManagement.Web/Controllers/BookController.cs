@@ -18,12 +18,13 @@ namespace LibraryManagement.Web.Controllers
         }
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Index(string? searchTerm)
+        public async Task<IActionResult> Index(string? searchTerm, int page = 1, int pageSize = 5)
         {
             try
-            {               
-                IEnumerable<BookIndexViewModel> allBooks = await this._bookService.GetBookIndexAsync(searchTerm);
-                return View(allBooks);
+            {
+                var result = await _bookService.GetBookIndexAsync(searchTerm, page, pageSize);
+                ViewData["SearchTerm"] = searchTerm;
+                return View(result);
             }
             catch (Exception e)
             {
