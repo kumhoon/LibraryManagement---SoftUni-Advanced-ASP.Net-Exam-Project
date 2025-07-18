@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace LibraryManagement.Data.Models
+﻿namespace LibraryManagement.Data.Models
 {
+    using Microsoft.AspNetCore.Identity;
+
     public class Member
     {
         public Guid Id { get; set; }
@@ -11,13 +11,15 @@ namespace LibraryManagement.Data.Models
 
         public string UserId { get; set; } = null!;
 
-        public IdentityUser User { get; set; } = null!;
+        public virtual IdentityUser User { get; set; } = null!;
 
-        public MembershipStatus Status { get; set; } = MembershipStatus.None;
+        public virtual MembershipStatus Status { get; set; } = MembershipStatus.None;
 
         public string? MembershipApplicationReason { get; set; }
 
         public virtual ICollection<FavouriteList> Favourites { get; set; } = new HashSet<FavouriteList>();
+
+        public virtual ICollection<Review> Reviews { get; set; } = new HashSet<Review>();
     }
     public enum MembershipStatus
     {

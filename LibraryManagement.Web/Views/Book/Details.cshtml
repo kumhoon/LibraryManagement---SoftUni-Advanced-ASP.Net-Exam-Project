@@ -72,6 +72,22 @@
 
 <a asp-action="Index" class="btn btn-primary">Back to All Books</a> 
 
+<partial name="_BookReviewsPartial" model="@Model.Reviews" />
+@if (User.Identity?.IsAuthenticated == true && Model.IsApprovedMember)
+{
+    if (Model.MemberReview != null)
+    {
+        <a asp-controller="Review" asp-action="Edit" asp-route-bookId="@Model.Id" class="btn btn-outline-primary mt-3">
+            Edit Your Review
+        </a>
+    }
+    else
+    {
+        <a asp-controller="Review" asp-action="Edit" asp-route-bookId="@Model.Id" class="btn btn-outline-primary mt-3">
+            Write a Review
+        </a>
+    }
+}
 @if (User.IsInRole("Admin"))
 {
     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning ms-2">Edit</a>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LibraryManagement.Web.ViewModels.Review;
+using System;
 using System.Collections.Generic;
 namespace LibraryManagement.Web.ViewModels.Book
 {
@@ -25,5 +26,9 @@ namespace LibraryManagement.Web.ViewModels.Book
         public bool HasBorrowedThisBook { get; set; }
 
         public bool HasBorrowedAnyBook { get; set; }
+
+        public BookReviewsViewModel Reviews { get; set; } = new BookReviewsViewModel();
+
+        public ReviewViewModel? MemberReview { get; set; }
     }
 }

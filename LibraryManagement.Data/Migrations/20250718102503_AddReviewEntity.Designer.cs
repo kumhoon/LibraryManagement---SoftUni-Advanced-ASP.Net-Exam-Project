@@ -4,6 +4,7 @@ using LibraryManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryManagement.Data.Migrations
 {
     [DbContext(typeof(LibraryManagementDbContext))]
-    partial class LibraryManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250718102503_AddReviewEntity")]
+    partial class AddReviewEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -226,7 +229,7 @@ namespace LibraryManagement.Data.Migrations
                     b.HasIndex("MemberId", "BookId")
                         .IsUnique();
 
-                    b.ToTable("Reviews", t =>
+                    b.ToTable("Review", t =>
                         {
                             t.HasCheckConstraint("CK_Review_Rating", "[Rating] >= 1 AND [Rating] <= 5");
                         });

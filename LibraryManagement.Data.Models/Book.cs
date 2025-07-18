@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace LibraryManagement.Data.Models
+﻿namespace LibraryManagement.Data.Models
 {
+    using Microsoft.AspNetCore.Identity;
     public class Book
     {
         public Guid Id { get; set; }
@@ -13,12 +12,14 @@ namespace LibraryManagement.Data.Models
         public DateTime PublishedDate { get; set; }
         public bool IsDeleted { get; set; }
         public string BookCreatorId { get; set; } = null!;
-        public IdentityUser BookCreator { get; set; } = null!;
+        public virtual IdentityUser BookCreator { get; set; } = null!;
 
         public string Description { get; set; } = null!;
 
         public string? ImageUrl { get; set; }
 
         public virtual ICollection<FavouriteList> FavouritedBy { get; set; } = new HashSet<FavouriteList>();
+
+        public virtual ICollection<Review> Reviews { get; set; } = new HashSet<Review>();
     }
 }

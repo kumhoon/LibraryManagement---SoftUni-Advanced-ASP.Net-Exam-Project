@@ -3,6 +3,7 @@ using LibraryManagement.Data.Models;
 using LibraryManagement.Services.Common;
 using LibraryManagement.Services.Core.Interfaces;
 using LibraryManagement.Web.ViewModels.Book;
+using LibraryManagement.Web.ViewModels.Review;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
@@ -20,6 +21,7 @@ namespace LibraryManagement.Services.Core
         private readonly IGenreRepository _genreRepository;
         private readonly IMembershipService _membershipService;
         private readonly IBorrowingRecordService _borrowingRecordService;
+        private readonly IReviewService _reviewService;
 
         public BookService
             (UserManager<IdentityUser> userManager, 
@@ -28,7 +30,8 @@ namespace LibraryManagement.Services.Core
             IAuthorService authorService,
             IGenreRepository genreRepository,
             IMembershipService membershipService,
-            IBorrowingRecordService borrowingRecordService
+            IBorrowingRecordService borrowingRecordService,
+            IReviewService reviewService
             )
         {
             _bookRepository = bookRepository;
@@ -38,6 +41,7 @@ namespace LibraryManagement.Services.Core
             _genreRepository = genreRepository;
             _membershipService = membershipService;
             _borrowingRecordService = borrowingRecordService;
+            _reviewService = reviewService;
         }
 
         public async Task<bool> CreateBookAsync(string userId, BookCreateInputModel inputModel)
@@ -82,11 +86,11 @@ namespace LibraryManagement.Services.Core
             return await _bookRepository.GetByIdAsync(bookId);
         }
 
-        public async Task<BookDetailsViewModel?> GetBookDetailsAsync(Guid id, string? userId)
+        public async Task<BookDetailsViewModel?> GetBookDetailsAsync(Guid id, string? userId, int reviewPage)
         {
             var book = await this._bookRepository.GetBookWithDetailsAsync(id);
 
-            if (book == null) { return null;}
+            if (book == null) { return null; }
 
             var viewModel = new BookDetailsViewModel
             {
@@ -101,8 +105,14 @@ namespace LibraryManagement.Services.Core
                 IsApprovedMember = false,
                 HasBorrowedThisBook = false,
                 HasBorrowedAnyBook = false
-
             };
+
+            int pageSize = 5;
+
+            
+            var pagedReviews = await _reviewService.GetBookReviewsAsync(id, reviewPage, pageSize);
+
+            ReviewViewModel? memberReview = null;
 
             if (!string.IsNullOrEmpty(userId))
             {
@@ -118,8 +128,14 @@ namespace LibraryManagement.Services.Core
 
                     viewModel.HasBorrowedAnyBook = await _borrowingRecordService
                         .HasAnyActiveBorrowAsync(member.Id);
+
+                    memberReview = await _reviewService.GetMemberReviewForBookAsync(member.Id, book.Id);
                 }
             }
+
+            viewModel.Reviews = pagedReviews; 
+
+            viewModel.MemberReview = memberReview;
 
             return viewModel;
         }

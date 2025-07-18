@@ -10,7 +10,7 @@
 
         Task<PagedResult<BookIndexViewModel>> GetBookIndexAsync(string? searchTerm, int pageNumber = 1, int pageSize = 5);
 
-        Task <BookDetailsViewModel?> GetBookDetailsAsync(Guid id, string? userId);
+        Task<BookDetailsViewModel?> GetBookDetailsAsync(Guid id, string? userId, int reviewPage);
 
         Task<bool> CreateBookAsync(string userId, BookCreateInputModel inputModel);
 

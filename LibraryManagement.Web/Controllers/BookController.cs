@@ -35,12 +35,12 @@ namespace LibraryManagement.Web.Controllers
         }
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Details(Guid id)
+        public async Task<IActionResult> Details(Guid id, int page = 1)
         {
             try
             {
                 string? userId = this.GetUserId();
-                BookDetailsViewModel? bookDetailsVM = await this._bookService.GetBookDetailsAsync(id, userId);
+                BookDetailsViewModel? bookDetailsVM = await this._bookService.GetBookDetailsAsync(id, userId, page);
                 if (bookDetailsVM == null)
                 {         
                     return NotFound();

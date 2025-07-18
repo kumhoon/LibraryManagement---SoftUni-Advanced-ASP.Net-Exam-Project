@@ -29,5 +29,12 @@ namespace LibraryManagement.Data.Common
         {
             public const int MemberNameMaxLength = 50;
         }
+
+        public static class ReviewConstants
+        {
+            public const int ReviewContentMaxLength = 1000;
+            public const int ReviewRatingMinValue = 1;
+            public const int ReviewRatingMaxValue = 5;
+        }
     }
 }

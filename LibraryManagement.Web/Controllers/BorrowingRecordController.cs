@@ -45,7 +45,7 @@
                 return RedirectToAction("Apply", "Membership");
             }
 
-            // Check if member has any active borrow (one book at a time rule)
+            
             bool hasActiveBorrow = await _borrowingRecordService.HasAnyActiveBorrowAsync(member.Id);
             if (hasActiveBorrow)
             {
@@ -59,7 +59,7 @@
                 return View("BorrowResult", vm);
             }
 
-            // Try borrowing the book
+            
             var borrowResult = await _borrowingRecordService.BorrowBookAsync(member.Id, bookId);
             var borrowedBook = await _bookService.GetBookByIdAsync(bookId);
 

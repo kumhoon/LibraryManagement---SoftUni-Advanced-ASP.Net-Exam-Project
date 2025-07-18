@@ -1,0 +1,49 @@
+﻿@using LibraryManagement.Web.ViewModels.Review
+@model BookReviewsViewModel
+
+<h3>Reviews (Average Rating: @Model.AverageRating / 5 from @Model.TotalReviews users)</h3>
+
+@if (!Model.Reviews.Items.Any())
+{
+    <p>No reviews yet. Be the first to leave one!</p>
+}
+else
+{
+    foreach (var r in Model.Reviews.Items)
+    {
+        <div class="card mb-2">
+            <div class="card-body">
+                <strong>@r.MemberName</strong>
+                <span>rated it @r.Rating/5</span>
+                <p>@r.Content</p>
+                <small class="text-muted">@r.CreatedAt.ToString("g")</small>
+            </div>
+        </div>
+    }
+
+    <!-- Pagination Controls -->
+    <nav aria-label="Review pagination">
+        <ul class="pagination">
+            @if (Model.Reviews.PageNumber > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Details", "Book", new { id = Model.BookId, page = Model.Reviews.PageNumber - 1 })">Previous</a>
+                </li>
+            }
+
+            @for (int i = 1; i <= Model.Reviews.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.Reviews.PageNumber ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Details", "Book", new { id = Model.BookId, page = i })">@i</a>
+                </li>
+            }
+
+            @if (Model.Reviews.PageNumber < Model.Reviews.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Details", "Book", new { id = Model.BookId, page = Model.Reviews.PageNumber + 1 })">Next</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}

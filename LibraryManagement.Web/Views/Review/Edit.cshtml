@@ -1,0 +1,35 @@
+﻿@using LibraryManagement.Web.ViewModels.Review
+@model ReviewViewModel
+
+<h2>@(Model.ReviewId == Guid.Empty ? "Write a Review" : "Edit Your Review")</h2>
+
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="BookId" />
+    <input type="hidden" asp-for="ReviewId" />
+
+    <div class="form-group">
+        <label asp-for="Rating"></label>
+        <select asp-for="Rating" class="form-control">
+            @for (int i = 1; i <= 5; i++)
+            {
+                <option value="@i">@i Star@(i > 1 ? "s" : "")</option>
+            }
+        </select>
+        <span asp-validation-for="Rating" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Content"></label>
+        <textarea asp-for="Content" class="form-control" rows="5" placeholder="Write your review here..."></textarea>
+        <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit Review</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

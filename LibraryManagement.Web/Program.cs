@@ -51,6 +51,8 @@ namespace LibraryManagement.Web
             builder.Services.AddScoped<IBorrowingRecordService, BorrowingRecordService>();
             builder.Services.AddScoped<IFavouriteListRepository, FavouriteListRepository>();
             builder.Services.AddScoped<IFavouriteListService, FavouriteListService>();
+            builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+            builder.Services.AddScoped<IReviewService, ReviewService>();
 
             WebApplication? app = builder.Build();
 

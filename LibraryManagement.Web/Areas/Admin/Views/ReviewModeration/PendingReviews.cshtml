@@ -1,0 +1,59 @@
+﻿@using LibraryManagement.Web.ViewModels.Review
+@model IEnumerable<PendingReviewViewModel>
+@{
+    ViewData["Title"] = "Pending Reviews";
+}
+
+<h2>Pending Reviews for Moderation</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        There are no pending reviews at the moment.
+    </div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Book</th>
+                <th>Member</th>
+                <th>Rating</th>
+                <th>Content</th>
+                <th>Submitted At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var review in Model)
+            {
+                <tr>
+                    <td>@review.BookTitle</td>
+                    <td>@review.MemberName</td>
+                    <td>@review.Rating / 5</td>
+                    <td>@(string.IsNullOrWhiteSpace(review.Content) ? "<em>No content</em>" : review.Content)</td>
+                    <td>@review.CreatedAt.ToLocalTime().ToString("g")</td>
+                    <td>
+                        <form asp-area="Admin" asp-controller="ReviewModeration" asp-action="Approve" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@review.ReviewId" />
+                            <button type="submit" class="btn btn-success btn-sm" title="Approve">
+                               Approve
+                            </button>
+                        </form>
+
+                        <form asp-area="Admin" asp-controller="ReviewModeration" asp-action="Reject" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@review.ReviewId" />
+                            <button type="submit" class="btn btn-danger btn-sm" title="Reject">
+                                Reject
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            <li class="nav-item">
+                <a asp-area="Admin" asp-controller="Admin" asp-action="Dashboard">Back to Dashboard</a>
+            </li>
+        </tbody>
+    </table>
+}
