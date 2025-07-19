@@ -19,8 +19,9 @@
         {
             IQueryable<Author> query = _authorRepository
                 .GetAllAttached()
-                .Include(a => a.Books);
-                
+                .Where(a => a.Books.Any(b => !b.IsDeleted)) 
+                .Include(a => a.Books.Where(b => !b.IsDeleted));
+
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 query = query.Where(a => a.Name.Contains(searchTerm.Trim()));
