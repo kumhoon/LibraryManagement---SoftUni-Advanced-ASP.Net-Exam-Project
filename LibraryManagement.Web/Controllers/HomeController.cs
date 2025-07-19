@@ -25,9 +25,14 @@ namespace LibraryManagement.Web.Controllers
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult Error(int? statusCode)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return statusCode switch
+            {
+                404 => View("Error404"),
+                500 => View("Error500"),
+                _ => View("Error")
+            };
         }
     }
 }
