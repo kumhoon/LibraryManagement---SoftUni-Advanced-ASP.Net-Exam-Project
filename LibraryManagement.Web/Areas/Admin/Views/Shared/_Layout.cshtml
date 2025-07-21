@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - Admin Area</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/admin.css" />
+</head>
+<body>
+    <div class="admin-navbar">
+        <strong>Admin Panel</strong> |
+        <a asp-area="Admin" asp-controller="Admin" asp-action="Dashboard">Dashboard</a>
+        <a asp-area="Admin" asp-controller="Admin" asp-action="ReviewApplications">Applications</a>
+        <a asp-area="Admin" asp-controller="Admin" asp-action="Members">Members</a>
+        <a asp-area="Admin" asp-controller="ReviewModeration" asp-action="PendingReviews">Reviews</a>
+    </div>
+
+    <main role="main" class="container">
+        @RenderBody()
+    </main>
+</body>
+</html>

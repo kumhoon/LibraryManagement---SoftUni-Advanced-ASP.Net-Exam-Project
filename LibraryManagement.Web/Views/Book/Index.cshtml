@@ -4,60 +4,77 @@
 @inject SignInManager<IdentityUser> SignInManager
 @model PagedResult<BookIndexViewModel>
 
-<h2>All Books</h2>
+<div class="container-fluid px-3 px-md-4">
+    <div class="dark-bg">
+        <h2>All Books</h2>
 
-<form asp-action="Index" method="get" class="mb-4">
-    <div class="input-group">
-        <input type="text" name="searchTerm" class="form-control" placeholder="Search by title, author, or genre" value="@Context.Request.Query["searchTerm"]" />
-        <button type="submit" class="btn btn-primary">Search</button>
-    </div>
-</form>
-@foreach (var book in Model.Items)
-{
-    <div class="mb-4">
-        <h3>@book.Title</h3>
-        @if (!string.IsNullOrEmpty(book.ImageUrl))
-        {
-            <img src="@book.ImageUrl"
-                 alt="Cover of @book.Title"
-                 class="img-fluid mb-2"
-                 style="max-height:150px;" />
-        }
-        else
-        {
-            <p><em>No cover image available.</em></p>
-        }
-        <p><strong>Author:</strong> @book.AuthorName</p>
-        <p><strong>Publish Date:</strong> @book.PublishedDate.ToString("dd-MM-yyyy")</p>
-        <a asp-action="Details" asp-route-id="@book.Id" class="btn btn-link">Details</a>
-    </div>
-}
-<nav>
-    <ul class="pagination">
-        <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
-            <a class="page-link"
-               asp-action="Index"
-               asp-route-searchTerm="@ViewData["SearchTerm"]"
-               asp-route-page="@(Model.PageNumber - 1)"
-               asp-route-pageSize="@Model.PageSize">
-                Previous
-            </a>
-        </li>
-        <li class="page-item @(Model.PageNumber >= Model.TotalPages ? "disabled" : "")">
-            <a class="page-link"
-               asp-action="Index"
-               asp-route-searchTerm="@ViewData["SearchTerm"]"
-               asp-route-page="@(Model.PageNumber + 1)"
-               asp-route-pageSize="@Model.PageSize">
-                Next
-            </a>
-        </li>
-    </ul>
-</nav>
+        <form asp-action="Index" method="get" class="mb-4">
+            <div class="input-group">
+                <input type="text" name="searchTerm" class="form-control" placeholder="Search by title, author, or genre" value="@Context.Request.Query["searchTerm"]" />
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
 
-@if (User.IsInRole("Admin"))
-{
-    <div class="mb-3">
-        <a asp-action="Create" class="btn btn-success">Add New Book</a>
+        @foreach (var book in Model.Items)
+        {
+            <div class="card mb-3 bg-dark text-light shadow">
+                <div class="row g-0 align-items-center">
+                    <div class="col-md-3 p-3 text-center">
+                        @if (!string.IsNullOrEmpty(book.ImageUrl))
+                        {
+                            <img src="@book.ImageUrl" alt="Cover of @book.Title" class="img-fluid rounded" style="max-height:150px;" />
+                        }
+                        else
+                        {
+                            <div class="d-flex justify-content-center align-items-center bg-secondary text-muted rounded" style="height:150px;">
+                                <em>No cover image available</em>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-md-7 p-3">
+                        <h4>@book.Title</h4>
+                        <p class="mb-1"><strong>Author:</strong> @book.AuthorName</p>
+                        <p><strong>Publish Date:</strong> @book.PublishedDate.ToString("dd-MM-yyyy")</p>
+                    </div>
+                    <div class="col-md-2 p-3 d-flex justify-content-center">
+                        <a asp-action="Details" asp-route-id="@book.Id" class="btn btn-outline-info align-self-center w-100">
+                            Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <nav>
+            <ul class="pagination justify-content-center mb-3">
+                <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")" aria-disabled="@(Model.PageNumber == 1)">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-searchTerm="@ViewData["SearchTerm"]"
+                       asp-route-page="@(Model.PageNumber - 1)"
+                       asp-route-pageSize="@Model.PageSize"
+                       tabindex="@(Model.PageNumber == 1 ? "-1" : "0")">
+                        Previous
+                    </a>
+                </li>
+                <li class="page-item @(Model.PageNumber >= Model.TotalPages ? "disabled" : "")" aria-disabled="@(Model.PageNumber >= Model.TotalPages)">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-searchTerm="@ViewData["SearchTerm"]"
+                       asp-route-page="@(Model.PageNumber + 1)"
+                       asp-route-pageSize="@Model.PageSize"
+                       tabindex="@(Model.PageNumber >= Model.TotalPages ? "-1" : "0")">
+                        Next
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="mb-3 text-center">
+                <a asp-action="Create" class="btn btn-success">Add New Book</a>
+            </div>
+        }
     </div>
-}
+</div>

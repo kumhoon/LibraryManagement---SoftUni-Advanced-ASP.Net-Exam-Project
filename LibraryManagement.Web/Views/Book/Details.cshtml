@@ -31,6 +31,7 @@
             </dd>
         }
     </dl>
+    <div class="mb-4">
     @if (User.Identity?.IsAuthenticated == true && Model.IsApprovedMember)
     {
         if (Model.HasBorrowedThisBook)
@@ -62,12 +63,18 @@
     }
     else
     {
-        <p class="text-info mt-3">Please <a asp-controller="Account" asp-action="Login">log in</a> as an approved member to borrow books.</p>
+        <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-success mt-3">Login to as an approved member to borrow this book</a>
     }
 </div>
 
+<div class="mb-4">
 <a asp-action="Index" class="btn btn-primary">Back to All Books</a> 
-
+@if (User.IsInRole("Admin"))
+{
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning ms-2">Edit</a>
+    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-warning ms-2">Delete</a>
+}
+</div>
 <partial name="_BookReviewsPartial" model="@Model.Reviews" />
 @if (User.Identity?.IsAuthenticated == true && Model.IsApprovedMember)
 {
@@ -84,8 +91,4 @@
         </a>
     }
 }
-@if (User.IsInRole("Admin"))
-{
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning ms-2">Edit</a>
-    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-warning ms-2">Delete</a>
-}
+

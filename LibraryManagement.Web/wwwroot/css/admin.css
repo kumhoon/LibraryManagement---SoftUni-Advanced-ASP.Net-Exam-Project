@@ -1,0 +1,27 @@
+﻿body {
+    background-color: #1e1e2f;
+    color: #f0f0f0;
+}
+
+.admin-navbar {
+    background-color: #2b2b3d;
+    padding: 1rem;
+}
+
+    .admin-navbar a {
+        color: #ffffff;
+        margin-right: 1rem;
+        text-decoration: none;
+    }
+
+        .admin-navbar a:hover {
+            text-decoration: underline;
+        }
+
+main {
+    padding: 2rem;
+}
+
+.btn {
+    margin-top: 0.5rem;
+}
