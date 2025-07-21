@@ -3,7 +3,7 @@
 @model UserMembershipViewModel
 
 @{
-    ViewData["Title"] = "Membership Dashboard";
+    ViewData["Title"] = "Membership";
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -27,3 +27,9 @@
         }
     }
 </div>
+<a asp-controller="BorrowingRecord" asp-action="History" class="btn btn-primary">
+    Borrowing Record History
+</a>
+<a asp-controller="FavouriteList" asp-action="Index" class="btn btn-primary">
+    My favourite books
+</a>

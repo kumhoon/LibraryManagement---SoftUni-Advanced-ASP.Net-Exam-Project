@@ -14,21 +14,19 @@
         }
         public async Task<BorrowResult> BorrowBookAsync(Guid memberId, Guid bookId)
         {
-            // Check if member already borrowed this book
+            
             var alreadyBorrowed = await _borrowingRecordRepository.HasActiveBorrowAsync(memberId, bookId);
             if (alreadyBorrowed != null)
             {
                 return BorrowResult.AlreadyBorrowedByMember;
             }
 
-            // Check if book is borrowed by someone else
             var isBorrowedByOther = await _borrowingRecordRepository.IsBookBorrowedAsync(bookId);
             if (isBorrowedByOther)
             {
                 return BorrowResult.BookUnavailable;
             }
 
-            // If all good, create borrowing record
             var record = new BorrowingRecord
             {
                 Id = Guid.NewGuid(),

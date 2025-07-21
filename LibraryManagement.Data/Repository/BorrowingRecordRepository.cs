@@ -25,7 +25,7 @@
         {
             return await _context.BorrowingRecords
                 .AnyAsync(br => br.MemberId == memberId &&
-                                            br.ReturnDate == null);
+                                br.ReturnDate == null);
         }
 
         public async Task<bool> IsBookBorrowedAsync(Guid bookId)
