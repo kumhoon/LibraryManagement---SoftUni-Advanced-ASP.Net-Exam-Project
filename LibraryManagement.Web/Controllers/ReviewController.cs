@@ -3,7 +3,7 @@
     using LibraryManagement.Services.Core.Interfaces;
     using LibraryManagement.Web.ViewModels.Review;
     using Microsoft.AspNetCore.Mvc;
-
+    using static LibraryManagement.GCommon.Messages.ReviewMessages;
     public class ReviewController : BaseController
     {
         private readonly IReviewService _reviewService;
@@ -25,7 +25,7 @@
 
             var review = await _reviewService.GetMemberReviewForBookAsync(memberId, bookId);
 
-            var model = new ReviewViewModel
+            var model = new ReviewInputModel
             {
                 ReviewId = review?.ReviewId ?? Guid.Empty,
                 Rating = review?.Rating ?? 5, 
@@ -39,7 +39,7 @@
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ReviewViewModel model)
+        public async Task<IActionResult> Edit(ReviewInputModel model)
         {
             if (model.Rating < 1 || model.Rating > 5)
             {
@@ -74,7 +74,7 @@
                 return View(model);
             }
 
-            TempData["SuccessMessage"] = "Your review was submitted successfully!";
+            TempData["SuccessMessage"] = ReviewAdded;
             return RedirectToAction("Details", "Book", new { id = model.BookId });
         }
 

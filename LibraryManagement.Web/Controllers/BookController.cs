@@ -4,7 +4,7 @@
     using LibraryManagement.Web.ViewModels.Book;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-
+    using static LibraryManagement.GCommon.PagedResultConstants;
     public class BookController : BaseController
     {
         private readonly IBookService _bookService;
@@ -17,11 +17,11 @@
         }
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Index(string? searchTerm, int page = 1, int pageSize = 5)
+        public async Task<IActionResult> Index(string? searchTerm, int pageNumber = DefaultPageNumber, int pageSize = DefaultPageSize)
         {
             try
             {
-                var result = await _bookService.GetBookIndexAsync(searchTerm, page, pageSize);
+                var result = await _bookService.GetBookIndexAsync(searchTerm, pageNumber, pageSize);
                 ViewData["SearchTerm"] = searchTerm;
                 return View(result);
             }
@@ -34,12 +34,12 @@
         }
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Details(Guid id, int page = 1)
+        public async Task<IActionResult> Details(Guid id, int pageNumber = DefaultPageNumber)
         {
             try
             {
                 string? userId = this.GetUserId();
-                BookDetailsViewModel? bookDetailsVM = await this._bookService.GetBookDetailsAsync(id, userId, page);
+                BookDetailsViewModel? bookDetailsVM = await this._bookService.GetBookDetailsAsync(id, userId, pageNumber);
                 if (bookDetailsVM == null)
                 {         
                     return NotFound();

@@ -40,7 +40,7 @@
             return await _context.Books
                 .Include(b => b.Author)
                 .Include(b => b.Genre)
-                .ToListAsync();
+                .ToArrayAsync();
         }
 
         public async Task<IEnumerable<Book>> GetPagedBooksAsync(int pageNumber, int pageSize)

@@ -4,7 +4,7 @@
     using static LibraryManagement.GCommon.ViewModelValidationConstants.ReviewConstants;
     using static LibraryManagement.GCommon.ViewModelValidationConstants.ErrorMessages;
 
-    public class ReviewViewModel
+    public class ReviewInputModel
     {
         public Guid ReviewId { get; set; }
 

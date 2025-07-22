@@ -5,6 +5,7 @@
     using LibraryManagement.Services.Common;
     using LibraryManagement.Services.Core.Interfaces;
     using LibraryManagement.Web.ViewModels.Review;
+    using static LibraryManagement.GCommon.Defaults.Text;
     public class ReviewService : IReviewService
     {
         private readonly IReviewRepository _reviewRepository;
@@ -53,14 +54,14 @@
             return await _reviewRepository.UpdateAsync(review);
         }
 
-        public async Task<ReviewViewModel?> GetMemberReviewForBookAsync(Guid memberId, Guid bookId)
+        public async Task<ReviewInputModel?> GetMemberReviewForBookAsync(Guid memberId, Guid bookId)
         {
             Review? review = await _reviewRepository
                 .FirstOrDefaultAsync(r => r.BookId == bookId && r.MemberId == memberId);
 
             if (review == null) return null;
 
-            return new ReviewViewModel
+            return new ReviewInputModel
             {
                 BookId = bookId,
                 ReviewId = review.Id,
@@ -85,21 +86,21 @@
                 .Take(pageSize)
                 .ToList();
 
-            var display = new List<ReviewDisplayViewModel>(pagedReviews.Count);
+            var display = new List<ReviewDisplayInputModel>(pagedReviews.Count);
             foreach (var r in pagedReviews)
             {
                 var member = await _memberRepository.GetByIdAsync(r.MemberId);
 
-                display.Add(new ReviewDisplayViewModel
+                display.Add(new ReviewDisplayInputModel
                 {
-                    MemberName = member?.Name ?? "Unknown",
+                    MemberName = member?.Name ?? UnknownMember,
                     Rating = r.Rating,
                     Content = r.Content,
                     CreatedAt = r.CreatedAt
                 });
             }
 
-            var pagedResult = new PagedResult<ReviewDisplayViewModel>
+            var pagedResult = new PagedResult<ReviewDisplayInputModel>
             {
                 Items = display,
                 PageNumber = pageNumber,
@@ -129,9 +130,9 @@
                 {
                     ReviewId = r.Id,
                     BookId = r.BookId,
-                    BookTitle = book?.Title ?? "(Unknown)",
+                    BookTitle = book?.Title ?? UnknownTitle,
                     MemberId = r.MemberId,
-                    MemberName = member?.Name ?? "(Unknown)",
+                    MemberName = member?.Name ?? UnknownMember,
                     Rating = r.Rating,
                     Content = r.Content,
                     CreatedAt = r.CreatedAt

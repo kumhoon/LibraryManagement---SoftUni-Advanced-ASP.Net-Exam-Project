@@ -57,7 +57,7 @@
                         .Include(f => f.Book)
                           .ThenInclude(b => b.Genre)       
                         .Select(f => f.Book)
-                        .ToListAsync();
+                        .ToArrayAsync();
         }
 
     }

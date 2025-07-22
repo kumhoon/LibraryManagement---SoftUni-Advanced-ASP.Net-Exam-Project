@@ -51,7 +51,7 @@
                     <a class="page-link"
                        asp-action="Index"
                        asp-route-searchTerm="@ViewData["SearchTerm"]"
-                       asp-route-page="@(Model.PageNumber - 1)"
+                       asp-route-pageNumber="@(Model.PageNumber - 1)"
                        asp-route-pageSize="@Model.PageSize"
                        tabindex="@(Model.PageNumber == 1 ? "-1" : "0")">
                         Previous
@@ -61,7 +61,7 @@
                     <a class="page-link"
                        asp-action="Index"
                        asp-route-searchTerm="@ViewData["SearchTerm"]"
-                       asp-route-page="@(Model.PageNumber + 1)"
+                       asp-route-pageNumber="@(Model.PageNumber + 1)"
                        asp-route-pageSize="@Model.PageSize"
                        tabindex="@(Model.PageNumber >= Model.TotalPages ? "-1" : "0")">
                         Next

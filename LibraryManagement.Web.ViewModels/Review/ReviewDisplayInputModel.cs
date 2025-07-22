@@ -3,7 +3,7 @@
     using System.ComponentModel.DataAnnotations;
     using static LibraryManagement.GCommon.ViewModelValidationConstants.ReviewConstants;
     using static LibraryManagement.GCommon.ViewModelValidationConstants.ErrorMessages;
-    public class ReviewDisplayViewModel
+    public class ReviewDisplayInputModel
     {
         [Required]
         public string MemberName { get; set; } = null!;

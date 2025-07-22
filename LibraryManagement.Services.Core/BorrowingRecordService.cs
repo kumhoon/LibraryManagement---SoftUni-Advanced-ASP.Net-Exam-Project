@@ -4,6 +4,7 @@
     using LibraryManagement.Data.Models;
     using LibraryManagement.Services.Core.Interfaces;
     using LibraryManagement.Web.ViewModels.BorrowingRecord;
+    using static LibraryManagement.GCommon.Defaults.Text;
 
     public class BorrowingRecordService : IBorrowingRecordService
     {
@@ -47,12 +48,11 @@
                 .GetByMemberIdAsync(memberId);
 
             return records
-                .Select(r => new BorrowingRecordViewModel
-            {
-                Title = r.Book?.Title ?? "Unknown Title",
-                BorrowDate = r.BorrowDate,
-                ReturnDate = r.ReturnDate
-            });
+                .Select(r => new BorrowingRecordViewModel { 
+                    Title = r.Book?.Title ?? UnknownTitle,
+                    BorrowDate = r.BorrowDate,
+                    ReturnDate = r.ReturnDate
+                });
         }
 
         public async Task<bool> IsBookBorrowedAsync(Guid bookId)

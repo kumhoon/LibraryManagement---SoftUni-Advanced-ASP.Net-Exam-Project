@@ -10,6 +10,7 @@
     using Microsoft.EntityFrameworkCore;
     using System.Globalization;
     using static LibraryManagement.GCommon.ViewModelValidationConstants.BookConstants;
+    using static LibraryManagement.GCommon.PagedResultConstants;
     public class BookService : IBookService
     {
         private readonly UserManager<IdentityUser> _userManager;
@@ -105,12 +106,11 @@
                 HasBorrowedAnyBook = false
             };
 
-            int pageSize = 5;
-
+            int pageSize = DefaultPageSize;
             
             var pagedReviews = await _reviewService.GetBookReviewsAsync(id, reviewPage, pageSize);
 
-            ReviewViewModel? memberReview = null;
+            ReviewInputModel? memberReview = null;
 
             if (!string.IsNullOrEmpty(userId))
             {
@@ -180,7 +180,7 @@
             return editModel;
         }
 
-        public async Task<PagedResult<BookIndexViewModel>> GetBookIndexAsync(string? searchTerm, int pageNumber = 1, int pageSize = 5)
+        public async Task<PagedResult<BookIndexViewModel>> GetBookIndexAsync(string? searchTerm, int pageNumber = DefaultPageNumber, int pageSize = DefaultPageSize)
         {          
             IQueryable<Book> query = _bookRepository
                 .GetAllAttached()              

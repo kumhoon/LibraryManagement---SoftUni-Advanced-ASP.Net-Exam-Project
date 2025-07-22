@@ -27,6 +27,6 @@ namespace LibraryManagement.Web.ViewModels.Book
 
         public BookReviewsViewModel Reviews { get; set; } = new BookReviewsViewModel();
 
-        public ReviewViewModel? MemberReview { get; set; }
+        public ReviewInputModel? MemberReview { get; set; }
     }
 }

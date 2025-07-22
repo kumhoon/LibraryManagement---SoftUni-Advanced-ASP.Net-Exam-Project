@@ -3,7 +3,8 @@
     using LibraryManagement.Services.Core.Interfaces;
     using LibraryManagement.Web.ViewModels.BorrowingRecord;
     using Microsoft.AspNetCore.Mvc;
-
+    using static LibraryManagement.GCommon.Messages.BorrowingRecordMessages;
+    using static LibraryManagement.GCommon.Defaults.Text;
     public class BorrowingRecordController : BaseController
     {
         private readonly IBorrowingRecordService _borrowingRecordService;
@@ -52,8 +53,8 @@
                 var vm = new BorrowingRecordResultViewModel
                 {
                     Success = false,
-                    Message = "You can only borrow one book at a time. Please return your current book before borrowing another.",
-                    BookTitle = book?.Title ?? "Unknown Book"
+                    Message = BorrowLimitExceeded,
+                    BookTitle = book?.Title ?? UnknownTitle
                 };
                 return View("BorrowResult", vm);
             }
@@ -64,17 +65,17 @@
 
             string message = borrowResult switch
             {
-                BorrowResult.Success => "Book successfully borrowed!",
-                BorrowResult.AlreadyBorrowedByMember => "You have already borrowed this book.",
-                BorrowResult.BookUnavailable => "This book is currently borrowed by another user.",
-                _ => "Failed to borrow the book."
+                BorrowResult.Success => BorrowSuccess,
+                BorrowResult.AlreadyBorrowedByMember => BookAlreadyBorrowedByMember,
+                BorrowResult.BookUnavailable => BookAlreadyBorrowedByAnotherMember,
+                _ => BorrowFailed
             };
 
             var resultVm = new BorrowingRecordResultViewModel
             {
                 Success = borrowResult == BorrowResult.Success,
                 Message = message,
-                BookTitle = borrowedBook?.Title ?? "Unknown Book"
+                BookTitle = borrowedBook?.Title ?? UnknownTitle
             };
 
             return View("BorrowResult", resultVm);
@@ -98,8 +99,8 @@
             var viewModel = new BorrowingRecordResultViewModel
             {
                 Success = result,
-                BookTitle = book?.Title ?? "Unknown Book",
-                Message = result ? "Book returned successfully." : "Failed to return the book."
+                BookTitle = book?.Title ?? UnknownTitle,
+                Message = result ? ReturnSuccess : ReturnFailed
             };
 
             return View("ReturnResult", viewModel);

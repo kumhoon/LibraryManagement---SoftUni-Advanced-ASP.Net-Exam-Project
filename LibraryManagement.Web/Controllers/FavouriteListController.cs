@@ -2,7 +2,7 @@
 {
     using LibraryManagement.Services.Core.Interfaces;
     using Microsoft.AspNetCore.Mvc;
-
+    using static LibraryManagement.GCommon.Messages.FavouriteListMessages;
     public class FavouriteListController : BaseController
     {
         private readonly IFavouriteListService _favouriteListService;
@@ -52,7 +52,7 @@
             bool added = await _favouriteListService.AddToFavouritesAsync(member.Id, bookId);
 
             TempData[added ? "SuccessMessage" : "ErrorMessage"] =
-            added ? "Book added to your favourites!" : "This book is already in your favourites.";
+            added ? BookAddedToFavourites : BookAlreadyInFavourites;
 
             return RedirectToAction(nameof(Index));
         }
@@ -76,7 +76,7 @@
             bool removed = await _favouriteListService.RemoveFromFavouritesAsync(member.Id, bookId);
 
             TempData[removed ? "SuccessMessage" : "ErrorMessage"] =
-            removed ? "Book removed from your favourites." : "This book was not found in your favourites.";
+            removed ? BookRemovedFromFavourites : BookNotFoundInFavourites;
 
             return RedirectToAction(nameof(Index));
         }
