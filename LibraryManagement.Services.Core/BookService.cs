@@ -9,7 +9,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System.Globalization;
-    using static LibraryManagement.GCommon.ViewModelValidationConstants.BookConstants;
+    using static LibraryManagement.Web.ViewModels.ViewModelValidationConstants.BookConstants;
     using static LibraryManagement.GCommon.PagedResultConstants;
     public class BookService : IBookService
     {

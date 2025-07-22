@@ -1,8 +1,8 @@
 ﻿namespace LibraryManagement.Web.ViewModels.Review
 {
     using System.ComponentModel.DataAnnotations;
-    using static LibraryManagement.GCommon.ViewModelValidationConstants.ReviewConstants;
-    using static LibraryManagement.GCommon.ViewModelValidationConstants.ErrorMessages;
+    using static LibraryManagement.Web.ViewModels.ViewModelValidationConstants.ReviewConstants;
+    using static LibraryManagement.GCommon.ErrorMessages;
 
     public class ReviewInputModel
     {
