@@ -2,11 +2,16 @@
 {
     using LibraryManagement.Data.Interfaces;
     using LibraryManagement.Data.Models;
+    using LibraryManagement.GCommon;
     using LibraryManagement.Services.Common;
     using LibraryManagement.Services.Core.Interfaces;
     using LibraryManagement.Web.ViewModels.Author;
     using Microsoft.EntityFrameworkCore;
     using System.Threading.Tasks;
+    using static LibraryManagement.GCommon.ErrorMessages;
+    using static LibraryManagement.GCommon.PagedResultConstants;
+    using static LibraryManagement.GCommon.PaginationValidator;
+
     public class AuthorService : IAuthorService
     {
         private readonly IAuthorRepository _authorRepository;
@@ -15,8 +20,10 @@
             _authorRepository = authorRepository;
         }
 
-        public async Task<PagedResult<AuthorWithBooksViewModel>> GetAuthorsWithBooksAsync(string? searchTerm, int pageNumber = 1, int pageSize = 5)
+        public async Task<PagedResult<AuthorWithBooksViewModel>> GetAuthorsWithBooksAsync(string? searchTerm, int pageNumber = DefaultPageNumber, int pageSize = DefaultPageSize)
         {
+            PaginationValidator.Validate(pageNumber, pageSize);
+
             IQueryable<Author> query = _authorRepository
                 .GetAllAttached()
                 .Where(a => a.Books.Any(b => !b.IsDeleted)) 
@@ -33,7 +40,7 @@
                 .OrderBy(a => a.Name)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .ToListAsync();
+                .ToArrayAsync();
 
             var items = pagedAuthors.Select(a => new AuthorWithBooksViewModel
             {
@@ -54,7 +61,7 @@
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentException("Author name cannot be null or empty.", nameof(name));
+                throw new ArgumentException(BookAuthorNameErrorMessage, nameof(name));
             }
 
             var existingAuthor = await _authorRepository.GetByNameAsync(name.Trim());

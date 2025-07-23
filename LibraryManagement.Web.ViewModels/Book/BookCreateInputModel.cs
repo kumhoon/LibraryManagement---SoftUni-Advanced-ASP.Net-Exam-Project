@@ -2,8 +2,8 @@
 {
     using System.ComponentModel.DataAnnotations;
     using Microsoft.AspNetCore.Mvc.Rendering;
-    using static LibraryManagement.GCommon.ViewModelValidationConstants.BookConstants;
-    using static LibraryManagement.GCommon.ViewModelValidationConstants.ErrorMessages;
+    using static LibraryManagement.Web.ViewModels.ViewModelValidationConstants.BookConstants;
+    using static LibraryManagement.GCommon.ErrorMessages;
     public class BookCreateInputModel
     {
         [Required]

@@ -1,4 +1,4 @@
-﻿namespace LibraryManagement.GCommon
+﻿namespace LibraryManagement.Web.ViewModels
 {
     public static class ViewModelValidationConstants
     {
@@ -17,23 +17,6 @@
             public const int BookDescriptionMaxLength = 500;
 
             public const string PublishedOnDateTimeFormat = "dd-MM-yyyy";
-        }
-
-        public static class ErrorMessages
-        {
-            public const string BookTitleErrorMessage = "Title length must be between 1 and 60 characters";
-
-            public const string BookAuthorNameErrorMessage = "Author name must be between 1 and 50 characters";
-
-            public const string BookGenreNameErrorMessage = "Genre must be between 1 and 25 characters";
-
-            public const string BookDescriptionErrorMessage = "Description must be between 1 and 500 characters";
-
-            public const string MemberNameErrorMessage = "Name must be between 1 and 60 characters";
-
-            public const string ReviewContentErrorMessage = "Review content must be between 1 and 1000 characters";
-
-            public const string ReviewRatingErrorMessage = "Rating must be between 1 and 5";
         }
 
         public static class MembershipConstants

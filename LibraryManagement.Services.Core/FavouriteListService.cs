@@ -3,6 +3,7 @@
     using LibraryManagement.Data.Interfaces;
     using LibraryManagement.Services.Core.Interfaces;
     using LibraryManagement.Web.ViewModels.Book;
+    using static LibraryManagement.GCommon.Defaults.Text;
     public class FavouriteListService : IFavouriteListService
     {
         private readonly IFavouriteListRepository _favouriteListRepository;
@@ -37,8 +38,8 @@
             {
                 Id = book.Id,
                 Title = book.Title,
-                AuthorName = book.Author?.Name ?? "Unknown Author",
-                Genre = book.Genre?.Name ?? "Unknown Genre",
+                AuthorName = book.Author?.Name ?? UnknownAuthor,
+                Genre = book.Genre?.Name ?? UnknownGenre,
                 PublishedDate = book.PublishedDate,
                 ImageUrl = book.ImageUrl
             });

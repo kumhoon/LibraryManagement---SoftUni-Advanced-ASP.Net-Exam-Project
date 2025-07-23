@@ -7,7 +7,7 @@
 
         Task<bool> UpdateReviewAsync(Guid memberId, Guid reviewId, int rating, string? content);
 
-        Task<ReviewViewModel?> GetMemberReviewForBookAsync(Guid memberId, Guid bookId);
+        Task<ReviewInputModel?> GetMemberReviewForBookAsync(Guid memberId, Guid bookId);
 
         Task<BookReviewsViewModel> GetBookReviewsAsync(Guid bookId, int pageNumber, int pageSize);
 

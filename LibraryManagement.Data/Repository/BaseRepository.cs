@@ -3,6 +3,7 @@
     using LibraryManagement.Data.Interfaces;
     using Microsoft.EntityFrameworkCore;
     using System.Linq.Expressions;
+    using static LibraryManagement.GCommon.ErrorMessages;
     public class BaseRepository<TType, TId> : IRepository<TType, TId>
         where TType : class
     {
@@ -88,7 +89,7 @@
             }
             else
             {
-                throw new InvalidOperationException($"{typeof(TType).Name} does not support soft deletion (missing IsDeleted property).");
+                throw new InvalidOperationException(MissingIsDeletedPropertyErrorMessage);
             }
         }
     }

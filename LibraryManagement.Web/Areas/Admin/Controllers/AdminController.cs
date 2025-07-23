@@ -5,16 +5,20 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using LibraryManagement.Web.Controllers;
+    using static LibraryManagement.GCommon.Messages.AdminMessages;
+    using static LibraryManagement.GCommon.ErrorMessages;
 
     [Area("Admin")]
     [Authorize(Roles = "Admin")]
     public class AdminController : BaseController
     {
         private readonly IMembershipService _membershipService;
+        private readonly ILogger<AdminController> _logger;
 
-        public AdminController(IMembershipService membershipService)
+        public AdminController(IMembershipService membershipService, ILogger<AdminController> logger)
         {
             _membershipService = membershipService;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -39,20 +43,61 @@
         [HttpPost]
         public async Task<IActionResult> ApproveMembership(Guid id)
         {
-            await _membershipService.UpdateMembershipStatusAsync(id, MembershipStatus.Approved);
-            return RedirectToAction(nameof(ReviewApplications));
+            try
+            {
+                bool success = await _membershipService.UpdateMembershipStatusAsync(id, MembershipStatus.Approved);
+
+                TempData[success ? "SuccessMessage" : "ErrorMessage"] =
+                    success ? MembershipApproved : MembershipApprovedFailed;
+
+                return RedirectToAction(nameof(ReviewApplications));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ApproveMembershipErrorMessage);
+                TempData["ErrorMessage"] = UnexpectedErrorMessage;
+                return RedirectToAction(nameof(ReviewApplications));
+            }
         }
+
         [HttpPost]
         public async Task<IActionResult> RejectMembership(Guid id)
         {
-            await _membershipService.UpdateMembershipStatusAsync(id, MembershipStatus.Rejected);
-            return RedirectToAction(nameof(ReviewApplications));
+            try
+            {
+                bool success = await _membershipService.UpdateMembershipStatusAsync(id, MembershipStatus.Rejected);
+
+                TempData[success ? "SuccessMessage" : "ErrorMessage"] =
+                    success ? MembershipRejected : MembershipRejectedFailed;
+
+                return RedirectToAction(nameof(ReviewApplications));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, RejectMembershipErrorMessage);
+                TempData["ErrorMessage"] = UnexpectedErrorMessage;
+                return RedirectToAction(nameof(ReviewApplications));
+            }
         }
+
         [HttpPost]
         public async Task<IActionResult> RevokeMembership(Guid id)
         {
-            await _membershipService.UpdateMembershipStatusAsync(id, MembershipStatus.Revoked);
-            return RedirectToAction(nameof(Members));
+            try
+            {
+                bool success = await _membershipService.UpdateMembershipStatusAsync(id, MembershipStatus.Revoked);
+
+                TempData[success ? "SuccessMessage" : "ErrorMessage"] =
+                    success ? MembershipRevoked : MembershipRevokedFailed;
+
+                return RedirectToAction(nameof(Members));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, RevokeMembershipErrorMessage);
+                TempData["ErrorMessage"] = UnexpectedErrorMessage;
+                return RedirectToAction(nameof(Members));
+            }
         }
     }
 }

@@ -9,7 +9,11 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System.Globalization;
-    using static LibraryManagement.GCommon.ViewModelValidationConstants.BookConstants;
+    using static LibraryManagement.Web.ViewModels.ViewModelValidationConstants.BookConstants;
+    using static LibraryManagement.GCommon.PagedResultConstants;
+    using static LibraryManagement.GCommon.ErrorMessages;
+    using LibraryManagement.GCommon;
+
     public class BookService : IBookService
     {
         private readonly UserManager<IdentityUser> _userManager;
@@ -42,41 +46,41 @@
             _reviewService = reviewService;
         }
 
-        public async Task<bool> CreateBookAsync(string userId, BookCreateInputModel inputModel)
+        public async Task<(bool Success, string? FailureReason)> CreateBookAsync(string userId, BookCreateInputModel inputModel)
         {
-            bool createResult = false;
 
             IdentityUser? user = await this._userManager.FindByIdAsync(userId);
+            if (user == null) return (false, UserNotFoundErrorMessage);
 
             var genre = await this._genreRepository.GetByIdAsync(inputModel.GenreId);
+            if (genre == null) return (false, InvalidGenreErrorMessage);
 
             var author = await this._authorService.GetOrCreateAuthorAsync(inputModel.Author);
 
-            bool isPublishedOnDateValid = DateTime.TryParseExact(
+            if (!DateTime.TryParseExact(
                 inputModel.PublishedDate,
                 PublishedOnDateTimeFormat,
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.None,
-                out DateTime PublishedOn);
-
-            if ((user != null) && (genre != null) && (isPublishedOnDateValid))
-            {
-                Book book = new Book
-                {
-                    Title = inputModel.Title,
-                    Description = inputModel.Description,
-                    ImageUrl = inputModel.ImageUrl,
-                    PublishedDate = PublishedOn,
-                    BookCreatorId = userId,
-                    Author = author,
-                    Genre = genre
-                };
-
-                await this._bookRepository.AddAsync(book);
-                await this._bookRepository.SaveChangesAsync();
-                createResult = true;
+                out DateTime PublishedOn))
+            { 
+                return (false, InvalidBookErrorMessage);
             }
-            return createResult;
+            
+            Book book = new Book
+            {
+                Title = inputModel.Title.Trim(),
+                Description = inputModel.Description.Trim(),
+                ImageUrl = inputModel.ImageUrl?.Trim(),
+                PublishedDate = PublishedOn,
+                BookCreatorId = userId,
+                Author = author,
+                Genre = genre
+            };
+
+            await this._bookRepository.AddAsync(book);
+            await this._bookRepository.SaveChangesAsync();
+            return (true, null);
         }
 
         public async Task<Book?> GetBookByIdAsync(Guid bookId)
@@ -88,7 +92,7 @@
         {
             var book = await this._bookRepository.GetBookWithDetailsAsync(id);
 
-            if (book == null) { return null; }
+            if (book == null) { throw new KeyNotFoundException(BookNotFoundErrorMessage); }
 
             var viewModel = new BookDetailsViewModel
             {
@@ -105,12 +109,11 @@
                 HasBorrowedAnyBook = false
             };
 
-            int pageSize = 5;
-
+            int pageSize = DefaultPageSize;
             
             var pagedReviews = await _reviewService.GetBookReviewsAsync(id, reviewPage, pageSize);
 
-            ReviewViewModel? memberReview = null;
+            ReviewInputModel? memberReview = null;
 
             if (!string.IsNullOrEmpty(userId))
             {
@@ -138,50 +141,48 @@
             return viewModel;
         }
 
-        public async Task<BookDeleteInputModel?> GetBookForDeletingAsync(string userId, Guid? bookId)
+        public async Task<BookDeleteInputModel> GetBookForDeletingAsync(string userId, Guid bookId)
         {
-            BookDeleteInputModel? deleteModel = null;
-            if (bookId != null)
+            var book = await _bookRepository.GetBookWithDetailsAsync(bookId)
+                ?? throw new KeyNotFoundException(BookNotFoundErrorMessage);
+
+            if (!book.BookCreatorId.Equals(userId, StringComparison.OrdinalIgnoreCase))
+                throw new UnauthorizedAccessException(NotAuthorizedErrorMessage);
+
+            return new BookDeleteInputModel
             {
-                var bookDeleteModel = await _bookRepository.GetBookWithDetailsAsync(bookId.Value);
-                if((bookDeleteModel != null) 
-                    && (bookDeleteModel.BookCreatorId.Equals(userId, StringComparison.OrdinalIgnoreCase)))
-                {
-                    deleteModel = new BookDeleteInputModel
-                    {
-                        Title = bookDeleteModel.Title,
-                        AuthorName = bookDeleteModel.Author.Name,
-                    };
-                }
-            }
-            return deleteModel;
+                Id = book.Id,
+                Title = book.Title,
+                AuthorName = book.Author.Name 
+            };
         }
 
-        public async Task<BookEditInputModel?> GetBookForEditingAsync(string userId, Guid? bookId)
+        public async Task<BookEditInputModel> GetBookForEditingAsync(string userId, Guid bookId)
         {
-            BookEditInputModel? editModel = null;
-            if (bookId != null) 
-            { 
-                var bookEditModel = await _bookRepository.GetBookWithDetailsAsync(bookId.Value);
-                if ((bookEditModel != null) && bookEditModel.BookCreatorId.Equals(userId, StringComparison.OrdinalIgnoreCase))
-                {
-                    editModel = new BookEditInputModel
-                    {
-                        Id = bookEditModel.Id,
-                        Title = bookEditModel.Title,
-                        Description = bookEditModel.Description,
-                        ImageUrl = bookEditModel.ImageUrl,
-                        GenreId = bookEditModel.GenreId,
-                        PublishedDate = bookEditModel.PublishedDate,
-                        Author = bookEditModel.Author.Name,
-                    };
-                }
-            }
-            return editModel;
+            var book = await _bookRepository.GetBookWithDetailsAsync(bookId);
+
+            if (book == null)
+                throw new KeyNotFoundException(BookNotFoundErrorMessage);
+
+            if (!book.BookCreatorId.Equals(userId, StringComparison.OrdinalIgnoreCase))
+                throw new UnauthorizedAccessException(NotAuthorizedErrorMessage);
+
+            return new BookEditInputModel
+            {
+                Id = book.Id,
+                Title = book.Title,
+                Description = book.Description,
+                ImageUrl = book.ImageUrl,
+                GenreId = book.GenreId,
+                PublishedDate = book.PublishedDate,
+                Author = book.Author.Name
+            };
         }
 
-        public async Task<PagedResult<BookIndexViewModel>> GetBookIndexAsync(string? searchTerm, int pageNumber = 1, int pageSize = 5)
+        public async Task<PagedResult<BookIndexViewModel>> GetBookIndexAsync(string? searchTerm, int pageNumber = DefaultPageNumber, int pageSize = DefaultPageSize)
         {          
+            PaginationValidator.Validate(pageNumber, pageSize);
+
             IQueryable<Book> query = _bookRepository
                 .GetAllAttached()              
                 .Include(b => b.Author)
@@ -227,60 +228,53 @@
             };
         }
 
-        public async Task<bool> SoftDeleteBookAsync(string userId, BookDeleteInputModel inputModel)
+        public async Task SoftDeleteBookAsync(string userId, BookDeleteInputModel inputModel)
         {
-            bool deleteResult = false;
+            var user = await _userManager.FindByIdAsync(userId)
+                ?? throw new InvalidOperationException(UserNotFoundErrorMessage);
 
-            IdentityUser? user = await this._userManager.FindByIdAsync(userId);
+            var book = await _bookRepository.GetBookWithDetailsAsync(inputModel.Id)
+                ?? throw new KeyNotFoundException(BookNotFoundErrorMessage);
 
-            Book? book = await this._bookRepository.GetBookWithDetailsAsync(inputModel.Id);
+            if (!book.BookCreatorId.Equals(userId, StringComparison.OrdinalIgnoreCase))
+                throw new UnauthorizedAccessException(NotAuthorizedErrorMessage);
 
-            if ((user != null) 
-                && (book != null) 
-                && (book.BookCreatorId.Equals(userId, StringComparison.OrdinalIgnoreCase))) 
-            { 
-                book.IsDeleted = true;
-                await this._bookRepository.SaveChangesAsync();
-                deleteResult = true;
-            }
-            return deleteResult;
+            book.IsDeleted = true;
+            await _bookRepository.SaveChangesAsync();
         }
 
-        public async Task<bool> UpdateEditedBookAsync(string userId, BookEditInputModel inputModel)
+        public async Task UpdateEditedBookAsync(string userId, BookEditInputModel inputModel)
         {
-            bool updateResult = false;
+            var user = await _userManager.FindByIdAsync(userId)
+                ?? throw new InvalidOperationException(UserNotFoundErrorMessage);
 
-            IdentityUser? user = await this._userManager
-                .FindByIdAsync(userId);
+            var genre = await _genreRepository.GetByIdAsync(inputModel.GenreId)
+                ?? throw new InvalidOperationException(GenreNotFoundErrorMessage);
 
-            Genre? genre = await this._genreRepository.GetByIdAsync(inputModel.GenreId);
+            var book = await _bookRepository.GetBookWithDetailsAsync(inputModel.Id)
+                ?? throw new KeyNotFoundException(BookNotFoundErrorMessage);
 
-            Book? book = await this._bookRepository.GetBookWithDetailsAsync(inputModel.Id);
+            if (!book.BookCreatorId.Equals(userId, StringComparison.OrdinalIgnoreCase))
+                throw new UnauthorizedAccessException(NotAuthorizedErrorMessage);
 
-            bool isPublishedOnDateValid = DateTime.TryParseExact(
-                inputModel.PublishedDate.ToString(PublishedOnDateTimeFormat),
-                PublishedOnDateTimeFormat,
-                CultureInfo.InvariantCulture,
-                DateTimeStyles.None,
-                out DateTime PublishedOn);
-
-            if ((user != null) 
-                && (genre != null) 
-                && (book != null) 
-                && (book.BookCreatorId.Equals(userId, StringComparison.OrdinalIgnoreCase))
-                && (isPublishedOnDateValid))
+            if (!DateTime.TryParseExact(
+                    inputModel.PublishedDate.ToString(PublishedOnDateTimeFormat),
+                    PublishedOnDateTimeFormat,
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.None,
+                    out DateTime publishedOn))
             {
-                book.Title = inputModel.Title;
-                book.Author.Name = inputModel.Author;
-                book.Description = inputModel.Description;
-                book.ImageUrl = inputModel.ImageUrl;
-                book.PublishedDate = PublishedOn;
-                book.GenreId = inputModel.GenreId;
-
-                await this._bookRepository.UpdateAsync(book);
-                updateResult = true;
+                throw new FormatException(InvalidPublishedDateFormatErrorMessage);
             }
-            return updateResult;
+
+            book.Title = inputModel.Title;
+            book.Author.Name = inputModel.Author;
+            book.Description = inputModel.Description;
+            book.ImageUrl = inputModel.ImageUrl;
+            book.PublishedDate = publishedOn;
+            book.GenreId = inputModel.GenreId;
+
+            await _bookRepository.UpdateAsync(book);
         }
     }
 }

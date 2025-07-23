@@ -9,6 +9,13 @@
 
 <h2>@Model.Title</h2>
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
 <div class="book-details">
     <dl class="row">
         <dt class="col-sm-2">Author</dt>
@@ -31,6 +38,7 @@
             </dd>
         }
     </dl>
+    </div>
     <div class="mb-4">
     @if (User.Identity?.IsAuthenticated == true && Model.IsApprovedMember)
     {

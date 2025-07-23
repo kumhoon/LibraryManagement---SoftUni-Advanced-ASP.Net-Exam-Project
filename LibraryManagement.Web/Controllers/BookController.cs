@@ -4,52 +4,63 @@
     using LibraryManagement.Web.ViewModels.Book;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-
+    using static LibraryManagement.GCommon.PagedResultConstants;
+    using static LibraryManagement.GCommon.ErrorMessages;
     public class BookController : BaseController
     {
         private readonly IBookService _bookService;
         private readonly IGenreService _genreService;
+        private readonly ILogger<BookController> _logger;
 
-        public BookController(IBookService bookService, IGenreService genreService)
+        public BookController(IBookService bookService, IGenreService genreService, ILogger<BookController> logger)
         {
             _bookService = bookService;
             _genreService = genreService;
+            _logger = logger;
         }
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Index(string? searchTerm, int page = 1, int pageSize = 5)
+        public async Task<IActionResult> Index(string? searchTerm, int pageNumber = DefaultPageNumber, int pageSize = DefaultPageSize)
         {
             try
             {
-                var result = await _bookService.GetBookIndexAsync(searchTerm, page, pageSize);
+                var result = await _bookService.GetBookIndexAsync(searchTerm, pageNumber, pageSize);
                 ViewData["SearchTerm"] = searchTerm;
                 return View(result);
             }
-            catch (Exception e)
+            catch (ArgumentOutOfRangeException ex)
+            {                
+                _logger.LogWarning(ex, InvalidPaginationValues);
+                return RedirectToAction(nameof(Index), new { searchTerm, pageNumber = DefaultPageNumber, pageSize = DefaultPageSize });
+            }
+            catch (Exception ex)
             {
-
-                Console.WriteLine($"An error has occured: {e.Message}");
-                return RedirectToAction(nameof(Index));
+                _logger.LogError(ex, UnexpectedErrorMessage);
+                return View("Error");
             }
         }
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Details(Guid id, int page = 1)
+        public async Task<IActionResult> Details(Guid id, int pageNumber = DefaultPageNumber)
         {
             try
             {
                 string? userId = this.GetUserId();
-                BookDetailsViewModel? bookDetailsVM = await this._bookService.GetBookDetailsAsync(id, userId, page);
+                BookDetailsViewModel? bookDetailsVM = await this._bookService.GetBookDetailsAsync(id, userId, pageNumber);
                 if (bookDetailsVM == null)
                 {         
                     return NotFound();
                 }
                 return View(bookDetailsVM);
             }
-            catch (Exception e)
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (Exception ex)
             {
 
-                Console.WriteLine($"An error has occured: {e.Message}");
+                _logger.LogError(ex, UnexpectedErrorMessage);
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -65,11 +76,11 @@
                 };
                 return View(inputModel);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
 
-                Console.WriteLine($"An error has occured: {e.Message}");
-                return RedirectToAction(nameof(Create));
+                _logger.LogError(ex, UnexpectedErrorMessage);
+                return RedirectToAction(nameof(Index));
             }
         }
         [HttpPost]
@@ -83,20 +94,20 @@
                     inputModel.Genres = await this._genreService.GetAllAsSelectListAsync();
                     return View(inputModel);
                 }
-                bool createResult = await this._bookService.CreateBookAsync(this.GetUserId()!, inputModel);
+                var (success, reason) = await _bookService.CreateBookAsync(GetUserId()!, inputModel);
 
-                if (createResult == false) 
+                if (!success)
                 {
-                    ModelState.AddModelError(string.Empty, "A fatal error has occured. Please try again later.");
-                    inputModel.Genres = await this._genreService.GetAllAsSelectListAsync();
+                    ModelState.AddModelError(string.Empty, reason ?? UnexpectedErrorMessage);
+                    inputModel.Genres = await _genreService.GetAllAsSelectListAsync();
                     return View(inputModel);
                 }
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine($"An error has occured: {e.Message}");
-                return RedirectToAction(nameof(Create));
+                _logger.LogError(ex, UnexpectedErrorMessage);
+                return RedirectToAction(nameof(Index));
             }
         }
         [HttpGet]
@@ -104,54 +115,65 @@
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
-            {
                 return RedirectToAction(nameof(Index));
-            }
 
             try
             {
-                string userId = this.GetUserId()!;
+                var userId = GetUserId()!;
+                var editInputModel = await _bookService.GetBookForEditingAsync(userId, id.Value);
+                editInputModel.Genres = await _genreService.GetAllAsSelectListAsync();
 
-                BookEditInputModel? editInputModel = await this._bookService.GetBookForEditingAsync(userId, id.Value);
-                if(editInputModel == null)
-                {
-                    return RedirectToAction(nameof(Edit));
-                }
-                editInputModel.Genres = await this._genreService.GetAllAsSelectListAsync();
                 return View(editInputModel);
             }
-            catch (Exception e)
+            catch (KeyNotFoundException)
             {
-                Console.WriteLine($"An error has occured: {e.Message}");
-                return RedirectToAction(nameof(Edit));
+                return NotFound();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, BookEditErrorMessage);
+                return View("Error");
             }
         }
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(BookEditInputModel editInputModel)
         {
+            if (!ModelState.IsValid)
+            {
+                editInputModel.Genres = await _genreService.GetAllAsSelectListAsync();
+                return View(editInputModel);
+            }
+
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    editInputModel.Genres = await this._genreService.GetAllAsSelectListAsync();
-                    return View(editInputModel);
-                }
-                bool editResult = await this._bookService.UpdateEditedBookAsync(GetUserId()!, editInputModel);
-                if (editResult == false)
-                {
-                    ModelState.AddModelError(string.Empty, "A fatal error has occured. Please try again later.");
-
-                    editInputModel.Genres = await this._genreService.GetAllAsSelectListAsync();
-                    return View(editInputModel);
-                }
+                await _bookService.UpdateEditedBookAsync(GetUserId()!, editInputModel);
                 return RedirectToAction(nameof(Details), new { id = editInputModel.Id });
             }
-            catch (Exception e)
+            catch (FormatException)
             {
-                Console.WriteLine($"An error has occured: {e.Message}");
-                return RedirectToAction(nameof(Edit));
+                ModelState.AddModelError(nameof(editInputModel.PublishedDate), InvalidPublishedDateFormatErrorMessage);
             }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, BookUpdateErrorMessage);
+                ModelState.AddModelError(string.Empty, UnexpectedErrorMessage);
+            }
+
+            editInputModel.Genres = await _genreService.GetAllAsSelectListAsync();
+            return View(editInputModel);
         }
         [HttpGet]
         [Authorize(Roles = "Admin")]
@@ -159,46 +181,52 @@
         {
             try
             {
-                string userId = this.GetUserId()!;
-                BookDeleteInputModel? bookDeleteInputModel = await this._bookService.GetBookForDeletingAsync(userId, id);
-
-                if (bookDeleteInputModel == null)
-                {
-                    return RedirectToAction(nameof(Index));
-                }
+                string userId = GetUserId()!;
+                var bookDeleteInputModel = await _bookService.GetBookForDeletingAsync(userId, id);
                 return View(bookDeleteInputModel);
             }
-            catch (Exception e)
+            catch (KeyNotFoundException)
             {
-                Console.WriteLine($"An error has occured: {e.Message}");
-                return RedirectToAction(nameof(Delete));
+                return NotFound();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, UnexpectedErrorMessage);
+                return View("Error");
             }
         }
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ConfirmDelete(BookDeleteInputModel inputModel)
         {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError(string.Empty, InvalidDataErrorMessage);
+                return View(inputModel);
+            }
+
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid data provided. Please try again.");
-                    return View(inputModel);
-                }
-
-                bool deleteResult = await this._bookService.SoftDeleteBookAsync(this.GetUserId()!, inputModel);
-                if (deleteResult == false)
-                {
-                    ModelState.AddModelError(string.Empty, "A fatal error has occured. Please try again later.");
-                    return View(inputModel);
-                }
-
+                await _bookService.SoftDeleteBookAsync(GetUserId()!, inputModel);
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception e)
+            catch (KeyNotFoundException)
             {
-                Console.WriteLine($"An error has occured: {e.Message}");
-                return RedirectToAction(nameof(Delete));
+                return NotFound();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, BookDeleteErrorMessage);
+                ModelState.AddModelError(string.Empty, UnexpectedErrorMessage);
+                return View(inputModel);
             }
         }
     }

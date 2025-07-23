@@ -3,82 +3,98 @@
     using LibraryManagement.Services.Core.Interfaces;
     using LibraryManagement.Web.ViewModels.Review;
     using Microsoft.AspNetCore.Mvc;
-
+    using static LibraryManagement.GCommon.Messages.ReviewMessages;
+    using static LibraryManagement.GCommon.ErrorMessages;
     public class ReviewController : BaseController
     {
         private readonly IReviewService _reviewService;
         private readonly IMembershipService _memberService; 
+        private readonly ILogger<ReviewController> _logger;
 
-        public ReviewController(IReviewService reviewService, IMembershipService memberService)
+        public ReviewController(IReviewService reviewService, IMembershipService memberService, ILogger<ReviewController> logger)
         {
             _reviewService = reviewService;
             _memberService = memberService;
+            _logger = logger;
         }
 
-        
+
         [HttpGet]
         public async Task<IActionResult> Edit(Guid bookId)
         {
-            var memberId = await GetCurrentMemberIdAsync();
-            if (memberId == Guid.Empty)
-                return Unauthorized();
+            if (bookId == Guid.Empty)
+                return BadRequest();
 
-            var review = await _reviewService.GetMemberReviewForBookAsync(memberId, bookId);
-
-            var model = new ReviewViewModel
+            try
             {
-                ReviewId = review?.ReviewId ?? Guid.Empty,
-                Rating = review?.Rating ?? 5, 
-                Content = review?.Content,
-                BookId = bookId
-            };
+                var memberId = await GetCurrentMemberIdAsync();
+                if (memberId == Guid.Empty)
+                    return Unauthorized();
 
-            return View(model);
+                var review = await _reviewService.GetMemberReviewForBookAsync(memberId, bookId);
+
+                var model = new ReviewInputModel
+                {
+                    ReviewId = review?.ReviewId ?? Guid.Empty,
+                    Rating = review?.Rating ?? 5,
+                    Content = review?.Content,
+                    BookId = bookId
+                };
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, UnexpectedErrorMessage);
+                return View("Error");  
+            }
         }
 
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ReviewViewModel model)
+        public async Task<IActionResult> Edit(ReviewInputModel model)
         {
-            if (model.Rating < 1 || model.Rating > 5)
+            try
             {
-                ModelState.AddModelError(nameof(model.Rating), "Rating must be between 1 and 5.");
-            }
+                if (model.Rating < 1 || model.Rating > 5)
+                {
+                    ModelState.AddModelError(nameof(model.Rating), ReviewRatingErrorMessage);
+                }
 
-            if (!ModelState.IsValid)
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+
+                var memberId = await GetCurrentMemberIdAsync();
+                if (memberId == Guid.Empty)
+                    return Unauthorized();
+
+                bool success = model.ReviewId == Guid.Empty
+                    ? await _reviewService.CreateReviewAsync(model.BookId, memberId, model.Rating, model.Content)
+                    : await _reviewService.UpdateReviewAsync(memberId, model.BookId, model.Rating, model.Content);
+
+                if (!success)
+                {
+                    ModelState.AddModelError(string.Empty, ReviewSubmitErrorMessage);
+                    return View(model);
+                }
+
+                ModelState.Clear();
+
+                TempData["SuccessMessage"] = ReviewAdded;
+                return RedirectToAction("Details", "Book", new { id = model.BookId });
+            }
+            catch (Exception ex)
             {
+                _logger.LogError(ex, ReviewSubmitErrorMessage);
+                ModelState.AddModelError(string.Empty, UnexpectedErrorMessage);
                 return View(model);
             }
-
-            var memberId = await GetCurrentMemberIdAsync();
-            if (memberId == Guid.Empty)
-                return Unauthorized();
-
-            bool success;
-
-            if (model.ReviewId == Guid.Empty)
-            {
-               
-                success = await _reviewService.CreateReviewAsync(model.BookId, memberId, model.Rating, model.Content);
-            }
-            else
-            {
-                
-                success = await _reviewService.UpdateReviewAsync(memberId, model.BookId, model.Rating, model.Content);
-            }
-
-            if (!success)
-            {
-                ModelState.AddModelError("", "An error occurred while submitting your review.");
-                return View(model);
-            }
-
-            TempData["SuccessMessage"] = "Your review was submitted successfully!";
-            return RedirectToAction("Details", "Book", new { id = model.BookId });
         }
 
-        
+
         private async Task<Guid> GetCurrentMemberIdAsync()
         {
             string? userId = this.GetUserId();

@@ -5,6 +5,7 @@
     using LibraryManagement.Services.Common;
     using LibraryManagement.Services.Core.Interfaces;
     using LibraryManagement.Web.ViewModels.Review;
+    using static LibraryManagement.GCommon.Defaults.Text;
     public class ReviewService : IReviewService
     {
         private readonly IReviewRepository _reviewRepository;
@@ -20,7 +21,10 @@
 
         public async Task<bool> CreateReviewAsync(Guid bookId, Guid memberId, int rating, string? content)
         {
-            Review? existing = await _reviewRepository
+            if (bookId == Guid.Empty || memberId == Guid.Empty || rating < 1 || rating > 5) return false;
+
+
+            var existing = await _reviewRepository
                 .FirstOrDefaultAsync(r => r.BookId == bookId && r.MemberId == memberId);
 
             if (existing != null) return false;
@@ -41,6 +45,8 @@
 
         public async Task<bool> UpdateReviewAsync(Guid memberId, Guid bookId, int rating, string? content)
         {
+            if (bookId == Guid.Empty || memberId == Guid.Empty || rating < 1 || rating > 5) return false;
+
             Review? review = await _reviewRepository
                 .FirstOrDefaultAsync(r => r.BookId == bookId && r.MemberId == memberId);
 
@@ -53,14 +59,16 @@
             return await _reviewRepository.UpdateAsync(review);
         }
 
-        public async Task<ReviewViewModel?> GetMemberReviewForBookAsync(Guid memberId, Guid bookId)
+        public async Task<ReviewInputModel?> GetMemberReviewForBookAsync(Guid memberId, Guid bookId)
         {
+            if (memberId == Guid.Empty || bookId == Guid.Empty) return null;
+
             Review? review = await _reviewRepository
                 .FirstOrDefaultAsync(r => r.BookId == bookId && r.MemberId == memberId);
 
             if (review == null) return null;
 
-            return new ReviewViewModel
+            return new ReviewInputModel
             {
                 BookId = bookId,
                 ReviewId = review.Id,
@@ -85,21 +93,21 @@
                 .Take(pageSize)
                 .ToList();
 
-            var display = new List<ReviewDisplayViewModel>(pagedReviews.Count);
+            var display = new List<ReviewDisplayInputModel>(pagedReviews.Count);
             foreach (var r in pagedReviews)
             {
                 var member = await _memberRepository.GetByIdAsync(r.MemberId);
 
-                display.Add(new ReviewDisplayViewModel
+                display.Add(new ReviewDisplayInputModel
                 {
-                    MemberName = member?.Name ?? "Unknown",
+                    MemberName = member?.Name ?? UnknownMember,
                     Rating = r.Rating,
                     Content = r.Content,
                     CreatedAt = r.CreatedAt
                 });
             }
 
-            var pagedResult = new PagedResult<ReviewDisplayViewModel>
+            var pagedResult = new PagedResult<ReviewDisplayInputModel>
             {
                 Items = display,
                 PageNumber = pageNumber,
@@ -129,9 +137,9 @@
                 {
                     ReviewId = r.Id,
                     BookId = r.BookId,
-                    BookTitle = book?.Title ?? "(Unknown)",
+                    BookTitle = book?.Title ?? UnknownTitle,
                     MemberId = r.MemberId,
-                    MemberName = member?.Name ?? "(Unknown)",
+                    MemberName = member?.Name ?? UnknownMember,
                     Rating = r.Rating,
                     Content = r.Content,
                     CreatedAt = r.CreatedAt

@@ -7,6 +7,6 @@
         public Guid BookId { get; set; }
         public double AverageRating { get; set; }        
         public int TotalReviews { get; set; }          
-        public PagedResult<ReviewDisplayViewModel> Reviews { get; set; } = new ();
+        public PagedResult<ReviewDisplayInputModel> Reviews { get; set; } = new ();
     }
 }

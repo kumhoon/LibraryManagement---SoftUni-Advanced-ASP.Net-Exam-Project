@@ -4,6 +4,8 @@
     using LibraryManagement.Data.Models;
     using LibraryManagement.Services.Core.Interfaces;
     using LibraryManagement.Web.ViewModels.BorrowingRecord;
+    using static LibraryManagement.GCommon.Defaults.Text;
+    using static LibraryManagement.GCommon.ErrorMessages;
 
     public class BorrowingRecordService : IBorrowingRecordService
     {
@@ -15,18 +17,20 @@
         public async Task<BorrowResult> BorrowBookAsync(Guid memberId, Guid bookId)
         {
             
-            var alreadyBorrowed = await _borrowingRecordRepository.HasActiveBorrowAsync(memberId, bookId);
-            if (alreadyBorrowed != null)
+            bool alreadyBorrowed = await _borrowingRecordRepository.HasActiveBorrowAsync(memberId, bookId);
+            if (alreadyBorrowed)
             {
                 return BorrowResult.AlreadyBorrowedByMember;
             }
 
-            var isBorrowedByOther = await _borrowingRecordRepository.IsBookBorrowedAsync(bookId);
-            if (isBorrowedByOther)
+            
+            bool isBorrowedByAnother = await _borrowingRecordRepository.IsBookBorrowedAsync(bookId);
+            if (isBorrowedByAnother)
             {
                 return BorrowResult.BookUnavailable;
             }
 
+            
             var record = new BorrowingRecord
             {
                 Id = Guid.NewGuid(),
@@ -47,12 +51,11 @@
                 .GetByMemberIdAsync(memberId);
 
             return records
-                .Select(r => new BorrowingRecordViewModel
-            {
-                Title = r.Book?.Title ?? "Unknown Title",
-                BorrowDate = r.BorrowDate,
-                ReturnDate = r.ReturnDate
-            });
+                .Select(r => new BorrowingRecordViewModel { 
+                    Title = r.Book?.Title ?? UnknownTitle,
+                    BorrowDate = r.BorrowDate,
+                    ReturnDate = r.ReturnDate
+                });
         }
 
         public async Task<bool> IsBookBorrowedAsync(Guid bookId)
@@ -62,18 +65,24 @@
 
         public async Task<bool> ReturnBookAsync(Guid memberId, Guid bookId)
         {
-            var record = await this._borrowingRecordRepository
-                .HasActiveBorrowAsync(memberId, bookId);
+            var record = await _borrowingRecordRepository
+                .GetActiveBorrowRecordAsync(memberId, bookId);
 
-            if (record == null) 
-            { 
-                return false;
+            if (record == null)
+            {
+                throw new KeyNotFoundException(BorrowingRecordNotFoundErrorMessage);
             }
 
             record.ReturnDate = DateTime.UtcNow;
 
-            return await _borrowingRecordRepository
-                .UpdateAsync(record);
+            bool updated = await _borrowingRecordRepository.UpdateAsync(record);
+
+            if (!updated)
+            {
+                throw new Exception(BorrowingRecordUpdateErorrMessage);
+            }
+
+            return true;
         }
 
         public async Task<bool> HasAnyActiveBorrowAsync(Guid memberId)
@@ -84,8 +93,9 @@
         public async Task<bool> IsBookBorrowedByMemberAsync(Guid memberId, Guid bookId)
         {
             var record = await _borrowingRecordRepository.HasActiveBorrowAsync(memberId, bookId);
-            return record != null;
+            return record;
         }
+
     }
 
 }

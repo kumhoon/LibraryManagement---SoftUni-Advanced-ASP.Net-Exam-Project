@@ -7,6 +7,8 @@
     using Microsoft.AspNetCore.Identity;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using static LibraryManagement.GCommon.ErrorMessages;
+    using static LibraryManagement.GCommon.Defaults.Text;
     public class MembershipService : IMembershipService
     {
         private readonly IMembershipRepository _membershipRepository;
@@ -20,7 +22,7 @@
 
         public async Task ApplyForMembershipAsync(string userId, MemberApplicationInputModel inputModel)
         {
-            var user = await this._userManager.FindByIdAsync(userId) ?? throw new InvalidOperationException("User not found");
+            var user = await this._userManager.FindByIdAsync(userId) ?? throw new InvalidOperationException(UserNotFoundErrorMessage);
             var existingMembership = await this._membershipRepository
                 .FirstOrDefaultAsync(m => m.UserId == userId);
 
@@ -29,7 +31,7 @@
                 if (existingMembership.Status == MembershipStatus.Pending ||
                     existingMembership.Status == MembershipStatus.Approved)
                 {
-                    throw new InvalidOperationException("You have already applied for or have been granted membership.");
+                    throw new InvalidOperationException(MembershipApprovedOrPendingErrorMessage);
                 }
 
                 
@@ -64,7 +66,7 @@
             {
                 Id = m.Id,
                 Name = m.Name,
-                Email = m.User?.Email ?? "(No Email)",
+                Email = m.User?.Email ?? UnknownEmail,
                 JoinDate = m.JoinDate,
                 Reason = m.MembershipApplicationReason,
                 Status = m.Status

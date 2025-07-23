@@ -2,8 +2,8 @@
 {
     using Microsoft.AspNetCore.Mvc.Rendering;
     using System.ComponentModel.DataAnnotations;
-    using static LibraryManagement.GCommon.ViewModelValidationConstants.BookConstants;
-    using static LibraryManagement.GCommon.ViewModelValidationConstants.ErrorMessages;
+    using static LibraryManagement.Web.ViewModels.ViewModelValidationConstants.BookConstants;
+    using static LibraryManagement.GCommon.ErrorMessages;
     public class BookEditInputModel
     {
         public Guid Id { get; set; }

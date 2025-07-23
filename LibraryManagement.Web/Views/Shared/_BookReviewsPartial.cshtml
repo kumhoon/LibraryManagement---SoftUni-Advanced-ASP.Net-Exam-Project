@@ -26,21 +26,21 @@ else
             @if (Model.Reviews.PageNumber > 1)
             {
                 <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Details", "Book", new { id = Model.BookId, page = Model.Reviews.PageNumber - 1 })">Previous</a>
+                    <a class="page-link" href="@Url.Action("Details", "Book", new { id = Model.BookId, pageNumber = Model.Reviews.PageNumber - 1 })">Previous</a>
                 </li>
             }
 
             @for (int i = 1; i <= Model.Reviews.TotalPages; i++)
             {
                 <li class="page-item @(i == Model.Reviews.PageNumber ? "active" : "")">
-                    <a class="page-link" href="@Url.Action("Details", "Book", new { id = Model.BookId, page = i })">@i</a>
+                    <a class="page-link" href="@Url.Action("Details", "Book", new { id = Model.BookId, pageNumber = i })">@i</a>
                 </li>
             }
 
             @if (Model.Reviews.PageNumber < Model.Reviews.TotalPages)
             {
                 <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Details", "Book", new { id = Model.BookId, page = Model.Reviews.PageNumber + 1 })">Next</a>
+                    <a class="page-link" href="@Url.Action("Details", "Book", new { id = Model.BookId, pageNumber = Model.Reviews.PageNumber + 1 })">Next</a>
                 </li>
             }
         </ul>
