@@ -25,5 +25,20 @@
         {
             public const string ReviewAdded = "Your review was submitted successfully!";
         }
+
+        public static class AdminMessages
+        {
+            public const string MembershipApproved = "Membership approved successfully.";
+            public const string MembershipApprovedFailed = "Failed to approve membership.";
+
+            public const string MembershipRejected = "Membership rejected successfully.";
+            public const string MembershipRejectedFailed = "Failed to reject membership.";
+
+            public const string MembershipRevoked = "Membership revoked successfully.";
+            public const string MembershipRevokedFailed = "Failed to revoke membership.";
+
+            public const string ReviewApproved = "Review approved successfully.";
+            public const string ReviewRejected = "Review rejected successfully.";
+        }
     }
 }

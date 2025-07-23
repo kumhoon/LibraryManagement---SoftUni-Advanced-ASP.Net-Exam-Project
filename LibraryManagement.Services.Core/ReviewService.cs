@@ -21,7 +21,10 @@
 
         public async Task<bool> CreateReviewAsync(Guid bookId, Guid memberId, int rating, string? content)
         {
-            Review? existing = await _reviewRepository
+            if (bookId == Guid.Empty || memberId == Guid.Empty || rating < 1 || rating > 5) return false;
+
+
+            var existing = await _reviewRepository
                 .FirstOrDefaultAsync(r => r.BookId == bookId && r.MemberId == memberId);
 
             if (existing != null) return false;
@@ -42,6 +45,8 @@
 
         public async Task<bool> UpdateReviewAsync(Guid memberId, Guid bookId, int rating, string? content)
         {
+            if (bookId == Guid.Empty || memberId == Guid.Empty || rating < 1 || rating > 5) return false;
+
             Review? review = await _reviewRepository
                 .FirstOrDefaultAsync(r => r.BookId == bookId && r.MemberId == memberId);
 
@@ -56,6 +61,8 @@
 
         public async Task<ReviewInputModel?> GetMemberReviewForBookAsync(Guid memberId, Guid bookId)
         {
+            if (memberId == Guid.Empty || bookId == Guid.Empty) return null;
+
             Review? review = await _reviewRepository
                 .FirstOrDefaultAsync(r => r.BookId == bookId && r.MemberId == memberId);
 

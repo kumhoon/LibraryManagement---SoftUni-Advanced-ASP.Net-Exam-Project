@@ -36,7 +36,15 @@
 
         }
 
-        public async Task<BorrowingRecord?> HasActiveBorrowAsync(Guid memberId, Guid bookId)
+        public async Task<bool> HasActiveBorrowAsync(Guid memberId, Guid bookId)
+        {
+            return await _context.BorrowingRecords
+                .AnyAsync(br => br.MemberId == memberId &&
+                                br.BookId == bookId &&
+                                br.ReturnDate == null);
+        }
+
+        public async Task<BorrowingRecord?> GetActiveBorrowRecordAsync(Guid memberId, Guid bookId)
         {
             return await _context.BorrowingRecords
                 .FirstOrDefaultAsync(br => br.MemberId == memberId &&

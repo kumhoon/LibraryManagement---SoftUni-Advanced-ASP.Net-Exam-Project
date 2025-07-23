@@ -13,6 +13,7 @@
 
         Task<bool> HasAnyActiveBorrowAsync(Guid memberId);
         Task<bool> IsBookBorrowedAsync(Guid bookId);
+
     }
 
     public enum BorrowResult

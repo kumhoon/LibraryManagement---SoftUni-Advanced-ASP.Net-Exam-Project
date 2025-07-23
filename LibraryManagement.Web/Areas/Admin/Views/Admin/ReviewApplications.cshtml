@@ -1,7 +1,14 @@
 ﻿@model IEnumerable<LibraryManagement.Web.ViewModels.Membership.MembershipPendingViewModel>
 
 <h2>Pending Membership Applications</h2>
-
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
 <table class="table table-bordered table-dark">
     <thead>
         <tr>
