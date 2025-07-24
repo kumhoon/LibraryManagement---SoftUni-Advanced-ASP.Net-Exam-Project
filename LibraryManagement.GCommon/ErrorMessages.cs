@@ -34,7 +34,7 @@
 
         public const string InvalidBookErrorMessage = "Invalid book selected";
 
-        public const string BookNotFoundErrorMessage = "Book was not found.";
+        public const string BookNotFoundErrorMessage = "Book not found.";
 
         public const string NotAuthorizedErrorMessage = "You are not authorized to do this action.";
 

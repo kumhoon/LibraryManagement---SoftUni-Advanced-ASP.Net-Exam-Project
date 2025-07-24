@@ -30,14 +30,34 @@
         [HttpGet]
         public async Task<IActionResult> Members()
         {
-            var members = await _membershipService.GetApprovedMembersAsync();
-            return View(members);
+            try
+            {
+                var members = await _membershipService.GetApprovedMembersAsync();
+                return View(members);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, UnexpectedErrorMessage);
+                TempData["ErrorMessage"] = UnexpectedErrorMessage;
+                return RedirectToAction(nameof(Dashboard));
+            }
+            
         }
         [HttpGet]
         public async Task<IActionResult> ReviewApplications()
         {
-            var pendingMembers = await _membershipService.GetPendingApplications();
-            return View(pendingMembers);
+            try
+            {
+                var pendingMembers = await _membershipService.GetPendingApplications();
+                return View(pendingMembers);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, UnexpectedErrorMessage);
+                TempData["ErrorMessage"] = UnexpectedErrorMessage;
+                return RedirectToAction(nameof(Dashboard));
+            }
+            
         }
 
         [HttpPost]

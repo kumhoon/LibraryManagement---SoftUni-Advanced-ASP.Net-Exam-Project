@@ -25,6 +25,7 @@ namespace LibraryManagement.Web.Controllers
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        [AllowAnonymous]
         public IActionResult Error(int? statusCode)
         {
             return statusCode switch

@@ -174,7 +174,7 @@
                 Description = book.Description,
                 ImageUrl = book.ImageUrl,
                 GenreId = book.GenreId,
-                PublishedDate = book.PublishedDate,
+                PublishedDate = book.PublishedDate.ToString(PublishedOnDateTimeFormat),
                 Author = book.Author.Name
             };
         }
@@ -205,7 +205,7 @@
                 .OrderBy(b => b.Title)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .ToListAsync();
+                .ToArrayAsync();
 
             
             var items = pagedBooks.Select(b => new BookIndexViewModel
@@ -258,7 +258,7 @@
                 throw new UnauthorizedAccessException(NotAuthorizedErrorMessage);
 
             if (!DateTime.TryParseExact(
-                    inputModel.PublishedDate.ToString(PublishedOnDateTimeFormat),
+                    inputModel.PublishedDate,
                     PublishedOnDateTimeFormat,
                     CultureInfo.InvariantCulture,
                     DateTimeStyles.None,

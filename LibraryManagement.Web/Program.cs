@@ -68,8 +68,7 @@ namespace LibraryManagement.Web
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error?statusCode=500"); 
-                app.UseStatusCodePagesWithRedirects("/Home/Error?statusCode={0}");
+                app.UseExceptionHandler("/Home/Error"); 
                 app.UseHsts();
             }
 

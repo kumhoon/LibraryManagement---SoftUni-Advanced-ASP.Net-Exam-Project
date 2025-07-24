@@ -21,8 +21,8 @@
         public string Description { get; set; } = null!;
 
         public string? ImageUrl { get; set; }
-
-        public DateTime PublishedDate { get; set; }
+        [Required]
+        public string PublishedDate { get; set; } = null!;
         [Required]
         [StringLength(BookAuthorNameMaxLength, MinimumLength = BookAuthorNameMinLength, ErrorMessage = BookAuthorNameErrorMessage)]
         public string Author { get; set; } = null!;
