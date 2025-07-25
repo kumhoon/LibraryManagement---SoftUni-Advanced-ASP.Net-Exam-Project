@@ -1,9 +1,9 @@
-﻿using LibraryManagement.Data.Interfaces;
-using LibraryManagement.Data.Models;
-using Moq;
-
-namespace LibraryManagement.Services.Core.Tests.Services.AuthorServiceTests
+﻿namespace LibraryManagement.Services.Core.Tests.Services.AuthorServiceTests
 {
+    using LibraryManagement.Data.Interfaces;
+    using LibraryManagement.Data.Models;
+    using Moq;
+
     [TestFixture]
     public class AuthorServiceTests
     {
