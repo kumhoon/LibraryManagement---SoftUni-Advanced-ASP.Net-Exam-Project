@@ -8,15 +8,15 @@
     padding: 1rem;
 }
 
-    .admin-navbar a {
-        color: #ffffff;
-        margin-right: 1rem;
-        text-decoration: none;
-    }
+.admin-navbar a {
+    color: #ffffff;
+    margin-right: 1rem;
+    text-decoration: none;
+}
 
-        .admin-navbar a:hover {
-            text-decoration: underline;
-        }
+.admin-navbar a:hover {
+    text-decoration: underline;
+}
 
 main {
     padding: 2rem;
