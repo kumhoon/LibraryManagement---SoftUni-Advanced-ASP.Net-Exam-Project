@@ -29,9 +29,11 @@
                 <td>@applicant.Reason</td>
                 <td>
                     <form asp-action="ApproveMembership" asp-route-id="@applicant.Id" method="post" style="display:inline">
+						@Html.AntiForgeryToken()
                         <button type="submit" class="btn btn-success btn-sm">Approve</button>
                     </form>
                     <form asp-action="RejectMembership" asp-route-id="@applicant.Id" method="post" style="display:inline">
+                        @Html.AntiForgeryToken()
                         <button type="submit" class="btn btn-danger btn-sm">Reject</button>
                     </form>
                 </td>

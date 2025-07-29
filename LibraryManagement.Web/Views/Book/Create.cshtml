@@ -7,21 +7,23 @@
 <h2>Add New Book</h2>
 
 <form asp-action="Create" method="post">
+	@Html.AntiForgeryToken()
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
     <div class="form-group">
         <label asp-for="Title" class="control-label"></label>
-        <input asp-for="Title" class="form-control" />
+        <input asp-for="Title" class="form-control" value="@Model.Title" placeholder="Field is required"/>
         <span asp-validation-for="Title" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="Description" class="control-label"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
+        <textarea asp-for="Description" class="form-control" value="@Model.Description" placeholder="Field is required"></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="Author" class="control-label"></label>
-        <input asp-for="Author" class="form-control" />
+        <input asp-for="Author" class="form-control" value="@Model.Author" placeholder="Field is required" />
         <span asp-validation-for="Author" class="text-danger"></span>
     </div>
 
@@ -39,9 +41,7 @@
 
     <div class="form-group">
         <label asp-for="PublishedDate" class="control-label"></label>
-        <input asp-for="PublishedDate" type="text" class="form-control"
-               value="@Model.PublishedDate
-" placeholder="dd-MM-yyyy" />
+        <input asp-for="PublishedDate" type="text" class="form-control" value="@Model.PublishedDate" placeholder="dd-MM-yyyy" />
         <span asp-validation-for="PublishedDate" class="text-danger"></span>
     </div>
 

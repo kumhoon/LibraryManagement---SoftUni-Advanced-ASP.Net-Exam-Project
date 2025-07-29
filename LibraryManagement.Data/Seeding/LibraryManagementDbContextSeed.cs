@@ -1,12 +1,9 @@
-﻿using LibraryManagement.Data.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
-using static LibraryManagement.Data.Common.DbEntityValidationConstants;
-
-
-
-namespace LibraryManagement.Data.Seeding
+﻿namespace LibraryManagement.Data.Seeding
 {
+    using LibraryManagement.Data.Models;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.Extensions.DependencyInjection;
+
     public class LibraryManagementDbContextSeed
     {
         public static async Task SeedAsync(IServiceProvider serviceProvider)

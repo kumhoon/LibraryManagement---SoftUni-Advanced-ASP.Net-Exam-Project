@@ -4,6 +4,7 @@
     public interface IAuthorRepository : IRepository<Author, Guid>
     {
         Task<IEnumerable<Author>> GetAllAuthorsAsync();
+
         Task<Author?> GetByNameAsync(string name);
 
         Task<IEnumerable<Author>> GetAuthorsWithBooksAsync(string? searchTerm);

@@ -43,6 +43,7 @@ else
                     <td>@review.CreatedAt.ToLocalTime().ToString("g")</td>
                     <td>
                         <form asp-area="Admin" asp-controller="ReviewModeration" asp-action="Approve" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
                             <input type="hidden" name="id" value="@review.ReviewId" />
                             <button type="submit" class="btn btn-success btn-sm" title="Approve">
                                Approve
@@ -50,6 +51,7 @@ else
                         </form>
 
                         <form asp-area="Admin" asp-controller="ReviewModeration" asp-action="Reject" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
                             <input type="hidden" name="id" value="@review.ReviewId" />
                             <button type="submit" class="btn btn-danger btn-sm" title="Reject">
                                 Reject

@@ -83,7 +83,9 @@
                 return RedirectToAction(nameof(Index));
             }
         }
+        
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(BookCreateInputModel inputModel)
         {
@@ -114,8 +116,7 @@
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null)
-                return RedirectToAction(nameof(Index));
+            if (id == null) return RedirectToAction(nameof(Index));
 
             try
             {
@@ -140,6 +141,7 @@
             }
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(BookEditInputModel editInputModel)
         {
@@ -200,6 +202,7 @@
             }
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ConfirmDelete(BookDeleteInputModel inputModel)
         {

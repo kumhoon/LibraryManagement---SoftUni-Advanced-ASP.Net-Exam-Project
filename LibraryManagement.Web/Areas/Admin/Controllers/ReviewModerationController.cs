@@ -34,6 +34,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Approve(Guid id)
         {
             try
@@ -56,6 +57,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Reject(Guid id)
         {
             try

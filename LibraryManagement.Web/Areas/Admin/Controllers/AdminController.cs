@@ -61,6 +61,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ApproveMembership(Guid id)
         {
             try
@@ -81,6 +82,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> RejectMembership(Guid id)
         {
             try
@@ -101,6 +103,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> RevokeMembership(Guid id)
         {
             try

@@ -11,7 +11,6 @@
         {
             public const int BookTitleMaxLength = 60;
             public const int BookDescriptionMaxLength = 500;
-            
         }
 
         public static class GenreConstants

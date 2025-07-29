@@ -9,6 +9,7 @@
 @if (canApply)
 {
     <form asp-action="Apply" method="post">
+		@Html.AntiForgeryToken()
         @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
         <div class="mb-3">

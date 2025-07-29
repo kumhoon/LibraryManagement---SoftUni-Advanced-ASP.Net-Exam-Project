@@ -17,6 +17,7 @@
         }
 
         [HttpGet]
+
         public async Task<IActionResult> Apply()
         {
             try
@@ -45,6 +46,7 @@
             }
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Apply(MemberApplicationInputModel inputModel)
         {
             if (!ModelState.IsValid)

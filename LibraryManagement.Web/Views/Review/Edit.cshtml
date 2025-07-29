@@ -5,6 +5,7 @@
 
 <form asp-action="Edit" method="post">
     @Html.AntiForgeryToken()
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
     <input type="hidden" asp-for="BookId" />
     <input type="hidden" asp-for="ReviewId" />
 

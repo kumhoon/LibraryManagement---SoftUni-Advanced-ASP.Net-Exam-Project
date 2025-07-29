@@ -12,6 +12,8 @@
 </div>
 
 <form asp-action="ConfirmDelete" method="post">
+	@Html.AntiForgeryToken()
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
     <input type="hidden" asp-for="Id" />
     <input type="hidden" asp-for="Title" />
     <input type="hidden" asp-for="AuthorName" />
