@@ -68,3 +68,21 @@ body {
 .card-body {
     color: #f1f1f1; 
 }
+
+.form-floating .form-control {
+    background-color: #2c2c2c; 
+    color: #ffffff; 
+    border: 1px solid #555; 
+}
+
+.form-floating label {
+    color: #dddddd;
+}
+
+
+.form-floating .form-control:focus {
+    background-color: #3a3a3a;
+    color: #ffffff;
+    border-color: #0d6efd; 
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
