@@ -29,10 +29,7 @@
         }
 
         [TearDown]
-        public void TearDown() 
-        {
-            _adminController.Dispose();
-        }
+        public void TearDown() => _adminController.Dispose();
 
         [Test]
         public async Task Members_WhenServiceReturnsMembers_ShouldReturnViewWithModel()
