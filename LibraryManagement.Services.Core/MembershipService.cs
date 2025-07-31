@@ -103,7 +103,6 @@
                 Id = m.Id,
                 Name = m.Name,
                 JoinDate = m.JoinDate,
-
             });
         }
     }

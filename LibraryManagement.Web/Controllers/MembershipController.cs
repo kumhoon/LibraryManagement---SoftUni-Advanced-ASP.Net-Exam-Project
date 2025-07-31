@@ -58,7 +58,7 @@
             {
                 var userId = this.GetUserId()!;
                 await _membershipService.ApplyForMembershipAsync(userId, inputModel);
-                return RedirectToAction("ApplyConfirmation");
+                return RedirectToAction(nameof(ApplyConfirmation));
             }
             catch (InvalidOperationException ex)
             {     

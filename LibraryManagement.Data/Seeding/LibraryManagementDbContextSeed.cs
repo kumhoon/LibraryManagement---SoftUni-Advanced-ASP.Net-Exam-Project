@@ -14,7 +14,7 @@
             var context = scope.ServiceProvider.GetRequiredService<LibraryManagementDbContext>();
 
             // Seed roles
-            string[] roles = ["Admin", "User"];
+            string[] roles = ["Admin"];
             foreach (var role in roles)
             {
                 if (!await roleManager.RoleExistsAsync(role))
@@ -35,13 +35,11 @@
             if (await userManager.FindByEmailAsync(user1.Email) == null)
             {
                 await userManager.CreateAsync(user1, "User123!");
-                await userManager.AddToRoleAsync(user1, "User");
             }
 
             if (await userManager.FindByEmailAsync(user2.Email) == null)
             {
                 await userManager.CreateAsync(user2, "User123!");
-                await userManager.AddToRoleAsync(user2, "User");
             }
 
             // Seed genres 
