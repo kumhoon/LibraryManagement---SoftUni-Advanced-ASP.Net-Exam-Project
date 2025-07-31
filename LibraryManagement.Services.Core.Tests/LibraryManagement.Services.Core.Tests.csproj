@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\LibraryManagement.Data\LibraryManagement.Data.csproj" />
     <ProjectReference Include="..\LibraryManagement.Services.Core\LibraryManagement.Services.Core.csproj" />
+    <ProjectReference Include="..\LibraryManagement.Web\LibraryManagement.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>
