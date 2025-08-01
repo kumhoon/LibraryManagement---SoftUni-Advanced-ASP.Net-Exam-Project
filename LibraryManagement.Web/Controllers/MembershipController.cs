@@ -17,7 +17,6 @@
         }
 
         [HttpGet]
-
         public async Task<IActionResult> Apply()
         {
             try
