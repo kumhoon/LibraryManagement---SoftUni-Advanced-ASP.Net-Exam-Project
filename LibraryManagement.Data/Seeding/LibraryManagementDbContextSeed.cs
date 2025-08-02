@@ -47,9 +47,28 @@
                              ?? throw new InvalidOperationException("Admin missing");
             var booksToAdd = new[]
             {
-                new { Title="Foundation", Author="Isaac Asimov", Genre="Science Fiction", Pub=new DateTime(1951,1,1) },
-                new { Title="I, Robot", Author="Isaac Asimov", Genre="Science Fiction", Pub=new DateTime(1950,1,1) },
-                new { Title="The Hobbit", Author="J.R.R. Tolkien", Genre="Fantasy", Pub=new DateTime(1937,9,21) }
+                new { 
+                    Title="Foundation", 
+                    Author="Isaac Asimov", 
+                    Genre="Science Fiction", 
+                    PublishedDate=new DateTime(1951,1,1), 
+                    ImageUrl ="https://upload.wikimedia.org/wikipedia/en/d/d9/Foundation_-_Isaac_Asimov_%28Gnome_1951%29.jpg"
+                },
+                new { 
+                    Title="I, Robot", 
+                    Author="Isaac Asimov", 
+                    Genre="Science Fiction", 
+                    PublishedDate=new DateTime(1950,1,1),
+                    ImageUrl = "https://upload.wikimedia.org/wikipedia/en/thumb/d/d5/I_robot.jpg/250px-I_robot.jpg"
+
+                },
+                new { 
+                    Title="The Hobbit", 
+                    Author="J.R.R. Tolkien", 
+                    Genre="Fantasy", 
+                    PublishedDate=new DateTime(1937,9,21),
+                    ImageUrl = "https://upload.wikimedia.org/wikipedia/en/thumb/4/4a/TheHobbit_FirstEdition.jpg/250px-TheHobbit_FirstEdition.jpg"
+                }
             };
             foreach (var b in booksToAdd)
             {
@@ -61,11 +80,12 @@
                     {
                         Id = Guid.NewGuid(),
                         Title = b.Title,
-                        Description = $"Seeded: {b.Title}",
+                        Description = b.Title,
                         AuthorId = author.Id,
                         GenreId = genre.Id,
-                        PublishedDate = b.Pub,
-                        BookCreatorId = adminUser.Id
+                        PublishedDate = b.PublishedDate,
+                        BookCreatorId = adminUser.Id,
+                        ImageUrl = b.ImageUrl
                     });
                 }
             }
@@ -94,6 +114,9 @@
                     });
                 }
             }
+
+            await context.SaveChangesAsync();
+
             // 7) Reviews
             var reviewSeeds = new[]
             {

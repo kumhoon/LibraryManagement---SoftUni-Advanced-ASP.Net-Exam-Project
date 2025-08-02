@@ -59,6 +59,10 @@ namespace LibraryManagement.Web
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
+                var dbContext = services.GetRequiredService<LibraryManagementDbContext>();
+
+                dbContext.Database.Migrate();
+
                 await LibraryManagementDbContextSeed.SeedAsync(services);
             }
 
