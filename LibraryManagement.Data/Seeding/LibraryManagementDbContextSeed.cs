@@ -9,137 +9,200 @@
         public static async Task SeedAsync(IServiceProvider serviceProvider)
         {
             using var scope = serviceProvider.CreateScope();
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var userMgr = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var roleMgr = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var context = scope.ServiceProvider.GetRequiredService<LibraryManagementDbContext>();
 
-            // Seed roles
-            string[] roles = ["Admin"];
+            // 1) Roles 
+            string[] roles = { "Admin" };
             foreach (var role in roles)
+                if (!await roleMgr.RoleExistsAsync(role))
+                    await roleMgr.CreateAsync(new IdentityRole(role));
+
+            // 2) Users
+            await EnsureUser(userMgr, "admin@library.com", "Admin123!", addToRole: "Admin");
+            await EnsureUser(userMgr, "user1@library.com", "User123!");
+            await EnsureUser(userMgr, "user2@library.com", "User123!");
+
+            // 3) Genres
+            var genreNames = new[] { "Science Fiction", "Fantasy", "Mystery", "Biography" };
+            foreach (var name in genreNames)
             {
-                if (!await roleManager.RoleExistsAsync(role))
-                    await roleManager.CreateAsync(new IdentityRole(role));
+                if (!context.Genres.Any(g => g.Name == name))
+                    context.Genres.Add(new Genre { Id = Guid.NewGuid(), Name = name });
             }
+            await context.SaveChangesAsync();
 
-            // Seed users
-            var adminUser = new IdentityUser { UserName = "admin@library.com", Email = "admin@library.com", EmailConfirmed = true };
-            var user1 = new IdentityUser { UserName = "user1@library.com", Email = "user1@library.com", EmailConfirmed = true };
-            var user2 = new IdentityUser { UserName = "user2@library.com", Email = "user2@library.com", EmailConfirmed = true };
-
-            if (await userManager.FindByEmailAsync(adminUser.Email) == null)
+            // 4) Authors
+            var authorNames = new[] { "Isaac Asimov", "J.R.R. Tolkien" };
+            foreach (var name in authorNames)
             {
-                await userManager.CreateAsync(adminUser, "Admin123!");
-                await userManager.AddToRoleAsync(adminUser, "Admin");
+                if (!context.Authors.Any(a => a.Name == name))
+                    context.Authors.Add(new Author { Id = Guid.NewGuid(), Name = name, IsDeleted = false });
             }
+            await context.SaveChangesAsync();
 
-            if (await userManager.FindByEmailAsync(user1.Email) == null)
+            // 5) Books 
+            var adminUser = await userMgr.FindByEmailAsync("admin@library.com")
+                             ?? throw new InvalidOperationException("Admin missing");
+            var booksToAdd = new[]
             {
-                await userManager.CreateAsync(user1, "User123!");
-            }
-
-            if (await userManager.FindByEmailAsync(user2.Email) == null)
+                new { Title="Foundation", Author="Isaac Asimov", Genre="Science Fiction", Pub=new DateTime(1951,1,1) },
+                new { Title="I, Robot", Author="Isaac Asimov", Genre="Science Fiction", Pub=new DateTime(1950,1,1) },
+                new { Title="The Hobbit", Author="J.R.R. Tolkien", Genre="Fantasy", Pub=new DateTime(1937,9,21) }
+            };
+            foreach (var b in booksToAdd)
             {
-                await userManager.CreateAsync(user2, "User123!");
-            }
-
-            // Seed genres 
-            if (!context.Genres.Any())
-            {
-                context.Genres.AddRange(
-                    new Genre { Id = Guid.NewGuid(), Name = "Science Fiction" },
-                    new Genre { Id = Guid.NewGuid(), Name = "Fantasy" },
-                    new Genre { Id = Guid.NewGuid(), Name = "Mystery" },
-                    new Genre { Id = Guid.NewGuid(), Name = "Biography" }              
-                );
-
-                await context.SaveChangesAsync(); 
-            }
-
-            // Seed authors
-            if (!context.Authors.Any())
-            {
-                context.Authors.AddRange(
-                    new Author { Id = Guid.NewGuid(), Name = "Isaac Asimov", IsDeleted = false },
-                    new Author { Id = Guid.NewGuid(), Name = "J.R.R. Tolkien", IsDeleted = false }
-                );
-                await context.SaveChangesAsync();
-            }
-
-            // Seed books
-            if (!context.Books.Any())
-            {
-                var adminDbUser = await userManager.FindByEmailAsync(adminUser.Email)
-                    ?? throw new InvalidOperationException($"Admin user with email '{adminUser.Email}' was not found.");
-
-                var asimov = context.Authors.First(a => a.Name == "Isaac Asimov");
-                var tolkien = context.Authors.First(a => a.Name == "J.R.R. Tolkien");
-
-                var sciFi = context.Genres.First(g => g.Name == "Science Fiction");
-                var fantasy = context.Genres.First(g => g.Name == "Fantasy");
-
-                context.Books.AddRange(
-                    new Book
-                    {
-                        Id = Guid.NewGuid(),
-                        Title = "Foundation",
-                        Description = "A visionary tale of the fall and rise of civilizations.",
-                        AuthorId = asimov.Id,
-                        GenreId = sciFi.Id,
-                        PublishedDate = new DateTime(1951, 1, 1),
-                        BookCreatorId = adminDbUser.Id
-                    },
-                    new Book
-                    {
-                        Id = Guid.NewGuid(),
-                        Title = "I, Robot",
-                        Description = "A collection of short stories exploring robotics and ethics.",
-                        AuthorId = asimov.Id,
-                        GenreId = sciFi.Id,
-                        PublishedDate = new DateTime(1950, 1, 1),
-                        BookCreatorId = adminDbUser.Id
-                    },
-                    new Book
-                    {
-                        Id = Guid.NewGuid(),
-                        Title = "The Hobbit",
-                        Description = "A fantasy adventure featuring Bilbo Baggins and a dragon.",
-                        AuthorId = tolkien.Id,
-                        GenreId = fantasy.Id,
-                        PublishedDate = new DateTime(1937, 9, 21),
-                        BookCreatorId = adminDbUser.Id
-                    }
-                );
-                await context.SaveChangesAsync();
-            }
-
-            // Seed members
-            if (!context.Memberships.Any())
-            {
-                var userDb1 = await userManager.FindByEmailAsync(user1.Email);
-                var userDb2 = await userManager.FindByEmailAsync(user2.Email);
-                if (userDb1 == null || userDb2 == null)
+                if (!context.Books.Any(x => x.Title == b.Title && x.Author.Name == b.Author))
                 {
-                    throw new InvalidOperationException($"User was not found.");
+                    var author = context.Authors.First(a => a.Name == b.Author);
+                    var genre = context.Genres.First(g => g.Name == b.Genre);
+                    context.Books.Add(new Book
+                    {
+                        Id = Guid.NewGuid(),
+                        Title = b.Title,
+                        Description = $"Seeded: {b.Title}",
+                        AuthorId = author.Id,
+                        GenreId = genre.Id,
+                        PublishedDate = b.Pub,
+                        BookCreatorId = adminUser.Id
+                    });
                 }
-                context.Memberships.AddRange(
-                    new Member
+            }
+            await context.SaveChangesAsync();
+
+            // 6) Members
+            var memberSeeds = new[]
+            {
+                new { Email="user1@library.com", Name="User One" },
+                new { Email="user2@library.com", Name="User Two" }
+            };
+            foreach (var m in memberSeeds)
+            {
+                var user = await userMgr.FindByEmailAsync(m.Email)
+                           ?? throw new InvalidOperationException($"User {m.Email} not found");
+
+                if (!context.Memberships.Any(ms => ms.UserId == user.Id))
+                {
+                    context.Memberships.Add(new Member
                     {
                         Id = Guid.NewGuid(),
-                        Name = "User One",
+                        Name = m.Name,
                         JoinDate = DateTime.UtcNow,
-                        UserId = userDb1.Id,
+                        UserId = user.Id,
                         Status = MembershipStatus.Approved
-                    },
-                    new Member
+                    });
+                }
+            }
+            // 7) Reviews
+            var reviewSeeds = new[]
+            {
+                new {
+                    MemberEmail = "user1@library.com",
+                    BookTitle   = "I, Robot",
+                    Rating      = 5,
+                    Content     = "Absolutely loved the scope and vision!"
+                },
+                new {
+                    MemberEmail = "user2@library.com",
+                    BookTitle   = "Foundation",
+                    Rating      = 4,
+                    Content     = "Great adventure, though a bit slow at times."
+                }
+            };
+
+            foreach (var r in reviewSeeds)
+            {
+
+                var identityUser = await userMgr.FindByEmailAsync(r.MemberEmail);
+                var member = identityUser == null
+                    ? null
+                    : context.Memberships.FirstOrDefault(m => m.UserId == identityUser.Id);
+
+                var book = context.Books.FirstOrDefault(b => b.Title == r.BookTitle);
+
+                if (member != null && book != null)
+                {
+                    bool alreadyReviewed = context.Reviews
+                        .Any(x => x.MemberId == member.Id && x.BookId == book.Id);
+
+                    if (!alreadyReviewed)
                     {
-                        Id = Guid.NewGuid(),
-                        Name = "User Two",
-                        JoinDate = DateTime.UtcNow,
-                        UserId = userDb2.Id,
-                        Status = MembershipStatus.Approved
+                        context.Reviews.Add(new Review
+                        {
+                            Id = Guid.NewGuid(),
+                            MemberId = member.Id,
+                            BookId = book.Id,
+                            Rating = r.Rating,
+                            Content = r.Content,
+                            CreatedAt = DateTime.UtcNow,
+                            IsApproved = true
+                        });
                     }
-                );
-                await context.SaveChangesAsync();
+                }
+            }
+
+            await context.SaveChangesAsync();
+
+
+            // 8) Seed borrowing records
+            var borrowSeeds = new[]
+            {           
+                new
+                {
+                    MemberEmail = "user1@library.com",
+                    BookTitle   = "I, Robot",
+                    BorrowDate  = DateTime.UtcNow.AddDays(-7),
+                    ReturnDate  = (DateTime?)null
+                },
+                new
+                {
+                    MemberEmail = "user2@library.com",
+                    BookTitle   = "Foundation",
+                    BorrowDate  = DateTime.UtcNow.AddDays(-30),
+                    ReturnDate  = (DateTime?)DateTime.UtcNow.AddDays(-15)
+                }
+            };
+
+            foreach (var b in borrowSeeds)
+            {
+                var member = await userMgr.FindByEmailAsync(b.MemberEmail) is IdentityUser u
+                    ? context.Memberships.FirstOrDefault(m => m.UserId == u.Id)
+                    : null;
+                var book = context.Books.FirstOrDefault(bk => bk.Title == b.BookTitle);
+
+                if (member != null && book != null)
+                {
+                    bool exists = context.BorrowingRecords.Any(x =>
+                        x.MemberId == member.Id
+                     && x.BookId == book.Id
+                     && x.BorrowDate == b.BorrowDate);
+
+                    if (!exists)
+                    {
+                        context.BorrowingRecords.Add(new BorrowingRecord
+                        {
+                            Id = Guid.NewGuid(),
+                            MemberId = member.Id,
+                            BookId = book.Id,
+                            BorrowDate = b.BorrowDate,
+                            ReturnDate = b.ReturnDate
+                        });
+                    }
+                }
+            }
+            await context.SaveChangesAsync();
+        }
+
+        private static async Task EnsureUser(UserManager<IdentityUser> um, string email, string pw, string? addToRole = null)
+        {
+            var user = await um.FindByEmailAsync(email);
+            if (user == null)
+            {
+                user = new IdentityUser { UserName = email, Email = email, EmailConfirmed = true };
+                await um.CreateAsync(user, pw);
+                if (addToRole != null)
+                    await um.AddToRoleAsync(user, addToRole);
             }
         }
     }
