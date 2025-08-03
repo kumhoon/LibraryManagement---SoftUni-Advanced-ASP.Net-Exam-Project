@@ -5,6 +5,8 @@
     using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+
+    /// <inheritdoc />
     public class GenreRepository : BaseRepository<Genre, Guid>, IGenreRepository
     {
         private readonly LibraryManagementDbContext _context;
@@ -13,6 +15,7 @@
             _context = dbContext;
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Genre>> GetAllGenresAsync()
         {
             return await this._context.Genres

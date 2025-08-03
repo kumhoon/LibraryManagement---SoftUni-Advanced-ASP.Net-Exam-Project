@@ -5,6 +5,8 @@
     using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+
+    /// <inheritdoc />
     public class BookRepository : BaseRepository<Book, Guid>, IBookRepository
     {
         private readonly LibraryManagementDbContext _context;
@@ -13,6 +15,7 @@
             _context = dbContext;
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Book>> GetBooksByAuthorAsync(Guid authorId)
         {
             return await this._context.Books
@@ -20,6 +23,7 @@
                 .ToArrayAsync();
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Book>> GetBooksByGenreAsync(Guid genreId)
         {
             return await this._context.Books
@@ -27,6 +31,7 @@
                 .ToArrayAsync();
         }
 
+        /// <inheritdoc />
         public async Task<Book?> GetBookWithDetailsAsync(Guid id)
         {
             return await _context.Books
@@ -35,6 +40,7 @@
                 .FirstOrDefaultAsync(b => b.Id == id);
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Book>> GetAllWithDetailsAsync()
         {
             return await _context.Books
@@ -43,6 +49,7 @@
                 .ToArrayAsync();
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Book>> GetPagedBooksAsync(int pageNumber, int pageSize)
         {
             return await _context.Books
@@ -52,6 +59,7 @@
                 .ToArrayAsync();
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Book>> SearchByTitleAsync(string title)
         {
             return await this._context.Books

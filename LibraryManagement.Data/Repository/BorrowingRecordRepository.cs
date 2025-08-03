@@ -4,6 +4,7 @@
     using LibraryManagement.Data.Models;
     using Microsoft.EntityFrameworkCore;
 
+    /// <inheritdoc />
     public class BorrowingRecordRepository : BaseRepository<BorrowingRecord, Guid>, IBorrowingRecordRepository
     {
         private readonly LibraryManagementDbContext _context;
@@ -12,6 +13,7 @@
             _context = dbContext;
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<BorrowingRecord>> GetByMemberIdAsync(Guid memberId)
         {
             return await this._context.BorrowingRecords
@@ -21,6 +23,7 @@
                 
         }
 
+        /// <inheritdoc />
         public async Task<bool> HasAnyActiveBorrowAsync(Guid memberId)
         {
             return await _context.BorrowingRecords
@@ -28,6 +31,7 @@
                                 br.ReturnDate == null);
         }
 
+        /// <inheritdoc />
         public async Task<bool> IsBookBorrowedAsync(Guid bookId)
         {
             return await _context.BorrowingRecords
@@ -36,6 +40,7 @@
 
         }
 
+        /// <inheritdoc />
         public async Task<bool> HasActiveBorrowAsync(Guid memberId, Guid bookId)
         {
             return await _context.BorrowingRecords
@@ -44,6 +49,7 @@
                                 br.ReturnDate == null);
         }
 
+        /// <inheritdoc />
         public async Task<BorrowingRecord?> GetActiveBorrowRecordAsync(Guid memberId, Guid bookId)
         {
             return await _context.BorrowingRecords

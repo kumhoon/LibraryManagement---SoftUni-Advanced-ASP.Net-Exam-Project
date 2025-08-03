@@ -3,6 +3,8 @@
     using LibraryManagement.Data.Interfaces;
     using LibraryManagement.Data.Models;
     using Microsoft.EntityFrameworkCore;
+
+    /// <inheritdoc />
     public class AuthorRepository : BaseRepository<Author, Guid>, IAuthorRepository
     {
         private readonly LibraryManagementDbContext _context;
@@ -11,6 +13,7 @@
             _context = dbContext;
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Author>> GetAllAuthorsAsync()
         {
             return await this._context.Authors
@@ -18,6 +21,7 @@
                 .ToArrayAsync();
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Author>> GetAuthorsWithBooksAsync(string? searchTerm)
         {
             IQueryable<Author> query = GetAllAttached()
@@ -33,6 +37,7 @@
                 .ToArrayAsync();
         }
 
+        /// <inheritdoc />
         public async Task<Author?> GetByNameAsync(string name)
         {
             return await _context.Authors

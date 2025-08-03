@@ -4,6 +4,8 @@ namespace LibraryManagement.Data.Repository
     using LibraryManagement.Data.Interfaces;
     using LibraryManagement.Data.Models;
     using Microsoft.EntityFrameworkCore;
+
+    /// <inheritdoc />
     public class ReviewRepository : BaseRepository<Review, Guid>, IReviewRepository
     {
         private readonly LibraryManagementDbContext _dbContext;
@@ -12,6 +14,7 @@ namespace LibraryManagement.Data.Repository
             _dbContext = dbContext;
         }
 
+        /// <inheritdoc />
         public async Task<bool> ApproveAsync(Guid reviewId)
         {
             var review = await _dbContext.Reviews.FindAsync(reviewId);
@@ -23,6 +26,7 @@ namespace LibraryManagement.Data.Repository
             return true;
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Review>> GetAllForBookAsync(Guid bookId)
         {
             return await _dbContext.Reviews
@@ -33,6 +37,7 @@ namespace LibraryManagement.Data.Repository
                 .ToArrayAsync();
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Review>> GetApprovedByBookAsync(Guid bookId)
         {
             return await _dbContext.Reviews
@@ -43,6 +48,7 @@ namespace LibraryManagement.Data.Repository
                 .ToArrayAsync();
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Review>> GetByMemberAsync(Guid memberId)
         {
             return await _dbContext.Reviews
@@ -53,6 +59,7 @@ namespace LibraryManagement.Data.Repository
                 .ToArrayAsync();
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Review>> GetPendingAsync()
         {
             return await _dbContext.Reviews
@@ -63,6 +70,7 @@ namespace LibraryManagement.Data.Repository
                 .ToArrayAsync();
         }
 
+        /// <inheritdoc />
         public async Task<bool> RejectAsync(Guid reviewId)
         {
             var review = await _dbContext.Reviews.FindAsync(reviewId);

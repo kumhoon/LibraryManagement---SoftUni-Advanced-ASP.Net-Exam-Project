@@ -4,6 +4,7 @@
     using LibraryManagement.Data.Models;
     using Microsoft.EntityFrameworkCore;
 
+    /// <inheritdoc />
     public class FavouriteListRepository : BaseRepository<FavouriteList, Guid>, IFavouriteListRepository
     {
         private readonly LibraryManagementDbContext _dbContext;
@@ -13,7 +14,7 @@
             _dbContext = dbContext;
         }
 
-
+        /// <inheritdoc />
         public async Task<bool> AddAsync(Guid memberId, Guid bookId)
         {
             var exists = await ExistsAsync(memberId, bookId);
@@ -30,6 +31,7 @@
             return true;
         }
 
+        /// <inheritdoc />
         public async Task<bool> RemoveAsync(Guid memberId, Guid bookId)
         {
             var fav = await _dbContext.FavouriteLists
@@ -42,12 +44,14 @@
             return true;
         }
 
+        /// <inheritdoc />
         public async Task<bool> ExistsAsync(Guid memberId, Guid bookId)
         {
             return await _dbContext.FavouriteLists
                 .AnyAsync(f => f.MemberId == memberId && f.BookId == bookId);
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Book>> GetFavouriteBooksAsync(Guid memberId)
         {
             return await _dbContext.FavouriteLists
