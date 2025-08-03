@@ -192,14 +192,14 @@
                 var member = await userMgr.FindByEmailAsync(b.MemberEmail) is IdentityUser u
                     ? context.Memberships.FirstOrDefault(m => m.UserId == u.Id)
                     : null;
+
                 var book = context.Books.FirstOrDefault(bk => bk.Title == b.BookTitle);
 
                 if (member != null && book != null)
                 {
                     bool exists = context.BorrowingRecords.Any(x =>
-                        x.MemberId == member.Id
-                     && x.BookId == book.Id
-                     && x.BorrowDate == b.BorrowDate);
+                                    x.MemberId == member.Id &&
+                                    x.BookId == book.Id);
 
                     if (!exists)
                     {
