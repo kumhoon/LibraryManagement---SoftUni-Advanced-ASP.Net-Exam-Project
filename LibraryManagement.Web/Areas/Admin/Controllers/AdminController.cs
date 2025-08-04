@@ -8,6 +8,9 @@
     using static LibraryManagement.GCommon.Messages.AdminMessages;
     using static LibraryManagement.GCommon.ErrorMessages;
 
+    /// <summary>
+    /// Provides administrative functionalities for managing memberships.
+    /// </summary>
     [Area("Admin")]
     [Authorize(Roles = "Admin")]
     public class AdminController : BaseController
@@ -27,6 +30,13 @@
             return View(); 
         }
 
+        /// <summary>
+        /// Displays a list of approved members.
+        /// </summary>
+        /// <returns>
+        /// A view showing all approved members.  
+        /// Redirects to the dashboard if an unexpected error occurs.
+        /// </returns>
         [HttpGet]
         public async Task<IActionResult> Members()
         {
@@ -43,6 +53,14 @@
             }
             
         }
+
+        /// <summary>
+        /// Displays a list of pending membership applications for review.
+        /// </summary>
+        /// <returns>
+        /// A view showing all pending membership applications.  
+        /// Redirects to the dashboard if an unexpected error occurs.
+        /// </returns>
         [HttpGet]
         public async Task<IActionResult> ReviewApplications()
         {
@@ -60,6 +78,14 @@
             
         }
 
+        /// <summary>
+        /// Approves a pending membership application.
+        /// </summary>
+        /// <param name="id">The unique identifier of the member application to approve.</param>
+        /// <returns>
+        /// Redirects to the ReviewApplications view.  
+        /// Displays a success or error message based on the operation result.
+        /// </returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ApproveMembership(Guid id)
@@ -81,6 +107,14 @@
             }
         }
 
+        /// <summary>
+        /// Rejects a pending membership application.
+        /// </summary>
+        /// <param name="id">The unique identifier of the member application to reject.</param>
+        /// <returns>
+        /// Redirects to the ReviewApplications view.  
+        /// Displays a success or error message based on the operation result.
+        /// </returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RejectMembership(Guid id)
@@ -102,6 +136,14 @@
             }
         }
 
+        /// <summary>
+        /// Revokes the membership of an existing approved member.
+        /// </summary>
+        /// <param name="id">The unique identifier of the member whose membership will be revoked.</param>
+        /// <returns>
+        /// Redirects to the Members view.  
+        /// Displays a success or error message based on the operation result.
+        /// </returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RevokeMembership(Guid id)

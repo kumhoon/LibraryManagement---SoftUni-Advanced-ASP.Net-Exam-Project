@@ -4,6 +4,10 @@
     using Microsoft.AspNetCore.Mvc;
     using static LibraryManagement.GCommon.Messages.FavouriteListMessages;
     using static LibraryManagement.GCommon.ErrorMessages;
+
+    /// <summary>
+    /// Manages the favourite books list for authenticated members, including viewing, adding, and removing favourites.
+    /// </summary>
     public class FavouriteListController : BaseController
     {
         private readonly IFavouriteListService _favouriteListService;
@@ -16,6 +20,14 @@
             _membershipService = membershipService;
             _logger = logger;
         }
+
+        /// <summary>
+        /// Displays the list of favourite books for the current member.
+        /// </summary>
+        /// <returns>
+        /// A view showing the member's favourite books;  
+        /// returns <c>Unauthorized</c> if not logged in; redirects to the book index if no membership exists.
+        /// </returns>
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -39,6 +51,14 @@
             }
         }
 
+        /// <summary>
+        /// Adds a book to the current member's favourites list.
+        /// </summary>
+        /// <param name="bookId">The unique identifier of the book to add.</param>
+        /// <returns>
+        /// Redirects to <c>Index</c> with a success or error message;  
+        /// returns <c>Unauthorized</c> if not logged in or not a member; returns <c>NotFound</c> if book not found.
+        /// </returns>
         [HttpPost]
         public async Task<IActionResult> Add(Guid bookId)
         {
@@ -71,6 +91,14 @@
             }
         }
 
+        /// <summary>
+        /// Removes a book from the current member's favourites list.
+        /// </summary>
+        /// <param name="bookId">The unique identifier of the book to remove.</param>
+        /// <returns>
+        /// Redirects to <c>Index</c> with a success or error message;  
+        /// returns <c>Unauthorized</c> if not logged in or not a member; returns <c>NotFound</c> if book not in favourites.
+        /// </returns>
         [HttpPost]
         public async Task<IActionResult> Remove(Guid bookId)
         {

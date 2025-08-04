@@ -4,6 +4,10 @@
     using LibraryManagement.Web.ViewModels.User;
     using Microsoft.AspNetCore.Mvc;
     using static LibraryManagement.GCommon.ErrorMessages;
+
+    /// <summary>
+    /// Provides users a personal dashboard and view their membership status.
+    /// </summary>
     public class UserController : BaseController
     {
         private readonly IMembershipService _membershipService;
@@ -13,6 +17,14 @@
             _membershipService = membershipService;
             _logger = logger;
         }
+
+        /// <summary>
+        /// Displays the user's dashboard with their membership status.
+        /// </summary>
+        /// <returns>
+        /// A view containing a <see cref="UserMembershipViewModel"/> with membership status; 
+        /// returns an error view if an unexpected exception occurs.
+        /// </returns>
         public async Task<IActionResult> Dashboard()
         {
             try

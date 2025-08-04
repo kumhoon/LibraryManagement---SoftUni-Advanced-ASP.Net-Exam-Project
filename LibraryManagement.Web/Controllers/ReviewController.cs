@@ -5,6 +5,10 @@
     using Microsoft.AspNetCore.Mvc;
     using static LibraryManagement.GCommon.Messages.ReviewMessages;
     using static LibraryManagement.GCommon.ErrorMessages;
+
+    /// <summary>
+    /// Enables creating and editing book reviews for authenticated members.
+    /// </summary>
     public class ReviewController : BaseController
     {
         private readonly IReviewService _reviewService;
@@ -18,7 +22,15 @@
             _logger = logger;
         }
 
-
+        /// <summary>
+        /// Displays the review form for a specific book, pre-filled if a review exists.
+        /// </summary>
+        /// <param name="bookId">The unique identifier of the book to review.</param>
+        /// <returns>
+        /// A view with the <see cref="ReviewInputModel"/>;  
+        /// returns <c>BadRequest</c> if <paramref name="bookId"/> is invalid,  
+        /// <c>Unauthorized</c> if no membership, or an error view on unexpected failures.
+        /// </returns>
         [HttpGet]
         public async Task<IActionResult> Edit(Guid bookId)
         {
@@ -50,7 +62,15 @@
             }
         }
 
-
+        /// <summary>
+        /// Handles submission of a new or updated review.
+        /// </summary>
+        /// <param name="model">The review input data from the form.</param>
+        /// <returns>
+        /// Re-displays the form with validation errors if invalid,  
+        /// <c>Unauthorized</c> if no membership,  
+        /// redirects to book details on success, or shows errors on failure.
+        /// </returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ReviewInputModel model)
@@ -94,7 +114,12 @@
             }
         }
 
-
+        /// <summary>
+        /// Retrieves the current member's identifier from the authenticated user.
+        /// </summary>
+        /// <returns>
+        /// The member's <see cref="Guid"/> if found; otherwise, <see cref="Guid.Empty"/>.
+        /// </returns>
         private async Task<Guid> GetCurrentMemberIdAsync()
         {
             string? userId = this.GetUserId();

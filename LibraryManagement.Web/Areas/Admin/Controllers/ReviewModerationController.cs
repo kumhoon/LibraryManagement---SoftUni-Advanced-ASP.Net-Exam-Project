@@ -6,6 +6,10 @@
     using Microsoft.AspNetCore.Mvc;
     using static LibraryManagement.GCommon.ErrorMessages;
     using static LibraryManagement.GCommon.Messages.AdminMessages;
+
+    /// <summary>
+    /// Provides administrative actions for moderating pending book reviews.
+    /// </summary>
     [Area("Admin")]
     [Authorize(Roles = "Admin")]
     public class ReviewModerationController : BaseController
@@ -18,6 +22,14 @@
             _reviewService = reviewService;
             _logger = logger;
         }
+
+        /// <summary>
+        /// Displays a list of reviews that are pending moderation.
+        /// </summary>
+        /// <returns>
+        /// A view showing all pending reviews.  
+        /// Returns the "Error" view if loading fails.
+        /// </returns>
         [HttpGet]
         public async Task<IActionResult> PendingReviews()
         {
@@ -33,6 +45,14 @@
             }
         }
 
+        /// <summary>
+        /// Approves a specific pending review, making it visible to users.
+        /// </summary>
+        /// <param name="id">The unique identifier of the review to approve.</param>
+        /// <returns>
+        /// Redirects to the PendingReviews view.  
+        /// Displays a success or error message based on the result.
+        /// </returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Approve(Guid id)
@@ -56,6 +76,14 @@
             }
         }
 
+        /// <summary>
+        /// Rejects a specific pending review, preventing it from being displayed to users.
+        /// </summary>
+        /// <param name="id">The unique identifier of the review to reject.</param>
+        /// <returns>
+        /// Redirects to the PendingReviews view.  
+        /// Displays a success or error message based on the result.
+        /// </returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Reject(Guid id)

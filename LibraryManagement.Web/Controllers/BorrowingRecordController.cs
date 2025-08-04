@@ -6,6 +6,11 @@
     using static LibraryManagement.GCommon.Messages.BorrowingRecordMessages;
     using static LibraryManagement.GCommon.Defaults.Text;
     using static LibraryManagement.GCommon.ErrorMessages;
+
+    /// <summary>
+    /// Manages the borrowing and return operations for authenticated members,
+    /// including viewing borrowing history and processing borrow/return requests.
+    /// </summary>
     public class BorrowingRecordController : BaseController
     {
         private readonly IBorrowingRecordService _borrowingRecordService;
@@ -21,6 +26,13 @@
             _logger = logger;
         }
 
+        /// <summary>
+        /// Displays the borrowing history for the current member.
+        /// </summary>
+        /// <returns>
+        /// A view showing the member's borrowing records; redirects to membership application
+        /// if no membership exists, or error view on unexpected failures.
+        /// </returns>
         [HttpGet]
         public async Task<IActionResult> History()
         {
@@ -44,6 +56,13 @@
             }
         }
 
+        /// <summary>
+        /// Attempts to borrow a book for the current member.
+        /// </summary>
+        /// <param name="bookId">The unique identifier of the book to borrow.</param>
+        /// <returns>
+        /// A view displaying the result of the borrow operation, including success status and message.
+        /// </returns>
         [HttpPost]
         public async Task<IActionResult> BorrowBook(Guid bookId)
         {
@@ -93,6 +112,14 @@
             }
         }
 
+        /// <summary>
+        /// Processes the return of a borrowed book for the current member.
+        /// </summary>
+        /// <param name="bookId">The unique identifier of the book to return.</param>
+        /// <returns>
+        /// A view displaying the result of the return operation, including success status and message,
+        /// or appropriate redirects/notfound/forbid responses on failure.
+        /// </returns>
         [HttpPost]
         public async Task<IActionResult> ReturnBook(Guid bookId)
         {
