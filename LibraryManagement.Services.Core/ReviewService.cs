@@ -6,6 +6,8 @@
     using LibraryManagement.Services.Core.Interfaces;
     using LibraryManagement.Web.ViewModels.Review;
     using static LibraryManagement.GCommon.Defaults.Text;
+
+    /// <inheritdoc />
     public class ReviewService : IReviewService
     {
         private readonly IReviewRepository _reviewRepository;
@@ -19,6 +21,7 @@
             _memberRepository = memberRepository;
         }
 
+        /// <inheritdoc />
         public async Task<bool> CreateReviewAsync(Guid bookId, Guid memberId, int rating, string? content)
         {
             if (bookId == Guid.Empty || memberId == Guid.Empty || rating < 1 || rating > 5) return false;
@@ -43,6 +46,7 @@
             return true;
         }
 
+        /// <inheritdoc />
         public async Task<bool> UpdateReviewAsync(Guid memberId, Guid bookId, int rating, string? content)
         {
             if (bookId == Guid.Empty || memberId == Guid.Empty || rating < 1 || rating > 5) return false;
@@ -59,6 +63,7 @@
             return await _reviewRepository.UpdateAsync(review);
         }
 
+        /// <inheritdoc />
         public async Task<ReviewInputModel?> GetMemberReviewForBookAsync(Guid memberId, Guid bookId)
         {
             if (memberId == Guid.Empty || bookId == Guid.Empty) return null;
@@ -77,6 +82,7 @@
             };
         }
 
+        /// <inheritdoc />
         public async Task<BookReviewsViewModel> GetBookReviewsAsync(Guid bookId, int pageNumber, int pageSize)
         {         
             var allApproved = await _reviewRepository.GetApprovedByBookAsync(bookId);
@@ -124,6 +130,7 @@
             };
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<PendingReviewViewModel>> GetPendingReviewsAsync()
         {
             IEnumerable<Review> pending = await _reviewRepository.GetPendingAsync();
@@ -149,9 +156,11 @@
 
         }
 
+        /// <inheritdoc />
         public Task<bool> ApproveReviewAsync(Guid reviewId)
             => _reviewRepository.ApproveAsync(reviewId);
 
+        /// <inheritdoc />
         public Task<bool> RejectReviewAsync(Guid reviewId)
             => _reviewRepository.RejectAsync(reviewId);
     }

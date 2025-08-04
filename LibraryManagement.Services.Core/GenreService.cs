@@ -3,6 +3,8 @@
     using LibraryManagement.Data.Interfaces;
     using LibraryManagement.Services.Core.Interfaces;
     using Microsoft.AspNetCore.Mvc.Rendering;
+
+    /// <inheritdoc />
     public class GenreService : IGenreService
     {
         private readonly IGenreRepository _genreRepository;
@@ -10,6 +12,8 @@
         {
             _genreRepository = genreRepository;
         }
+
+        /// <inheritdoc />
         public async Task<IEnumerable<SelectListItem>> GetAllAsSelectListAsync()
         {
             var genres = await this._genreRepository.GetAllAsync();

@@ -7,6 +7,7 @@
     using static LibraryManagement.GCommon.Defaults.Text;
     using static LibraryManagement.GCommon.ErrorMessages;
 
+    /// <inheritdoc />
     public class BorrowingRecordService : IBorrowingRecordService
     {
         private readonly IBorrowingRecordRepository _borrowingRecordRepository;
@@ -14,6 +15,8 @@
         {
             _borrowingRecordRepository = borrowingRecordRepository;
         }
+
+        /// <inheritdoc />
         public async Task<BorrowResult> BorrowBookAsync(Guid memberId, Guid bookId)
         {
             
@@ -45,6 +48,7 @@
             return BorrowResult.Success;
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<BorrowingRecordViewModel>> GetBorrowingHistoryAsync(Guid memberId)
         {
             var records = await _borrowingRecordRepository
@@ -58,11 +62,13 @@
                 });
         }
 
+        /// <inheritdoc />
         public async Task<bool> IsBookBorrowedAsync(Guid bookId)
         {
             return await _borrowingRecordRepository.IsBookBorrowedAsync(bookId);
         }
 
+        /// <inheritdoc />
         public async Task<bool> ReturnBookAsync(Guid memberId, Guid bookId)
         {
             var record = await _borrowingRecordRepository
@@ -85,11 +91,13 @@
             return true;
         }
 
+        /// <inheritdoc />
         public async Task<bool> HasAnyActiveBorrowAsync(Guid memberId)
         {
             return await _borrowingRecordRepository.HasAnyActiveBorrowAsync(memberId);
         }
 
+        /// <inheritdoc />
         public async Task<bool> IsBookBorrowedByMemberAsync(Guid memberId, Guid bookId)
         {
             var record = await _borrowingRecordRepository.HasActiveBorrowAsync(memberId, bookId);

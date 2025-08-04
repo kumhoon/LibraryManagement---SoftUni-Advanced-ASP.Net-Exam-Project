@@ -12,6 +12,7 @@
     using static LibraryManagement.GCommon.PagedResultConstants;
     using static LibraryManagement.GCommon.PaginationValidator;
 
+    /// <inheritdoc />
     public class AuthorService : IAuthorService
     {
         private readonly IAuthorRepository _authorRepository;
@@ -20,6 +21,7 @@
             _authorRepository = authorRepository;
         }
 
+        /// <inheritdoc />
         public async Task<PagedResult<AuthorWithBooksViewModel>> GetAuthorsWithBooksAsync(string? searchTerm, int pageNumber = DefaultPageNumber, int pageSize = DefaultPageSize)
         {
             PaginationValidator.Validate(pageNumber, pageSize);
@@ -57,6 +59,7 @@
             };         
         }
 
+        /// <inheritdoc />
         public async Task<Author> GetOrCreateAuthorAsync(string name)
         {
             if (string.IsNullOrWhiteSpace(name))

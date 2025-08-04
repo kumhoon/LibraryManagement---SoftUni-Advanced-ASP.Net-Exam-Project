@@ -4,6 +4,8 @@
     using LibraryManagement.Services.Core.Interfaces;
     using LibraryManagement.Web.ViewModels.Book;
     using static LibraryManagement.GCommon.Defaults.Text;
+
+    /// <inheritdoc />
     public class FavouriteListService : IFavouriteListService
     {
         private readonly IFavouriteListRepository _favouriteListRepository;
@@ -15,21 +17,25 @@
             _membershipRepository = membershipRepository;
         }
 
+        /// <inheritdoc />
         public async Task<bool> AddToFavouritesAsync(Guid memberId, Guid bookId)
         {
             return await _favouriteListRepository.AddAsync(memberId, bookId);
         }
 
+        /// <inheritdoc />
         public async Task<bool> RemoveFromFavouritesAsync(Guid memberId, Guid bookId)
         {
             return await _favouriteListRepository.RemoveAsync(memberId, bookId);
         }
 
+        /// <inheritdoc />
         public async Task<bool> IsBookFavouriteAsync(Guid memberId, Guid bookId)
         {
             return await _favouriteListRepository.ExistsAsync(memberId, bookId);
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<BookIndexViewModel>> GetFavouriteBooksAsync(Guid memberId)
         {
             var favouriteBooks = await _favouriteListRepository.GetFavouriteBooksAsync(memberId);

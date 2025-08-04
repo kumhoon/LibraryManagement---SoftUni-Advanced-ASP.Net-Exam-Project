@@ -14,6 +14,7 @@
     using static LibraryManagement.GCommon.ErrorMessages;
     using LibraryManagement.GCommon;
 
+    /// <inheritdoc />
     public class BookService : IBookService
     {
         private readonly UserManager<IdentityUser> _userManager;
@@ -46,6 +47,7 @@
             _reviewService = reviewService;
         }
 
+        /// <inheritdoc />
         public async Task<(bool Success, string? FailureReason)> CreateBookAsync(string userId, BookCreateInputModel inputModel)
         {
 
@@ -83,11 +85,13 @@
             return (true, null);
         }
 
+        /// <inheritdoc />
         public async Task<Book?> GetBookByIdAsync(Guid bookId)
         {
             return await _bookRepository.GetByIdAsync(bookId);
         }
 
+        /// <inheritdoc />
         public async Task<BookDetailsViewModel?> GetBookDetailsAsync(Guid id, string? userId, int reviewPage)
         {
             var book = await this._bookRepository.GetBookWithDetailsAsync(id);
@@ -141,6 +145,7 @@
             return viewModel;
         }
 
+        /// <inheritdoc />
         public async Task<BookDeleteInputModel> GetBookForDeletingAsync(string userId, Guid bookId)
         {
             var book = await _bookRepository.GetBookWithDetailsAsync(bookId)
@@ -157,6 +162,7 @@
             };
         }
 
+        /// <inheritdoc />
         public async Task<BookEditInputModel> GetBookForEditingAsync(string userId, Guid bookId)
         {
             var book = await _bookRepository.GetBookWithDetailsAsync(bookId);
@@ -179,6 +185,7 @@
             };
         }
 
+        /// <inheritdoc />
         public async Task<PagedResult<BookIndexViewModel>> GetBookIndexAsync(string? searchTerm, int pageNumber = DefaultPageNumber, int pageSize = DefaultPageSize)
         {          
             PaginationValidator.Validate(pageNumber, pageSize);
@@ -197,17 +204,14 @@
                     b.Genre.Name.Contains(searchTerm));
             }
 
-            
             int total = await query.CountAsync();
-
-            
+        
             var pagedBooks = await query
                 .OrderBy(b => b.Title)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToArrayAsync();
 
-            
             var items = pagedBooks.Select(b => new BookIndexViewModel
             {
                 Id = b.Id,
@@ -228,6 +232,7 @@
             };
         }
 
+        /// <inheritdoc />
         public async Task SoftDeleteBookAsync(string userId, BookDeleteInputModel inputModel)
         {
             var user = await _userManager.FindByIdAsync(userId)
@@ -243,6 +248,7 @@
             await _bookRepository.SaveChangesAsync();
         }
 
+        /// <inheritdoc />
         public async Task UpdateEditedBookAsync(string userId, BookEditInputModel inputModel)
         {
             var user = await _userManager.FindByIdAsync(userId)

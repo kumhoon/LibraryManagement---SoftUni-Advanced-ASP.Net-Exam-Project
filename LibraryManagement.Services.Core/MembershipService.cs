@@ -9,6 +9,8 @@
     using System.Threading.Tasks;
     using static LibraryManagement.GCommon.ErrorMessages;
     using static LibraryManagement.GCommon.Defaults.Text;
+
+    /// <inheritdoc />
     public class MembershipService : IMembershipService
     {
         private readonly IMembershipRepository _membershipRepository;
@@ -20,6 +22,7 @@
             _userManager = userManager;
         }
 
+        /// <inheritdoc />
         public async Task ApplyForMembershipAsync(string userId, MemberApplicationInputModel inputModel)
         {
             var user = await this._userManager.FindByIdAsync(userId) ?? throw new InvalidOperationException(UserNotFoundErrorMessage);
@@ -58,6 +61,7 @@
             await _membershipRepository.SaveChangesAsync();
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<MembershipPendingViewModel>> GetPendingApplications()
         {
             var pendingMembers = await _membershipRepository.GetPendingApplicationsAsync();
@@ -75,12 +79,14 @@
             return result;
         }
 
+        /// <inheritdoc />
         public async Task<Member?> GetMembershipByUserIdAsync(string userId) 
         {
             return await _membershipRepository
                 .FirstOrDefaultAsync(m => m.UserId == userId);
         }
 
+        /// <inheritdoc />
         public async Task<bool> UpdateMembershipStatusAsync(Guid memberId, MembershipStatus newStatus)
         {
             var member = await _membershipRepository.GetByIdAsync(memberId);
@@ -94,6 +100,7 @@
             return await _membershipRepository.UpdateAsync(member);
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<ApprovedMemberViewModel>> GetApprovedMembersAsync()
         {
             var members = await _membershipRepository.GetApprovedMembersAsync();
