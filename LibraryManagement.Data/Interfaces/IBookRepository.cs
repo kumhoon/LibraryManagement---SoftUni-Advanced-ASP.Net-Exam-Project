@@ -51,7 +51,6 @@
         /// <returns>
         /// A collection of books for the specified page.
         /// </returns>
-
         Task<IEnumerable<Book>> GetPagedBooksAsync(int pageNumber, int pageSize);
 
         /// <summary>
